@@ -1,0 +1,98 @@
+name: artifacts_on_release
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  lint:
+    if: startsWith(github.head_ref, 'release/') == true
+    name: Run Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Run unit tests
+        run: ./gradlew test --stacktrace
+
+      - name: Check lint
+        if: always()
+        run: ./gradlew lint
+
+  build_apk_aab:
+    if: startsWith(github.head_ref, 'release/') == true
+    name: Build release artifacts
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout our repository
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+
+      - name: Caching ruby dependencies
+        uses: actions/cache@v2
+        with:
+          path: 'vendor/bundle'
+          key: ${{ runner.os }}-gems-${{ secrets.GEMS_CACHE_VERSION }}-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Caching Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build release APK and AAB after test
+        run: |
+          ./gradlew test
+          ./gradlew assembleRelease
+          ./gradlew bundleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: Upload AAB Bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release.aab
+          path: app/build/outputs/bundle/release/app-release.aab
