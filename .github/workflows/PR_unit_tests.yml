@@ -7,40 +7,24 @@ on:
   pull_request:
   push:
     branches:
-      - 'main'
+      - 'dev'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  lint:
-    name: Run Lint
+  create-cache-and-setup-options:
+    name: cache and setup options
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Copy CI gradle.properties
-        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
-
-      - name: Check lint
-        if: always()
-        run: ./gradlew lint --stacktrace
-
-  Unit-test:
-    name: Run unit tests on PR in main
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout our repository
+      
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
+          
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
@@ -48,7 +32,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
-
 
       - name: Caching ruby dependencies
         uses: actions/cache@v2
@@ -58,6 +41,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gems-
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        
       - name: Caching Gradle packages
         uses: actions/cache@v2
         with:
@@ -70,15 +56,40 @@ jobs:
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-
+  
+  lint:
+    needs: create-cache-and-setup-options
+    name: Run Lint
+    runs-on: ubuntu-latest
+    
+    steps:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
+      
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - name: Check lint
+        if: always()
+        run: ./gradlew lint --stacktrace
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
+  Unit-test:
+    needs: lint
+    name: Run unit tests on PR in main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
       - name: Run unit tests
         run: ./gradlew test --stacktrace
 
