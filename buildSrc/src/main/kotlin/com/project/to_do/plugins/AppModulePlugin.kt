@@ -5,6 +5,7 @@ import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.internal.plugins.AppPlugin
 import com.project.to_do.helper.VersionHelper
 import com.project.to_do.tasks.AutoInc
+import java.util.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -65,31 +66,54 @@ private fun Project.addAndroidLibrarySection(isLib: Boolean) = extensions.getByT
         versionCode = version.versionCode()
         versionName = version.versionName()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        findByName("release")?.apply {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-        findByName("debug")?.apply {
-            isDebuggable = true
+
+        signingConfigs {
+            create("release") {
+                val keystoreProperties = Properties()
+                val keystorePropsFile = file("keystore/keystore_config")
+
+                if (keystorePropsFile.exists()) {
+                    keystoreProperties.apply {
+                        load(keystorePropsFile.reader())
+                    }
+                    storeFile = file(keystoreProperties.getProperty("storeFile"))
+                    storePassword = keystoreProperties.getProperty("storePassword")
+                    keyAlias = keystoreProperties.getProperty("keyAlias")
+                    keyPassword = keystoreProperties.getProperty("keyPassword")
+                } else {
+                    storeFile = file("keystore/to-do.keystore")
+                    storePassword = System.getenv("KEYSTORE_PASSWORD")
+                    keyAlias = System.getenv("RELEASE_SIGN_KEY_ALIAS")
+                    keyPassword = System.getenv("RELEASE_SIGN_KEY_PASSWORD")
+                }
+            }
+        }
+
+        buildTypes {
+            findByName("release")?.apply {
+                signingConfig = signingConfigs.getByName("release")
+                isMinifyEnabled = false
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            }
+            findByName("debug")?.apply {
+                isDebuggable = true
+            }
+        }
+
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
+        }
+
+        project.tasks.withType<KotlinCompile<KotlinJvmOptions>> {
+            kotlinOptions.jvmTarget = "11"
         }
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    project.tasks.withType<KotlinCompile<KotlinJvmOptions>> {
-        kotlinOptions.jvmTarget = "11"
-    }
-}
 
 private fun Project.dependency() {
     dependencies {
