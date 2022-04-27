@@ -64,13 +64,14 @@ open class AutoInc : DefaultTask() {
         val build = versionHelper.versionCode()
         println("start commit")
         var result = ""
-        result = Git.runCommand("git diff")
+        result = "DIF \n " + Git.runCommand("git diff")
         println(result)
+        result = "add \n " + Git.runCommand("git add .")
         result = Git.runCommand("git add */version/version.properties")
         println(result)
-        result = Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
+        result =  "commit \n " + Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
         println(result)
-        result = Git.runCommand(
+        result = "push \n " + Git.runCommand(
             "git push HEAD:${
                 if (currentBrunch.contains(release)) {
                     release + major + minor
