@@ -73,13 +73,7 @@ open class AutoInc : DefaultTask() {
         result =  "commit \n " + Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
         println(result)
         result = "push \n " + Git.runCommand(
-            "git push HEAD:${
-                if (currentBrunch.contains(release)) {
-                    release + major + minor
-                } else {
-                    dev
-                }
-            }"
+            "git push HEAD"
         )
         println(result)
     }
