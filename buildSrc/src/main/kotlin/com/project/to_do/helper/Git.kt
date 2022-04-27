@@ -12,6 +12,15 @@ object Git {
         return ""
     }
 
+    fun runCommand(command: List<String>): String {
+        try {
+            return senCommand(command).inputStream.bufferedReader().use { it.readText() }
+        } catch (e: Exception) {
+            print(e)
+        }
+        return ""
+    }
+
     private fun senCommand(command: List<String>): Process {
         return ProcessBuilder(command).start()
     }
