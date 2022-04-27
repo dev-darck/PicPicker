@@ -64,6 +64,8 @@ open class AutoInc : DefaultTask() {
         val build = versionHelper.versionCode()
         println("start commit")
         var result = ""
+        result = Git.runCommand("git diff")
+        println(result)
         result = Git.runCommand("git add version/version.properties")
         println(result)
         result = Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
@@ -77,6 +79,8 @@ open class AutoInc : DefaultTask() {
                 }
             }"
         )
+        println(result)
+        result = Git.runCommand("git log")
         println(result)
     }
 
