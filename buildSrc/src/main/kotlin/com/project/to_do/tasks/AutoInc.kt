@@ -69,7 +69,7 @@ open class AutoInc : DefaultTask() {
         result = "add \n " + Git.runCommand("git add version/version.properties")
         println(result)
         println("status " + Git.runCommand("git status"))
-        result =  "commit \n " + Git.gitCommit("version/version.properties","\"autoInc version code: $major.$minor - $build\"")
+        result =  "commit \n " + Git.gitCommit(versionHelper.fullPath(),"\"autoInc version code: $major.$minor - $build\"")
         println(result)
         println("status " + Git.runCommand("git status"))
         result = "push \n " + Git.runCommand(
