@@ -11,13 +11,14 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
-        Git.runCommand("git ")
+        println(Git.runCommand("git remote -v"))
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
         println(result)
         val version = findVersion(result)
         if (result.isNotEmpty() && version.isNotEmpty()) {
             updateVersionByTag(version)
         } else {
+            println("update build version")
             updateBuildVersion()
         }
         addAndPushChange(result)
@@ -54,12 +55,14 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = (versionHelper.versionCode() + 1).toString()
         versionHelper.setNewVersion(listOf(major, minor, build))
+        println("new version build")
     }
 
     private fun addAndPushChange(currentBrunch: String) {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode()
+        println("start commit")
         var result = ""
         result = Git.runCommand("git add version/version.properties")
         println(result)
