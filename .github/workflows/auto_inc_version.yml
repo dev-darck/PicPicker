@@ -12,7 +12,6 @@ on:
 
 jobs:
   autoInc:
-    if: github.event.pull_request.merged == 'true'
     name: Run auto increment
     runs-on: ubuntu-latest
 
@@ -26,6 +25,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check lint
-        if: always()
+      - name: increment version
         run: ./gradlew autoInc
+        if: github.event.pull_request.merged == 'true'
