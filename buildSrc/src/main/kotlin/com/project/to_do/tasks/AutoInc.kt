@@ -64,11 +64,14 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode()
         println("start commit")
+        println("status " + Git.runCommand("git status"))
         var result = ""
         result = "add \n " + Git.runCommand("git add version/version.properties")
         println(result)
+        println("status " + Git.runCommand("git status"))
         result =  "commit \n " + Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
         println(result)
+        println("status " + Git.runCommand("git status"))
         result = "push \n " + Git.runCommand(
             "git push HEAD:${
                 if (currentBrunch.contains(release)) {
@@ -79,6 +82,7 @@ open class AutoInc : DefaultTask() {
             }"
         )
         println(result)
+        println("status " + Git.runCommand("git status"))
     }
 
     private fun findVersion(tags: String): String {
