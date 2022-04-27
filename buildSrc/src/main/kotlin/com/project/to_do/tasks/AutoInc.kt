@@ -12,10 +12,12 @@ open class AutoInc : DefaultTask() {
     @TaskAction
     fun run() {
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
+        println(result)
         val version = findVersion(result)
         if (result.isNotEmpty() && version.isNotEmpty()) {
             updateVersionByTag(version)
         } else {
+            println("update build version")
             updateBuildVersion()
         }
         addAndPushChange(result)
@@ -52,23 +54,27 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = (versionHelper.versionCode() + 1).toString()
         versionHelper.setNewVersion(listOf(major, minor, build))
+        println("new version build")
     }
 
     private fun addAndPushChange(currentBrunch: String) {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode()
-        Git.runCommand("git add version/version.properties")
-        Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
-        Git.runCommand(
-            "git push origin HEAD:${
-                if (currentBrunch.contains(release)) {
-                    release + major + minor
-                } else {
-                    dev
-                }
-            }"
+        println("start commit")
+        var result = ""
+        result = "DIF \n " + Git.runCommand("git diff")
+        println(result)
+        result = "add \n " + Git.runCommand("git add .")
+        println(result)
+        result = "add \n " + Git.runCommand("git status")
+        println(result)
+        result =  "commit \n " + Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
+        println(result)
+        result = "push \n " + Git.runCommand(
+            "git push HEAD"
         )
+        println(result)
     }
 
     private fun findVersion(tags: String): String {

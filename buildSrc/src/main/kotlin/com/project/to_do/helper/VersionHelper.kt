@@ -39,6 +39,7 @@ class VersionHelper(private val rootDir: String) {
                 "$VERSION_MINOR = ${versions[1]}\n" +
                 "$VERSION_BUILD = ${versions[2]}"
         propertiesFile.bufferedWriter().use { it.write(newVersion) }
+        println("file write new version")
     }
 
     private companion object {

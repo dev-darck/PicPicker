@@ -1,14 +1,12 @@
 name: auto_inc_version
 on:
   pull_request:
-    branches:
-        - 'dev'
-        - 'release'
-    types: [closed]
+    types:
+      - closed
 
 jobs:
   autoInc:
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == true
     name: Run auto increment
     runs-on: ubuntu-latest
 
@@ -22,6 +20,5 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check lint
-        if: always()
-        run: ./gradlew autoInc
+      - name: increment version
+        run: ./gradlew autoInc --stacktrace
