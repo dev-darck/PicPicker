@@ -4,7 +4,11 @@ on:
     branches:
         - 'dev'
         - 'release'
-    types: [closed]
+    types:
+      - opened
+      - closed
+      - edited
+      - synchronize
 
 jobs:
   autoInc:
