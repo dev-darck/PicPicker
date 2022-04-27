@@ -1,5 +1,10 @@
 package com.project.to_do.helper
 
+import org.apache.tools.ant.taskdefs.Execute.runCommand
+
+
+
+
 object Git {
 
     fun runCommand(command: String): String {
@@ -21,7 +26,20 @@ object Git {
         return ""
     }
 
+    fun gitCommit(message: String): String {
+        try {
+            return  senCommand(listOf("git ", "commit ", "-m ", message)).inputStream.bufferedReader().use { it.readText() }
+        } catch (e: Exception) {
+            print(e)
+        }
+        return ""
+
+    }
+
     private fun senCommand(command: List<String>): Process {
-        return ProcessBuilder(command).start()
+        return ProcessBuilder(command)
+            .redirectError(ProcessBuilder.Redirect.PIPE)
+            .redirectOutput(ProcessBuilder.Redirect.PIPE)
+            .start()
     }
 }
