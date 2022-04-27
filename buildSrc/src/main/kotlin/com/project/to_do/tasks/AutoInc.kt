@@ -11,7 +11,7 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
-        println(Git.runCommand("git remote -v"))
+        println(Git.runCommand("git restore --staged */version/version.properties"))
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
         println(result)
         val version = findVersion(result)
