@@ -11,6 +11,8 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
+        println("restore " + Git.runCommand("git restore version/version.properties"))
+        println("status " + Git.runCommand("git status"))
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
         println(result)
         val version = findVersion(result)
@@ -63,16 +65,18 @@ open class AutoInc : DefaultTask() {
         val build = versionHelper.versionCode()
         println("start commit")
         var result = ""
-        result = "DIF \n " + Git.runCommand("git diff")
-        println(result)
-        result = "add \n " + Git.runCommand("git add .")
-        println(result)
-        result = "add \n " + Git.runCommand("git status")
+        result = "add \n " + Git.runCommand("git add version/version.properties")
         println(result)
         result =  "commit \n " + Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
         println(result)
         result = "push \n " + Git.runCommand(
-            "git push"
+            "git push HEAD:${
+                if (currentBrunch.contains(release)) {
+                    release + major + minor
+                } else {
+                    dev
+                }
+            }"
         )
         println(result)
     }
