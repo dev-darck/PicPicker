@@ -1,15 +1,14 @@
-package com.project.to_do
+package com.project.to_do.plugins
 
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.internal.plugins.AppPlugin
+import com.project.to_do.helper.VersionHelper
+import com.project.to_do.tasks.AutoInc
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.repositories
-import org.gradle.kotlin.dsl.withType
+import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
@@ -20,6 +19,7 @@ class AppModulePlugin : Plugin<Project> {
                 addCommonPlugins()
                 when (this) {
                     is AppPlugin -> {
+                        autoInc()
                         addAndroidLibrarySection(false)
                         dependency()
                         appApp()
@@ -43,8 +43,13 @@ private fun Project.appApp() {
     plugins.apply("org.jetbrains.kotlin.android")
 }
 
+private fun Project.autoInc() {
+    tasks.register("autoInc", AutoInc::class.java)
+}
+
 //переделать!
 private fun Project.addAndroidLibrarySection(isLib: Boolean) = extensions.getByType<BaseExtension>().run {
+    val version = VersionHelper(project.rootDir.path)
     repositories {
         google()
         mavenCentral()
@@ -57,8 +62,8 @@ private fun Project.addAndroidLibrarySection(isLib: Boolean) = extensions.getByT
         minSdk = 21
         targetSdk = 32
         compileSdkVersion(32)
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = version.versionCode()
+        versionName = version.versionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
