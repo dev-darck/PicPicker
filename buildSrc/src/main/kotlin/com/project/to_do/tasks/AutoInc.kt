@@ -66,7 +66,7 @@ open class AutoInc : DefaultTask() {
         var result = ""
         result = Git.runCommand("git diff")
         println(result)
-        result = Git.runCommand("git add version/version.properties")
+        result = Git.runCommand("git add */version/version.properties")
         println(result)
         result = Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
         println(result)
@@ -79,8 +79,6 @@ open class AutoInc : DefaultTask() {
                 }
             }"
         )
-        println(result)
-        result = Git.runCommand("git log")
         println(result)
     }
 
