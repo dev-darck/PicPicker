@@ -11,7 +11,6 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
-        println(Git.runCommand("git restore --staged */version/version.properties"))
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
         println(result)
         val version = findVersion(result)
@@ -73,7 +72,7 @@ open class AutoInc : DefaultTask() {
         result =  "commit \n " + Git.runCommand("git commit -m autoInc version code: $major.$minor - $build")
         println(result)
         result = "push \n " + Git.runCommand(
-            "git push HEAD"
+            "git push"
         )
         println(result)
     }
