@@ -56,26 +56,32 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = (versionHelper.versionCode() + 1).toString()
         versionHelper.setNewVersion(listOf(major, minor, build))
-        println("new version build")
     }
 
     private fun addAndPushChange(currentBrunch: String) {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode()
-        println("start commit")
+        Git.runCommand("git checkout ${currentRootBranch(currentBrunch, major, minor)}")
         println("status " + Git.runCommand("git status"))
         var result = ""
         result = "add \n " + Git.runCommand("git add version/version.properties")
         println(result)
         println("status " + Git.runCommand("git status"))
-        result =  "commit \n " + Git.runCommand(listOf("git", "commit", "-a", "-m", "\'autoInc version code: $major.$minor - $build\'"))
+        result =  "commit \n " + Git.commit("version/version.properties","\'autoInc version code: $major.$minor - $build\'")
         println(result)
         println("status " + Git.runCommand("git status"))
-        result = "push \n " + Git.runCommand("git push ")
+        result = "push \n " + Git.runCommand("git push HEAD:${currentRootBranch(currentBrunch, major, minor)}")
         println(result)
         println("status " + Git.runCommand("git status"))
     }
+
+    private fun currentRootBranch(currentBrunch: String, major: String, minor: String) =
+        if (currentBrunch.contains(release)) {
+            release + major + minor
+        } else {
+            dev
+        }
 
     private fun findVersion(tags: String): String {
         return regex.find(tags)?.value ?: ""
