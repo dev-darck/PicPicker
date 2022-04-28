@@ -61,15 +61,11 @@ open class AutoInc : DefaultTask() {
     private fun addAndPushChange(currentBrunch: String) {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
-        val build = versionHelper.versionCode()
         var result = ""
         result = Git.runCommand("git checkout -B ${currentRootBranch(currentBrunch, major, minor)} origin/${currentRootBranch(currentBrunch, major, minor)}")
         println(result)
         println("status " + Git.runCommand("git status"))
-        result = "add \n " + Git.runCommand("git add version/version.properties")
-        println(result)
-        println("status " + Git.runCommand("git status"))
-        result =  "commit \n " + Git.commit("\'autoInc version code: $major.$minor - $build\'")
+        result =  "commit \n " + Git.runCommand(listOf("git","commit","-a"))
         println(result)
         println("status " + Git.runCommand("git status"))
         result = "push \n " + Git.runCommand("git push")
