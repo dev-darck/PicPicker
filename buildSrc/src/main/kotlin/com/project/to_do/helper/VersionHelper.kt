@@ -32,7 +32,7 @@ class VersionHelper(private val rootDir: String) {
 
     fun versionCode(): Int = versionProps[VERSION_BUILD].toString().toInt()
 
-    fun fullPath(): String = File("${rootDir}$path").absolutePath
+    fun fileName(): String = "version/version.properties"
 
     fun setNewVersion(versions: List<String>) {
         if (versions.size < 3) throw ArrayIndexOutOfBoundsException("Versions have not be < 3 elements $versions")

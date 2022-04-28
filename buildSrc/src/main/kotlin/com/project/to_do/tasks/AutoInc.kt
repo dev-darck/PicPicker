@@ -11,8 +11,7 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
-        Git.runCommand("git fetch origin")
-        print("pull ${Git.runCommand("git pull")}")
+        updateBrunch()
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
         println(result)
         val version = findVersion(result)
@@ -23,6 +22,11 @@ open class AutoInc : DefaultTask() {
             updateBuildVersion()
         }
         addAndPushChange(result)
+    }
+
+    private fun updateBrunch() {
+        println("fetch -> ${Git.runCommand("git fetch origin")}")
+        println("pull -> ${Git.runCommand("git pull")}")
     }
 
     private fun updateVersionByTag(version: String) {
@@ -62,22 +66,20 @@ open class AutoInc : DefaultTask() {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
-        var result = ""
-        result = Git.runCommand("git checkout -B ${currentRootBranch(currentBrunch, major, minor)} origin/${currentRootBranch(currentBrunch, major, minor)}")
-        println(result)
+        println(
+            "update and checkout $Git.runCommand(\"git checkout -B ${
+                currentRootBranch(
+                    currentBrunch,
+                    major,
+                    minor
+                )
+            } origin/${currentRootBranch(currentBrunch, major, minor)}\")"
+        )
         println("brunch -> " + Git.runCommand("git branch --show-current"))
-        result = "add -> \n " + Git.runCommand("git add version/version.properties")
-        println(result)
-        val command = mutableListOf("git", "commit").apply {
-            add("version/version.properties ")
-            add("-m")
-            add("\"autoInc version code: $major.$minor - $build\"")
-        }
-        result =  "commit -> \n " + Git.runCommand(command)
-        println(result)
+        println("add -> " + Git.runCommand("git add ${versionHelper.fileName()}"))
+        println("commit -> " + Git.commit("\"autoInc version code: $major.$minor ($build)\""))
         println("status -> " + Git.runCommand("git status"))
-        result = "push -> \n " + Git.runCommand("git push")
-        println(result)
+        println("push -> " + Git.runCommand("git push"))
         println("status -> " + Git.runCommand("git status"))
     }
 
