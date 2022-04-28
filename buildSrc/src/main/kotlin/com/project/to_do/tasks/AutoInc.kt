@@ -65,20 +65,20 @@ open class AutoInc : DefaultTask() {
         var result = ""
         result = Git.runCommand("git checkout -B ${currentRootBranch(currentBrunch, major, minor)} origin/${currentRootBranch(currentBrunch, major, minor)}")
         println(result)
-        println("status " + Git.runCommand("git branch --show-current"))
-        result = "add \n " + Git.runCommand("git add version/version.properties")
+        println("brunch -> " + Git.runCommand("git branch --show-current"))
+        result = "add -> \n " + Git.runCommand("git add version/version.properties")
         println(result)
         val command = mutableListOf("git", "commit").apply {
             add("version/version.properties ")
             add("-m")
-            add("autoInc version code: $major.$minor - $build")
+            add("\"autoInc version code: $major.$minor - $build\"")
         }
-        result =  "commit \n " + Git.runCommand(command)
+        result =  "commit -> \n " + Git.runCommand(command)
         println(result)
-        println("status " + Git.runCommand("git status"))
-        result = "push \n " + Git.runCommand("git push")
+        println("status -> " + Git.runCommand("git status"))
+        result = "push -> \n " + Git.runCommand("git push")
         println(result)
-        println("status " + Git.runCommand("git status"))
+        println("status -> " + Git.runCommand("git status"))
     }
 
     private fun currentRootBranch(currentBrunch: String, major: String, minor: String) =
