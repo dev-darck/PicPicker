@@ -66,6 +66,7 @@ open class AutoInc : DefaultTask() {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
+        println("git log -> ${Git.runCommand("git log --oneline --graph")}")
         println(
             "update and checkout $Git.runCommand(\"git checkout -B ${
                 currentRootBranch(
