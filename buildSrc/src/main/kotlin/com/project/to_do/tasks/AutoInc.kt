@@ -25,9 +25,8 @@ open class AutoInc : DefaultTask() {
     }
 
     private fun updateBrunch() {
-        println("add user.email ${Git.runCommand("git config --local user.email github-ci@aaa.ru")}")
-        println("add user.name ${Git.runCommand("git config --local user.name Auto-inc")}")
-        println("show list config ${Git.runCommand("git config --list")}")
+        println("add user.email ${Git.runCommand("git config --local user.email bot@bot.com")}")
+        println("add user.name ${Git.runCommand("git config --local user.name Bot")}")
         println("fetch -> ${Git.runCommand("git fetch origin")}")
         println("pull -> ${Git.runCommand("git pull")}")
     }
@@ -52,7 +51,7 @@ open class AutoInc : DefaultTask() {
                 updateBuildVersion()
             }
             else -> {
-                versions.add("0")
+                versions.add(versionHelper.versionCode().toString())
                 versionHelper.setNewVersion(versions)
             }
         }
@@ -69,7 +68,6 @@ open class AutoInc : DefaultTask() {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
-        println("git log -> ${Git.runCommand("git log --oneline --graph")}")
         println(
             "update and checkout " + Git.runCommand(
                 "\"git checkout -B ${
