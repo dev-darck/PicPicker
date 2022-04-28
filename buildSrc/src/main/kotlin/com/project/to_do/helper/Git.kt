@@ -21,9 +21,9 @@ object Git {
         return ""
     }
 
-    fun commit(file: String, message: String): String {
+    fun commit(message: String): String {
         try {
-            return  senCommand(listOf("git", "commit", "$file ", "-m", message)).inputStream.bufferedReader().use { it.readText() }
+            return  senCommand(listOf("git", "commit", "-m", message)).inputStream.bufferedReader().use { it.readText() }
         } catch (e: Exception) {
             print(e)
         }
