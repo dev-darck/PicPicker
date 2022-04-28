@@ -25,6 +25,9 @@ open class AutoInc : DefaultTask() {
     }
 
     private fun updateBrunch() {
+        println("add user.email ${Git.runCommand("git config --local user.email github-ci@aaa.ru")}")
+        println("add user.name ${Git.runCommand("git config --local user.name Auto-inc")}")
+        println("show list config ${Git.runCommand("git config --list")}")
         println("fetch -> ${Git.runCommand("git fetch origin")}")
         println("pull -> ${Git.runCommand("git pull")}")
     }
@@ -68,17 +71,19 @@ open class AutoInc : DefaultTask() {
         val build = versionHelper.versionCode().toString()
         println("git log -> ${Git.runCommand("git log --oneline --graph")}")
         println(
-            "update and checkout $Git.runCommand(\"git checkout -B ${
-                currentRootBranch(
-                    currentBrunch,
-                    major,
-                    minor
-                )
-            } origin/${currentRootBranch(currentBrunch, major, minor)}\")"
+            "update and checkout " + Git.runCommand(
+                "\"git checkout -B ${
+                    currentRootBranch(
+                        currentBrunch,
+                        major,
+                        minor
+                    )
+                } origin/${currentRootBranch(currentBrunch, major, minor)}\""
+            )
         )
         println("brunch -> " + Git.runCommand("git branch --show-current"))
         println("add -> " + Git.runCommand("git add ${versionHelper.fileName()}"))
-        println("commit -> " + Git.commit("\"autoInc version code: $major.$minor ($build)\""))
+        println("commit -> " + Git.commit("\"[CI-skip] autoInc version code: $major.$minor ($build)\""))
         println("status -> " + Git.runCommand("git status"))
         println("push -> " + Git.runCommand("git push"))
         println("status -> " + Git.runCommand("git status"))
