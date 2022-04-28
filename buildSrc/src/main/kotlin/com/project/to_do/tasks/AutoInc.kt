@@ -11,8 +11,8 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
-        println("restore " + Git.runCommand("git restore version/version.properties"))
-        println("status " + Git.runCommand("git status"))
+        Git.runCommand("git fetch origin")
+        print("pull ${Git.runCommand("git pull")}")
         val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
         println(result)
         val version = findVersion(result)
@@ -63,11 +63,11 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
         var result = ""
-        Git.runCommand("git fetch origin")
         result = Git.runCommand("git checkout -B ${currentRootBranch(currentBrunch, major, minor)} origin/${currentRootBranch(currentBrunch, major, minor)}")
         println(result)
-        print("pull ${Git.runCommand("git pull")}")
         println("status " + Git.runCommand("git branch --show-current"))
+        result = "add \n " + Git.runCommand("git add version/version.properties")
+        println(result)
         val command = mutableListOf("git", "commit").apply {
             add("version/version.properties ")
             add("-m")
