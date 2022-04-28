@@ -81,7 +81,7 @@ open class AutoInc : DefaultTask() {
         )
         println("brunch -> " + Git.runCommand("git branch --show-current"))
         println("add -> " + Git.runCommand("git add ${versionHelper.fileName()}"))
-        println("commit -> " + Git.commit("\"[CI-skip] autoInc version code: $major.$minor ($build)\""))
+        println("commit -> " + Git.commit("[CI-skip] autoInc version code: $major.$minor ($build)"))
         println("status -> " + Git.runCommand("git status"))
         println("push -> " + Git.runCommand("git push"))
         println("status -> " + Git.runCommand("git status"))
