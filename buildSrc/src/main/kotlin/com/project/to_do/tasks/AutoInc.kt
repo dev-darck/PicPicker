@@ -63,8 +63,10 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
         var result = ""
+        Git.runCommand("git fetch origin")
         result = Git.runCommand("git checkout -B ${currentRootBranch(currentBrunch, major, minor)} origin/${currentRootBranch(currentBrunch, major, minor)}")
         println(result)
+        print("pull ${Git.runCommand("git pull")}")
         println("status " + Git.runCommand("git branch --show-current"))
         val command = mutableListOf("git", "commit").apply {
             add("version/version.properties ")
