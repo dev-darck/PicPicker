@@ -14,17 +14,17 @@ jobs:
   create-cache-and-setup-options:
     name: cache and setup options
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
-      
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        
+
       - name: Caching Gradle packages
         uses: actions/cache@v2
         with:
@@ -56,22 +56,22 @@ jobs:
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-  
+
   lint:
     needs: create-cache-and-setup-options
     name: Run Lint
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
-      
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          
+
       - name: Check lint
         if: always()
         run: ./gradlew lint --stacktrace
@@ -85,11 +85,11 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-      
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      
+
       - name: Run unit tests
         run: ./gradlew test --stacktrace
 
