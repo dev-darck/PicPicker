@@ -4,6 +4,7 @@ import com.project.to_do.helper.Git
 import com.project.to_do.helper.VersionHelper
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import java.lang.IllegalArgumentException
 
 open class AutoInc : DefaultTask() {
 
@@ -11,24 +12,21 @@ open class AutoInc : DefaultTask() {
 
     @TaskAction
     fun run() {
-        updateBrunch()
-        val result = Git.runCommand("git rev-parse --abbrev-ref HEAD")
-        println(result)
+        updateBrunchAndSetConfig()
+        val result = Git.brunchName()
         val version = findVersion(result)
+        println(version)
         if (result.isNotEmpty() && version.isNotEmpty()) {
             updateVersionByTag(version)
         } else {
-            println("update build version")
             updateBuildVersion()
         }
         addAndPushChange(result)
     }
 
-    private fun updateBrunch() {
-        println("add user.email ${Git.runCommand("git config --local user.email bot@bot.com")}")
-        println("add user.name ${Git.runCommand("git config --local user.name Bot")}")
-        println("fetch -> ${Git.runCommand("git fetch origin")}")
-        println("pull -> ${Git.runCommand("git pull")}")
+    private fun updateBrunchAndSetConfig() {
+        Git.initConfig()
+        Git.fetch()
     }
 
     private fun updateVersionByTag(version: String) {
@@ -39,11 +37,11 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor()
         when {
             major > majorNew ->
-                throw IllegalStateException(
+                throw IllegalArgumentException(
                     "Mew major version is smaller than the current: current $major new $majorNew"
                 )
             major == majorNew && minor > minorNew -> {
-                throw IllegalStateException(
+                throw IllegalArgumentException(
                     "New minor version is smaller than the current: current $minor new $minorNew"
                 )
             }
@@ -51,7 +49,7 @@ open class AutoInc : DefaultTask() {
                 updateBuildVersion()
             }
             else -> {
-                versions.add(versionHelper.versionCode().toString())
+                versions.add("0")
                 versionHelper.setNewVersion(versions)
             }
         }
@@ -68,23 +66,12 @@ open class AutoInc : DefaultTask() {
         val major = versionHelper.versionMajor().toString()
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
-        println(
-            "update and checkout " + Git.runCommand(
-                "\"git checkout -B ${
-                    currentRootBranch(
-                        currentBrunch,
-                        major,
-                        minor
-                    )
-                } origin/${currentRootBranch(currentBrunch, major, minor)}\""
-            )
+        Git.runCommand(
+            "git checkout -B ${currentRootBranch(currentBrunch, major, minor)} " +
+                    "origin/${currentRootBranch(currentBrunch, major, minor)}"
         )
-        println("brunch -> " + Git.runCommand("git branch --show-current"))
-        println("add -> " + Git.runCommand("git add ${versionHelper.fileName()}"))
-        println("commit -> " + Git.commit("[CI-skip] autoInc version code: $major.$minor ($build)"))
-        println("status -> " + Git.runCommand("git status"))
-        println("push -> " + Git.runCommand("git push"))
-        println("status -> " + Git.runCommand("git status"))
+        Git.commit(versionHelper.fileName(), commitMessage(major, minor, build))
+        Git.push()
     }
 
     private fun currentRootBranch(currentBrunch: String, major: String, minor: String) =
@@ -94,9 +81,10 @@ open class AutoInc : DefaultTask() {
             dev
         }
 
-    private fun findVersion(tags: String): String {
-        return regex.find(tags)?.value ?: ""
-    }
+    private fun findVersion(tags: String): String = regex.find(tags)?.value ?: ""
+
+    private fun commitMessage(major: String, minor: String, build: String): String =
+        "[CI-skip] autoInc version code: $major.$minor ($build)"
 
     private companion object {
         val regex = "\\d+(\\.\\d+)?".toRegex()
