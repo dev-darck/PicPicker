@@ -2,6 +2,9 @@ val appName = "app"
 val buildSrc = "buildSrc"
 val modulesName = "modules"
 val gradlePathEnd = "/build.gradle.kts"
+val generatedCode = "import com.project.to_do.plugins.config.module\n" +
+        "\n" +
+        "module()"
 
 autoInclude()
 
@@ -54,17 +57,12 @@ fun File.moveTo() {
     val settings = File("$rootDir/settings.gradle.kts")
     var text = settings.inputStream().bufferedReader().use { it.readText() }
     val findText = "include(\":$name\")"
-    if (text.contains(findText)) {
-        text = text.substring(0, text.length - findText.length - 2)
-    }
+    text = text.replace(findText, "").trimEnd()
     settings.bufferedWriter().use { it.write(text) }
 }
 
 fun replaceDefaultGradle(file: File) {
-    val text = "plugins {\n" +
-            "    id(\"com.android.library\")\n" +
-            "    id(\"app-plugin\")\n" +
-            "}"
+    val text = generatedCode
     file.bufferedWriter().use { it.write(text) }
 }
 

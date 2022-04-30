@@ -1,4 +1,3 @@
-plugins {
-    id("com.android.application")
-    id("app-plugin")
-}
+import com.project.to_do.plugins.config.application
+
+application()
