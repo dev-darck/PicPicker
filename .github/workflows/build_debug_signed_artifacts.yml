@@ -1,0 +1,47 @@
+name: Build_debug_signed_artifacts
+
+on:
+  workflow_dispatch:
+
+env:
+  SIGNING_STORE_PASSWORD_DEBUG: ${{ secrets.SIGNING_STORE_PASSWORD_DEBUG }}
+  SIGNING_KEY_ALIAS_DEBUG: ${{ secrets.SIGNING_KEY_ALIAS_DEBUG }}
+  SIGNING_KEY_PASSWORD_DEBUG: ${{ secrets.SIGNING_KEY_PASSWORD_DEBUG }}
+  SIGNING_STORE_FILE_PATH_DEBUG: ${{ secrets.SIGNING_STORE_FILE_PATH_DEBUG }}
+
+jobs:
+  build_apk_aab:
+    name: Build debug artifacts
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Checkout keystore repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ secrets.KEYSTORE_GIT_REPOSITORY }}
+          token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
+          path: app/keystore
+
+      - name: Run tests and build debug artifacts
+        run: |
+          ./gradlew test
+          ./gradlew assembleDebug --stacktrace
+          ./gradlew bundleDebug
+
+      - name: Upload signed APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload AAB Bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug.aab
+          path: app/build/outputs/bundle/debug/app-debug.aab

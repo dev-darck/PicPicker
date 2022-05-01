@@ -1,12 +1,13 @@
-name: Build_signed_artifacts
+name: Build_release_signed_artifacts
 
 on:
   workflow_dispatch:
 
 env:
-  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-  RELEASE_SIGN_KEY_ALIAS: ${{ secrets.RELEASE_SIGN_KEY_ALIAS }}
-  RELEASE_SIGN_KEY_PASSWORD: ${{ secrets.RELEASE_SIGN_KEY_PASSWORD }}
+  SIGNING_STORE_PASSWORD_RELEASE: ${{ secrets.SIGNING_STORE_PASSWORD_RELEASE }}
+  SIGNING_KEY_ALIAS_RELEASE: ${{ secrets.SIGNING_KEY_ALIAS_RELEASE }}
+  SIGNING_KEY_PASSWORD_RELEASE: ${{ secrets.SIGNING_KEY_PASSWORD_RELEASE }}
+  SIGNING_STORE_FILE_PATH_RELEASE: ${{ secrets.SIGNING_STORE_FILE_PATH_RELEASE }}
 
 jobs:
   build_apk_aab:

@@ -3,13 +3,19 @@ package com.project.to_do.plugins
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.internal.plugins.AppPlugin
+import com.project.to_do.debug
+import com.project.to_do.extensions.getSigningProperties
+import com.project.to_do.extensions.setUp
 import com.project.to_do.helper.VersionHelper
+import com.project.to_do.release
 import com.project.to_do.tasks.AutoInc
-import java.util.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
@@ -49,59 +55,49 @@ private fun Project.autoInc() {
 }
 
 //переделать!
-private fun Project.addAndroidLibrarySection(isLib: Boolean) = extensions.getByType<BaseExtension>().run {
-    val version = VersionHelper(project.rootDir.path)
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    defaultConfig {
-        if (!isLib) {
-            applicationId = "com.project.to_do"
+private fun Project.addAndroidLibrarySection(isLib: Boolean) =
+    extensions.getByType<BaseExtension>().run {
+        val version = VersionHelper(project.rootDir.path)
+        repositories {
+            google()
+            mavenCentral()
         }
-        minSdk = 21
-        targetSdk = 32
-        compileSdkVersion(32)
-        versionCode = version.versionCode()
-        versionName = version.versionName()
+
+        defaultConfig {
+            if (!isLib) {
+                applicationId = "com.project.to_do"
+            }
+            minSdk = 21
+            targetSdk = 32
+            compileSdkVersion(32)
+            versionCode = version.versionCode()
+            versionName = version.versionName()
 
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
-        signingConfigs {
-            create("release") {
-                val keystoreProperties = Properties()
-                val keystorePropsFile = file("keystore/keystore_config")
-
-                if (keystorePropsFile.exists()) {
-                    keystoreProperties.apply {
-                        load(keystorePropsFile.reader())
-                    }
-                    storeFile = file(keystoreProperties.getProperty("storeFile"))
-                    storePassword = keystoreProperties.getProperty("storePassword")
-                    keyAlias = keystoreProperties.getProperty("keyAlias")
-                    keyPassword = keystoreProperties.getProperty("keyPassword")
-                } else {
-                    storeFile = file("keystore/to-do.keystore")
-                    storePassword = System.getenv("KEYSTORE_PASSWORD")
-                    keyAlias = System.getenv("RELEASE_SIGN_KEY_ALIAS")
-                    keyPassword = System.getenv("RELEASE_SIGN_KEY_PASSWORD")
+        if (!isLib) {
+            signingConfigs {
+                create(release) {
+                    setUp(getSigningProperties(this.name))
+                }
+                getByName(debug) {
+                    setUp(getSigningProperties(this.name))
                 }
             }
-        }
 
-        buildTypes {
-            findByName("release")?.apply {
-                signingConfig = signingConfigs.getByName("release")
-                isMinifyEnabled = false
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
-            }
-            findByName("debug")?.apply {
-                isDebuggable = true
+            buildTypes {
+                findByName(release)?.apply {
+                    signingConfig = signingConfigs.getByName(this.name)
+                    isMinifyEnabled = false
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android-optimize.txt"),
+                        "proguard-rules.pro"
+                    )
+                }
+                findByName(debug)?.apply {
+                    isDebuggable = true
+                }
             }
         }
 
