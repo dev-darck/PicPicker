@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
           path: app/keystore
 
-      - name: Run tests and build debug artifacts
+      - name: build debug artifacts
         run: |
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleDebug

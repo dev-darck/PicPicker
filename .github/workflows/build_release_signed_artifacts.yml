@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
           path: app/keystore
 
-      - name: Run tests and build release artifacts
+      - name: build release artifacts
         run: |
           ./gradlew assembleRelease --stacktrace
           ./gradlew bundleRelease
