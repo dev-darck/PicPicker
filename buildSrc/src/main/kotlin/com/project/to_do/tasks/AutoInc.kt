@@ -4,7 +4,6 @@ import com.project.to_do.helper.Git
 import com.project.to_do.helper.VersionHelper
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import java.lang.IllegalArgumentException
 
 open class AutoInc : DefaultTask() {
 
@@ -70,7 +69,8 @@ open class AutoInc : DefaultTask() {
             "git checkout -B ${currentRootBranch(currentBrunch, major, minor)} " +
                     "origin/${currentRootBranch(currentBrunch, major, minor)}"
         )
-        Git.commit(versionHelper.fileName(), commitMessage(major, minor, build))
+        Git.add(versionHelper.fileName())
+        Git.commit(commitMessage(major, minor, build))
         Git.push()
     }
 

@@ -21,14 +21,18 @@ object Git {
 
     fun push(branchName: String = "") {
         if (branchName.isNotEmpty()) {
-            runCommand("$git $push $branchName")
+            runCommand("$git $push $branchName", push)
         } else {
-            runCommand("$git $push")
+            runCommand("$git $push", push)
         }
     }
 
-    fun commit(fileName: String = "", message: String) {
-        process(listOf(git, commit, "$fileName ", "-m", message))
+    fun add(fileName: String) {
+        runCommand("git add $fileName", "add")
+    }
+
+    fun commit(message: String) {
+        process(listOf(git, commit, "-m", message))
             ?.printResult(commit)
     }
 
