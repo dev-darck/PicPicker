@@ -2,7 +2,7 @@ val appName = "app"
 val buildSrc = "buildSrc"
 val modulesName = "modules"
 val gradlePathEnd = "/build.gradle.kts"
-val generatedCode = "import com.project.to_do.plugins.config.module\n" +
+val generatedCode = "import com.project.picpicker.plugins.config.module\n" +
         "\n" +
         "module()"
 
@@ -68,7 +68,7 @@ fun replaceDefaultGradle(file: File) {
 
 fun isModule(file: File): Boolean {
     return file.name != appName && file.isDirectory
-            && existDirectory(file) && File("${file.absolutePath}/libs").exists()
+            && existDirectory(file)
 }
 
 fun existDirectory(file: File): Boolean =

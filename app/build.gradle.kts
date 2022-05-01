@@ -1,3 +1,4 @@
-import com.project.to_do.plugins.config.application
+import com.project.picpicker.plugins.config.application
 
-application()
+application(
+)
