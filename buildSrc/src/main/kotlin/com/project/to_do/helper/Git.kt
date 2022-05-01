@@ -1,40 +1,57 @@
 package com.project.to_do.helper
 
+private const val commit = "commit"
+private const val push = "push"
+private const val git = "git"
+
 object Git {
 
-    fun runCommand(command: String): String {
+    fun initConfig() {
+        runCommand("git config --local user.email bot@bot.com", "config --local")
+        runCommand("git config --local user.name Bot", "config --local")
+    }
+
+    fun fetch() {
+        runCommand("git fetch origin", "fetch")
+    }
+
+    fun brunchName(): String {
+        return runCommand("git branch --show-current", "branch")
+    }
+
+    fun push(branchName: String = "") {
+        if (branchName.isNotEmpty()) {
+            runCommand("$git $push $branchName")
+        } else {
+            runCommand("$git $push")
+        }
+    }
+
+    fun commit(fileName: String = "", message: String) {
+        process(listOf(git, commit, "$fileName ", "-m", message))
+            ?.printResult(commit)
+    }
+
+    fun runCommand(command: String, gitCommand: String = ""): String {
         val commands = command.split("\\s".toRegex())
-        try {
-            return senCommand(commands).inputStream.bufferedReader().use { it.readText() }
-        } catch (e: Exception) {
-            print(e)
-        }
-        return ""
+        return process(commands)?.printResult(gitCommand) ?: ""
     }
 
-    fun runCommand(command: List<String>): String {
-        try {
-            return senCommand(command).inputStream.bufferedReader().use { it.readText() }
+    private fun process(command: List<String>): Process? {
+        return try {
+            ProcessBuilder(command)
+                .redirectError(ProcessBuilder.Redirect.PIPE)
+                .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                .start()
         } catch (e: Exception) {
-            print(e)
+            println(e)
+            null
         }
-        return ""
     }
 
-    fun commit(message: String): String {
-        try {
-            return  senCommand(listOf("git", "commit", "-m", message)).inputStream.bufferedReader().use { it.readText() }
-        } catch (e: Exception) {
-            print(e)
-        }
-        return ""
-
-    }
-
-    private fun senCommand(command: List<String>): Process {
-        return ProcessBuilder(command)
-            .redirectError(ProcessBuilder.Redirect.PIPE)
-            .redirectOutput(ProcessBuilder.Redirect.PIPE)
-            .start()
+    private fun Process.printResult(command: String): String {
+        val result = inputStream.bufferedReader().use { it.readText() }
+        println("$command -> $result")
+        return result
     }
 }
