@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.`kotlin-dsl`
-
 plugins {
     `kotlin-dsl`
 }
@@ -7,6 +5,12 @@ plugins {
 repositories {
     mavenCentral()
     google()
+}
+
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of("11"))
+    }
 }
 
 gradlePlugin {

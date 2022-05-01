@@ -1,4 +1,4 @@
-plugins {
-    id("com.android.library")
-    id("app-plugin")
-}
+import com.project.to_do.plugins.config.module
+
+module(
+)
