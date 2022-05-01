@@ -8,6 +8,8 @@ object TestImpl : ConfigurationName("testImplementation")
 object Kapt : ConfigurationName("kapt")
 object AndroidTestImpl : ConfigurationName("androidTestImplementation")
 object CompileOnly : ConfigurationName("compileOnly")
+object RuntimeOnly : ConfigurationName("runtimeOnly")
+object DebugImpl : ConfigurationName("debugImplementation")
 
 sealed class AppDependency(
     open val name: String,
