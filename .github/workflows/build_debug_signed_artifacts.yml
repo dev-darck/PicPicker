@@ -30,7 +30,6 @@ jobs:
 
       - name: Run tests and build debug artifacts
         run: |
-          ./gradlew test
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleDebug
 
