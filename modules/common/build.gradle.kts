@@ -1,4 +1,4 @@
-import com.project.to_do.plugins.config.module
+import com.project.picpicker.plugins.config.module
 
 module(
 )
