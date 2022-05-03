@@ -1,4 +1,4 @@
-package com.project.navigation
+package com.project.picpicker
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -12,10 +12,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.project.navigation.bottomnav.BottomNavigation
-import com.project.navigation.bottomnav.BottomNavigationUi
-import com.project.navigation.bottomnav.graph.addBottomNavigationDestinations
-import com.project.navigation.bottomnav.graph.addComposableDestinations
+import com.project.bottom_navigation.BottomNavigation
+import com.project.bottom_navigation.BottomNavigationUi
+import com.project.bottom_navigation.graph.addBottomNavigationDestinations
+import com.project.bottom_navigation.graph.addComposableDestinations
 import com.project.navigation.navigation.*
 
 @OptIn(ExperimentalAnimationApi::class)

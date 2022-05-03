@@ -1,4 +1,4 @@
-package com.project.navigation.bottomnav
+package com.project.bottom_navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector

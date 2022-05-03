@@ -1,4 +1,4 @@
-package com.project.navigation.bottomnav
+package com.project.bottom_navigation
 
 import androidx.annotation.StringRes
 
