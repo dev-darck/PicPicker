@@ -24,5 +24,5 @@ fun addLibPlug(vararg string: String): LibraryPlugin = LibraryPlugin(string.asSe
 fun addAppPlug(vararg string: String): ApplicationPlugin = ApplicationPlugin(string.asSequence())
 
 infix operator fun Plugin.plus(plug: Plugin): Plugin = MixPlugin(
-    this.plugins + plug.plugins,
+    this.plugins.plus(plug.plugins),
 )

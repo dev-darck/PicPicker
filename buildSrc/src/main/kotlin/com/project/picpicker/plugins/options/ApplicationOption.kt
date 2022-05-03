@@ -52,6 +52,7 @@ internal fun Project.applicationOptions() = extensions.getByType<BaseAppModuleEx
         }
         findByName(debug)?.apply {
             isDebuggable = true
+            applicationIdSuffix = ".debug"
         }
     }
 

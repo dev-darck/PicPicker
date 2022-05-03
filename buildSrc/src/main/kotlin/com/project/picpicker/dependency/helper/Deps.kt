@@ -60,3 +60,7 @@ val String.kapt: NameSpec
     get() = NameSpec(this, Kapt)
 val String.compile: NameSpec
     get() = NameSpec(this, CompileOnly)
+val String.runtime: NameSpec
+    get() = NameSpec(this, RuntimeOnly)
+val String.debugImpl: NameSpec
+    get() = NameSpec(this, DebugImpl)
