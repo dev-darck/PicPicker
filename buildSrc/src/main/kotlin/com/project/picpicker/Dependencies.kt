@@ -22,6 +22,7 @@ object Dependency {
         "androidx.compose.ui:ui-test-junit4:1.2.0-alpha08".androidTest
     )
 
+    val systemuiController = "com.google.accompanist:accompanist-systemuicontroller:0.24.7-alpha".impl
     val composePreview = arrayOf(
         "androidx.compose.ui:ui-tooling-preview:1.1.1".impl,
         "androidx.compose.ui:ui-tooling:1.1.1".debugImpl,

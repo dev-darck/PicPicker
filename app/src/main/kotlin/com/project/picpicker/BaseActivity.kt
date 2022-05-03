@@ -3,6 +3,8 @@ package com.project.picpicker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.project.common_compos_ui.theme.AppTheme
+import com.project.common_compos_ui.theme.StatusBarColorProvider
 import com.project.navigation.PicPikerScaffold
 import com.project.navigation.bottomnav.BottomNavigationUi
 import com.project.navigation.navigation.Navigation
@@ -28,10 +30,13 @@ class BaseActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         bottomScreens = bottomScreens?.sortedBy { it.order }?.toSet()
         setContent {
-            //Придумать экран с ошибкой и в случае если нет ни одного экрана показать ползователю ошибку
-            val screensApp = screens ?: return@setContent
-            val bottomTabs = bottomScreens ?: return@setContent
-            PicPikerScaffold(appNavigation = appNavigation, screensApp, bottomTabs)
+            AppTheme {
+                StatusBarColorProvider()
+                val screensApp = screens ?: emptySet()
+                val bottomTabs = bottomScreens ?: return@AppTheme
+                //Придумать экран с ошибкой и в случае если нет ни одного экрана показать ползователю ошибку
+                PicPikerScaffold(appNavigation = appNavigation, screensApp, bottomTabs)
+            }
         }
     }
 }
