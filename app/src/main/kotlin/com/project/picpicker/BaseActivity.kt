@@ -3,10 +3,9 @@ package com.project.picpicker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.project.bottom_navigation.BottomNavigationUi
 import com.project.common_compos_ui.theme.AppTheme
 import com.project.common_compos_ui.theme.StatusBarColorProvider
-import com.project.navigation.PicPikerScaffold
-import com.project.navigation.bottomnav.BottomNavigationUi
 import com.project.navigation.navigation.Navigation
 import com.project.navigation.navigation.NavigationDestination
 import dagger.hilt.android.AndroidEntryPoint

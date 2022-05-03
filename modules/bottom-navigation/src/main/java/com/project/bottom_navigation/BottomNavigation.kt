@@ -1,4 +1,4 @@
-package com.project.navigation.bottomnav
+package com.project.bottom_navigation
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -20,7 +20,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.project.navigation.navigation.hideBottomNavigation
 
+
 private val BottomNavigationItemHorizontalPadding = 10.dp
+private val SpacingIcon = 5.dp
 
 @Composable
 fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavigationUi>) {
@@ -33,8 +35,6 @@ fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavi
     } else {
         Modifier
     }
-
-
 
     CustomBottomNavigation(
         modifier = size
@@ -53,7 +53,11 @@ fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavi
                     }
                 },
                 customTab = { animationProgress ->
-                    Column(content = {
+                    Column(
+                        modifier = Modifier
+                            .align(CenterVertically)
+                            .padding(top = 10.dp)
+                    ) {
                         Box(Modifier.padding(bottom = BottomNavigationItemHorizontalPadding)) {
                             Icon(
                                 imageVector = bottomEntry.icon,
@@ -69,13 +73,11 @@ fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavi
                                 imageVector = Icons.Filled.Circle,
                                 contentDescription = bottomEntry.screen.route,
                                 modifier = Modifier
-                                    .size(5.dp, 5.dp)
+                                    .size(SpacingIcon, SpacingIcon)
                                     .alpha(animationProgress)
                             )
                         }
-                    }, modifier = Modifier
-                        .align(CenterVertically)
-                        .padding(top = 10.dp))
+                    }
                 }
             )
         }
