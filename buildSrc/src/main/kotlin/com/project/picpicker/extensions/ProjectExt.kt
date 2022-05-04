@@ -2,12 +2,12 @@ package com.project.picpicker.extensions
 
 import com.project.picpicker.debug
 import com.project.picpicker.release
-import com.project.picpicker.storage.DebugSigningProperties
-import com.project.picpicker.storage.ReleaseSigningProperties
+import com.project.picpicker.managers.DebugSigningPropertiesManager
+import com.project.picpicker.managers.ReleaseSigningPropertiesManager
 import org.gradle.api.Project
 
 fun Project.getSigningProperties(signingName: String) = when (signingName) {
-    debug -> DebugSigningProperties(projectDir.path)
-    release -> ReleaseSigningProperties(projectDir.path)
+    debug -> DebugSigningPropertiesManager(projectDir.path)
+    release -> ReleaseSigningPropertiesManager(projectDir.path)
     else -> throw IllegalArgumentException("Unknown signingName = $signingName")
 }
