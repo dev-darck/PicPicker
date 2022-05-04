@@ -1,5 +1,5 @@
 buildscript {
-    val hiltVersion by extra(com.project.picpicker.LibsVersion.hilt_version)
+    val hiltVersion by extra(com.project.picpicker.LibsVersion.hiltVersion)
     repositories {
         google()
         mavenCentral()

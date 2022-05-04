@@ -2,27 +2,25 @@ package com.project.bottom_navigation
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.project.navigation.navigation.hideBottomNavigation
 
-
 private val BottomNavigationItemHorizontalPadding = 10.dp
-private val SpacingIcon = 5.dp
 
 @Composable
 fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavigationUi>) {
@@ -53,32 +51,42 @@ fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavi
                     }
                 },
                 customTab = { animationProgress ->
-                    Column(
-                        modifier = Modifier
-                            .align(CenterVertically)
-                            .padding(top = 10.dp)
-                    ) {
-                        Box(Modifier.padding(bottom = BottomNavigationItemHorizontalPadding)) {
-                            Icon(
-                                imageVector = bottomEntry.icon,
-                                contentDescription = bottomEntry.screen.route,
-                            )
-                        }
-                        Box(
-                            Modifier
-                                .alpha(animationProgress)
-                                .padding(horizontal = BottomNavigationItemHorizontalPadding)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Circle,
-                                contentDescription = bottomEntry.screen.route,
-                                modifier = Modifier
-                                    .size(SpacingIcon, SpacingIcon)
-                                    .alpha(animationProgress)
-                            )
-                        }
-                    }
+                    CustomTab(bottomEntry, animationProgress)
                 }
+            )
+        }
+    }
+}
+
+@Composable
+fun CustomTab(bottomEntry: BottomNavigationUi, animationProgress: Float) {
+    val color = MaterialTheme.colors.secondary
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(top = BottomNavigationItemHorizontalPadding),
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = bottomEntry.icon),
+            contentDescription = bottomEntry.screen.route,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(CenterHorizontally)
+        )
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(animationProgress)
+                .align(CenterHorizontally)
+        ) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+            drawCircle(
+                color = color,
+                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+                radius = size.minDimension / 10
             )
         }
     }

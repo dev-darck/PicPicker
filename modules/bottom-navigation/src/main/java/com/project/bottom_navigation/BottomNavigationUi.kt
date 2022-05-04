@@ -1,11 +1,10 @@
 package com.project.bottom_navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 
 interface BottomNavigationUi {
     val screen: BottomNavigationEntry
-    val icon: ImageVector
+    val icon: Int
     val isRoot: Boolean get() = false
     val order: Int
     val openScreen: @Composable () -> Unit

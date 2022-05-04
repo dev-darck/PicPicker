@@ -9,10 +9,13 @@ import org.gradle.kotlin.dsl.configure
 fun Project.application(
     appDependency: Dependency = EmptyDependency,
     plugins: Plugin = EmptyPlugins,
+    enabledCompose: Boolean = true,
     baseAppModuleExtension: (BaseAppModuleExtension.() -> Unit) = {}
 ) {
     addPlugins(applicationPlugin + plugins)
     applyDependency(appDependency)
+    baseConfig(enabledCompose)
+
     configure<BaseAppModuleExtension> {
         baseAppModuleExtension()
     }

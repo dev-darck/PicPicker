@@ -30,6 +30,7 @@ fun Settings.includeCore() {
 fun Settings.includeModules() {
     File(rootDir, modulesName)
         .walkTopDown()
+        .maxDepth(3)
         .findNameAndInclude()
 
 }

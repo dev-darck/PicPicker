@@ -21,19 +21,17 @@ class BaseActivity : ComponentActivity() {
 //    @set:Inject
     var screens: Set<@JvmSuppressWildcards(true) NavigationDestination>? = null
 
-    //Сделать реализвацию базовых экранов
-//    @set:Inject
+    @set:Inject
     var bottomScreens: Set<@JvmSuppressWildcards(true) BottomNavigationUi>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bottomScreens = bottomScreens?.sortedBy { it.order }?.toSet()
+        bottomScreens = bottomScreens?.sortedBy(BottomNavigationUi::order)?.toSet()
         setContent {
             AppTheme {
                 StatusBarColorProvider()
                 val screensApp = screens ?: emptySet()
                 val bottomTabs = bottomScreens ?: return@AppTheme
-                //Придумать экран с ошибкой и в случае если нет ни одного экрана показать ползователю ошибку
                 PicPikerScaffold(appNavigation = appNavigation, screensApp, bottomTabs)
             }
         }
