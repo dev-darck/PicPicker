@@ -1,4 +1,4 @@
-package com.project.go_to
+package com.project.picpicker
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

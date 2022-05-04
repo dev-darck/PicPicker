@@ -1,7 +1,7 @@
 package com.project.picpicker.application
 
 import android.app.Application
-import com.project.go_to.BuildConfig
+import com.project.picpicker.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
