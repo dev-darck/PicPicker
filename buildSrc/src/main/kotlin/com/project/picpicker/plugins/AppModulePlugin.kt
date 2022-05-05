@@ -1,6 +1,5 @@
 package com.project.picpicker.plugins
 
-import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.internal.plugins.AppPlugin
 import com.project.picpicker.Dependency.baseDependency
@@ -11,7 +10,6 @@ import com.project.picpicker.plugins.options.libraryOptions
 import com.project.picpicker.tasks.AutoInc
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 
 class AppModulePlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -38,11 +36,6 @@ class AppModulePlugin : Plugin<Project> {
 private fun Project.addCommonPlugins() {
     plugins.apply("kotlin-android")
     plugins.apply("kotlin-kapt")
-    configure<BaseExtension> {
-        composeOptions.useLiveLiterals = true
-        composeOptions.kotlinCompilerExtensionVersion = "1.2.0-alpha08"
-        buildFeatures.compose = true
-    }
 
     applyDependency(
         addDep(

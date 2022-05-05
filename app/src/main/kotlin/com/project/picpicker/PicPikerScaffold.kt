@@ -57,7 +57,7 @@ fun PicPikerScaffold(
             AnimatedNavHost(
                 modifier = Modifier.padding(paddingValues),
                 navController = navController,
-                startDestination = bottomTab.find { it.isRoot }?.screen?.route.orEmpty(),
+                startDestination = bottomTab.find(BottomNavigationUi::isRoot)?.screen?.route.orEmpty(),
                 enterTransition = { fadeIn(animationSpec = tween(0)) },
                 exitTransition = { fadeOut(animationSpec = tween(0)) },
             ) {

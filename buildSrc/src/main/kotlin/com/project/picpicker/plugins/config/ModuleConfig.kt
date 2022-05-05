@@ -9,10 +9,12 @@ import org.gradle.kotlin.dsl.configure
 fun Project.module(
     appDependency: Dependency = EmptyDependency,
     plugins: Plugin = EmptyPlugins,
+    enabledCompose: Boolean = true,
     androidLibraryConfiguration: (LibraryExtension.() -> Unit) = {}
 ) {
     addPlugins(libraryPlugin + plugins)
     applyDependency(appDependency)
+    baseConfig(enabledCompose)
 
     configure<LibraryExtension> {
         androidLibraryConfiguration()
