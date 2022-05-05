@@ -1,8 +1,10 @@
-package com.project.picpicker.storage
+package com.project.picpicker.managers
 
 import java.io.File
 
-class ReleaseSigningProperties(private val parentPath: String) : SigningProperties(parentPath) {
+class ReleaseSigningPropertiesManager(
+    private val parentPath: String
+) : SigningPropertiesManager(parentPath) {
     override val storeFile: File
         get() = File(parentPath, getStringValue("SIGNING_STORE_FILE_PATH_RELEASE"))
     override val storePassword: String
