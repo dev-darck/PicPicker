@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.project.navigation.navigation.hideBottomNavigation
 
 private val BottomNavigationItemHorizontalPadding = 10.dp
+private val SizeIcon = 20.dp
 
 @Composable
 fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavigationUi>) {
@@ -73,6 +74,7 @@ fun CustomTab(bottomEntry: BottomNavigationUi, animationProgress: Float) {
             contentDescription = bottomEntry.screen.route,
             modifier = Modifier
                 .fillMaxWidth()
+                .size(SizeIcon)
                 .align(CenterHorizontally)
         )
         Canvas(
