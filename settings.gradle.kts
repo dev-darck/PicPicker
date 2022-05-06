@@ -1,5 +1,5 @@
 val appName = "app"
-val buildSrc = "buildSrc"
+val buildSrc = "dependencies"
 val modulesName = "modules"
 val gradlePathEnd = "/build.gradle.kts"
 val generatedCode = "import com.project.picpicker.plugins.config.module\n" +
@@ -10,11 +10,12 @@ autoInclude()
 
 buildCache {
     local {
-        directory = File(rootDir, "build-cache")
+        directory = File(rootDir, ".gradle/build-cache")
     }
 }
 
 fun Settings.autoInclude() {
+    includeBuild("$rootDir/$buildSrc")
     includeCore()
     includeModules()
 }

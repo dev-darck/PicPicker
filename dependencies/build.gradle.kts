@@ -2,24 +2,15 @@ plugins {
     `kotlin-dsl`
 }
 
+group = "com.project.dependencies"
+version = "SNAPSHOT"
+
 repositories {
     mavenCentral()
     google()
 }
 
-kotlin {
-    jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of("11"))
-    }
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        when (requested.name) {
-            "javapoet" -> useVersion("1.13.0")
-        }
-    }
-}
+kotlin.sourceSets.getByName("main").kotlin.srcDir("../dependencies/src/main/kotlin")
 
 gradlePlugin {
     plugins {
