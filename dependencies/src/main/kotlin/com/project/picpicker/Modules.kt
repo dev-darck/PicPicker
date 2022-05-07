@@ -1,10 +1,10 @@
 package com.project.picpicker
 
 object Modules {
-    const val navigation = "navigation"
+    const val navigationApi = "navigation-api"
+    const val navigationImpl = "navigation-impl"
     const val commonTheme = "common-theme"
     const val bottomNavigation = "bottom-navigation"
-    const val configuration = "configuration"
 }
 
 object TabModule {

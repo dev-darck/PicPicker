@@ -1,7 +1,7 @@
 package com.project.hometab.di
 
-import com.project.bottom_navigation.BottomNavigationUi
 import com.project.hometab.config.HomeConfig
+import com.project.navigationapi.config.Config
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import dagger.multibindings.IntoSet
 abstract class HomeModule {
     @Binds
     @IntoSet
-    abstract fun homeConfig(homeConfig: HomeConfig): BottomNavigationUi
+    abstract fun homeConfig(homeConfig: HomeConfig): Config
 }

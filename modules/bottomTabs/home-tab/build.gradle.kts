@@ -3,8 +3,7 @@ import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.hiltNavigation
 import com.project.picpicker.Dependency.jetpackComposeUi
 import com.project.picpicker.Modules.bottomNavigation
-import com.project.picpicker.Modules.configuration
-import com.project.picpicker.Modules.navigation
+import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.dependency.helper.addDep
 import com.project.picpicker.dependency.helper.module
 import com.project.picpicker.dependency.helper.plus
@@ -18,7 +17,6 @@ module(
         *composePreview,
     ) + addDep(
         module(bottomNavigation),
-        module(navigation),
-        module(configuration),
+        module(navigationApi),
     )
 )

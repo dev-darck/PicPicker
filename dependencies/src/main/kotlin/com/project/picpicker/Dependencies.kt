@@ -63,6 +63,7 @@ object Dependency {
     )
 
     val timber = "com.jakewharton.timber:timber:$timberVersion".impl
+    val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.9.1".debugImpl
 
     val baseDependency = arrayOf(
         "androidx.core:core-ktx:1.7.0".impl,
@@ -72,7 +73,8 @@ object Dependency {
         "junit:junit:4.13.2".impl,
         "androidx.test.ext:junit:1.1.3".impl,
         "androidx.test.espresso:espresso-core:3.4.0".impl,
-        timber
+        timber,
+        leakCanary
     )
 }
 

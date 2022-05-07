@@ -57,7 +57,6 @@ fun RowScope.BottomTab(
     selectedContentColor: Color = MaterialTheme.colors.secondary,
     unselectedContentColor: Color = MaterialTheme.colors.onSecondary
 ) {
-
     Box(
         modifier
             .selectable(

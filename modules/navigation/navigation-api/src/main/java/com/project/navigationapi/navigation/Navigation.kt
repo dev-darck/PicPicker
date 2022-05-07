@@ -1,4 +1,4 @@
-package com.project.navigation.navigation
+package com.project.navigationapi.navigation
 
 import androidx.navigation.NavOptionsBuilder
 import kotlinx.coroutines.flow.Flow

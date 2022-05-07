@@ -3,36 +3,42 @@ package com.project.picpicker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.project.bottom_navigation.BottomNavigationUi
 import com.project.common_compos_ui.theme.AppTheme
 import com.project.common_compos_ui.theme.StatusBarColorProvider
-import com.project.navigation.navigation.Navigation
-import com.project.navigation.navigation.NavigationDestination
+import com.project.navigationapi.config.BottomConfig
+import com.project.navigationapi.config.Config
+import com.project.navigationapi.config.ToolBarConfig
+import com.project.navigationapi.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class BaseActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var appNavigation: Navigation
-
-    //Сделать реализвацию экранов
-//    @set:Inject
-    var screens: Set<@JvmSuppressWildcards(true) NavigationDestination>? = null
+    @set:Inject
+    var appNavigation: Navigation? = null
 
     @set:Inject
-    var bottomScreens: Set<@JvmSuppressWildcards(true) BottomNavigationUi>? = null
+    var screens: Set<@JvmSuppressWildcards Config>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bottomScreens = bottomScreens?.sortedBy(BottomNavigationUi::order)?.toSet()
+        val screens = screens?.asSequence() ?: emptySequence()
+        val bottomScreen = screens.convertTo<BottomConfig>().sortedBy(BottomConfig::order)
+        val startDestination = bottomScreen.find(BottomConfig::isRoot)?.route?.routeScheme.orEmpty()
+        val toolBarConfig: Sequence<ToolBarConfig> = screens.convertTo()
         setContent {
             AppTheme {
                 StatusBarColorProvider()
-                val screensApp = screens ?: emptySet()
-                val bottomTabs = bottomScreens ?: return@AppTheme
-                PicPikerScaffold(appNavigation = appNavigation, screensApp, bottomTabs)
+                if (startDestination.isNotEmpty() && appNavigation != null) {
+                    PicPikerScaffold(
+                        appNavigation = appNavigation!!,
+                        screens, bottomScreen,
+                        toolBarConfig, startDestination
+                    )
+                } else {
+                    //Ошибочное состояние ввывести ошибку!
+                }
             }
         }
     }

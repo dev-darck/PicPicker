@@ -1,5 +1,6 @@
-package com.project.navigation.navigation
+package com.project.navigationimpl
 
+import com.project.navigationapi.navigation.Navigation
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

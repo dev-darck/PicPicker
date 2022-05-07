@@ -1,7 +1,7 @@
 package com.project.download.di
 
-import com.project.bottom_navigation.BottomNavigationUi
 import com.project.download.config.DownloadConfig
+import com.project.navigationapi.config.Config
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import dagger.multibindings.IntoSet
 abstract class DownloadModule {
     @Binds
     @IntoSet
-    abstract fun downloadConfig(downloadConfig: DownloadConfig): BottomNavigationUi
+    abstract fun downloadConfig(downloadConfig: DownloadConfig): Config
 }

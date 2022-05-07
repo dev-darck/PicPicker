@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -18,16 +17,17 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.project.navigation.navigation.hideBottomNavigation
+import com.project.navigationapi.config.BottomConfig
 
 private val BottomNavigationItemHorizontalPadding = 10.dp
 private val SizeIcon = 20.dp
+private val Elevation = 4.dp
 
 @Composable
-fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavigationUi>) {
+fun BottomNavigation(navController: NavController, bottomScreens: Sequence<BottomConfig>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val hideBottomNav by derivedStateOf { navBackStackEntry.hideBottomNavigation }
+    val hideBottomNav = false
 
     val size = if (hideBottomNav) {
         Modifier.size(animateDpAsState(targetValue = 0.dp, animationSpec = tween()).value)
@@ -36,14 +36,15 @@ fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavi
     }
 
     CustomBottomNavigation(
-        modifier = size
+        modifier = size,
+        elevation = Elevation
     ) {
         bottomScreens.forEach { bottomEntry ->
             BottomTab(
-                selected = currentRoute == bottomEntry.screen.route,
+                selected = currentRoute == bottomEntry.route.routeScheme,
                 alwaysShowLabel = false,
                 onClick = {
-                    navController.navigate(bottomEntry.screen.route) {
+                    navController.navigate(bottomEntry.route.routeScheme) {
                         restoreState = true
                         popUpTo(navController.graph.startDestinationId) {
                             saveState = true
@@ -60,7 +61,7 @@ fun BottomNavigation(navController: NavController, bottomScreens: Set<BottomNavi
 }
 
 @Composable
-fun CustomTab(bottomEntry: BottomNavigationUi, animationProgress: Float) {
+fun CustomTab(bottomEntry: BottomConfig, animationProgress: Float) {
     val color = MaterialTheme.colors.secondary
     Column(
         modifier = Modifier
@@ -71,7 +72,7 @@ fun CustomTab(bottomEntry: BottomNavigationUi, animationProgress: Float) {
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(id = bottomEntry.icon),
-            contentDescription = bottomEntry.screen.route,
+            contentDescription = bottomEntry.route.routeScheme,
             modifier = Modifier
                 .fillMaxWidth()
                 .size(SizeIcon)
