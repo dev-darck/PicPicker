@@ -13,23 +13,31 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.project.bottom_navigation.BottomNavigation
-import com.project.bottom_navigation.BottomNavigationUi
-import com.project.bottom_navigation.graph.addBottomNavigationDestinations
-import com.project.bottom_navigation.graph.addComposableDestinations
-import com.project.navigation.navigation.*
+import com.project.bottom_navigation.graph.addDestinations
+import com.project.navigationapi.config.BottomConfig
+import com.project.navigationapi.config.Config
+import com.project.navigationapi.config.ToolBarConfig
+import com.project.navigationapi.navigation.Directions
+import com.project.navigationapi.navigation.NavigateUp
+import com.project.navigationapi.navigation.Navigation
+import com.project.navigationapi.navigation.PopBackStack
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PicPikerScaffold(
     appNavigation: Navigation,
-    screens: Set<NavigationDestination> = emptySet(),
-    bottomTab: Set<BottomNavigationUi> = emptySet()
+    config: Sequence<Config> = emptySequence(),
+    bottomConfig: Sequence<BottomConfig> = emptySequence(),
+    toolBarConfig: Sequence<ToolBarConfig> = emptySequence(),
+    startDestination: String = ""
 ) {
     Surface {
         val navController = rememberAnimatedNavController()
 
         LaunchedEffect(navController) {
-            appNavigation.destinations.collect { event ->
+            appNavigation.destinations.onEach { event ->
                 when (event) {
                     is NavigateUp -> {
                         navController.navigateUp()
@@ -42,7 +50,7 @@ fun PicPikerScaffold(
                         navController.popBackStack()
                     }
                 }
-            }
+            }.collect()
         }
 
         Scaffold(
@@ -50,19 +58,18 @@ fun PicPikerScaffold(
             bottomBar = {
                 BottomNavigation(
                     navController = navController,
-                    bottomTab
+                    bottomConfig
                 )
             }
         ) { paddingValues ->
             AnimatedNavHost(
                 modifier = Modifier.padding(paddingValues),
                 navController = navController,
-                startDestination = bottomTab.find(BottomNavigationUi::isRoot)?.screen?.route.orEmpty(),
+                startDestination = startDestination,
                 enterTransition = { fadeIn(animationSpec = tween(0)) },
                 exitTransition = { fadeOut(animationSpec = tween(0)) },
             ) {
-                addComposableDestinations(screens)
-                addBottomNavigationDestinations(bottomTab)
+                addDestinations(config)
             }
         }
     }

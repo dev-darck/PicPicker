@@ -4,7 +4,8 @@ import com.project.picpicker.Dependency.jetpackComposeActivity
 import com.project.picpicker.Dependency.jetpackComposeUi
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonTheme
-import com.project.picpicker.Modules.navigation
+import com.project.picpicker.Modules.navigationApi
+import com.project.picpicker.Modules.navigationImpl
 import com.project.picpicker.TabModule.collectionTab
 import com.project.picpicker.TabModule.downloadTab
 import com.project.picpicker.TabModule.homeTab
@@ -23,7 +24,8 @@ application(
         *jetpackComposeUi,
         *hilt,
     ) + addDep(
-        module(navigation),
+        module(navigationApi),
+        module(navigationImpl),
         module(commonTheme),
         module(bottomNavigation),
         module(homeTab),

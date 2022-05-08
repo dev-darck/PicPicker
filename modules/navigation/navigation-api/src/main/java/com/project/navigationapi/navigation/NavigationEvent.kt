@@ -1,4 +1,4 @@
-package com.project.navigation.navigation
+package com.project.navigationapi.navigation
 
 import androidx.navigation.NavOptionsBuilder
 
@@ -6,7 +6,7 @@ sealed class NavigationEvent
 object NavigateUp : NavigationEvent()
 class Directions(
     val destination: String,
-    val builder: NavOptionsBuilder.() -> Unit
+    val builder: NavOptionsBuilder.() -> Unit,
 ) : NavigationEvent()
 
 object PopBackStack : NavigationEvent()

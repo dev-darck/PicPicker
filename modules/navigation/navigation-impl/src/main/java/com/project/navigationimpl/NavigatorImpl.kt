@@ -1,6 +1,7 @@
-package com.project.navigation.navigation
+package com.project.navigationimpl
 
 import androidx.navigation.NavOptionsBuilder
+import com.project.navigationapi.navigation.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject

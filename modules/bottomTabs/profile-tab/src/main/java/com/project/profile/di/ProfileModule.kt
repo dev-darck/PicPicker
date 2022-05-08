@@ -1,6 +1,6 @@
 package com.project.profile.di
 
-import com.project.bottom_navigation.BottomNavigationUi
+import com.project.navigationapi.config.Config
 import com.project.profile.config.ProfileConfig
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ import dagger.multibindings.IntoSet
 abstract class ProfileModule {
     @Binds
     @IntoSet
-    abstract fun profileConfig(profileConfig: ProfileConfig): BottomNavigationUi
+    abstract fun profileConfig(profileConfig: ProfileConfig): Config
 }

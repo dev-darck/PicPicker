@@ -1,7 +1,7 @@
 package com.project.collectionstab.di
 
-import com.project.bottom_navigation.BottomNavigationUi
 import com.project.collectionstab.config.CollectionsConfig
+import com.project.navigationapi.config.Config
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ abstract class CollectionsModule {
 
     @Binds
     @IntoSet
-    abstract fun collectionConfig(collectionsConfig: CollectionsConfig): BottomNavigationUi
+    abstract fun collectionConfig(collectionsConfig: CollectionsConfig): Config
 }
