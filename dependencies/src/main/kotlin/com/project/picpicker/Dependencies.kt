@@ -24,6 +24,8 @@ object Dependency {
         "androidx.compose.foundation:foundation-layout:$composeVersion".impl
     val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion".impl
 
+    val coil = "io.coil-kt:coil-compose:2.0.0-rc03".impl
+
     val jetpackComposeUi = arrayOf(
         "androidx.compose.ui:ui:$composeVersion".impl,
         "androidx.compose.ui:ui-tooling:$composeVersion".impl,
