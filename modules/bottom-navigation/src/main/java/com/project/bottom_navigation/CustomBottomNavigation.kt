@@ -3,6 +3,7 @@ package com.project.bottom_navigation
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -14,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
@@ -23,16 +26,18 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CustomBottomNavigation(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.primarySurface,
-    contentColor: Color = contentColorFor(backgroundColor),
-    elevation: Dp = BottomNavigationDefaults.Elevation,
-    content: @Composable RowScope.() -> Unit
+    elevation: Dp = 15.dp,
+    content: @Composable RowScope.() -> Unit,
 ) {
     Surface(
-        color = backgroundColor,
-        contentColor = contentColor,
-        elevation = elevation,
         modifier = modifier
+            .background(MaterialTheme.colors.surface)
+            .shadow(
+                elevation + LocalAbsoluteElevation.current,
+                RectangleShape,
+                false,
+                MaterialTheme.colors.secondaryVariant
+            )
     ) {
         Row(
             Modifier
@@ -51,14 +56,13 @@ fun RowScope.BottomTab(
     onClick: () -> Unit,
     customTab: @Composable (animationProgress: Float) -> Unit,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier,
     alwaysShowLabel: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     selectedContentColor: Color = MaterialTheme.colors.secondary,
-    unselectedContentColor: Color = MaterialTheme.colors.onSecondary
+    unselectedContentColor: Color = MaterialTheme.colors.onSecondary,
 ) {
     Box(
-        modifier
+        Modifier
             .selectable(
                 selected = selected,
                 onClick = onClick,
@@ -67,6 +71,7 @@ fun RowScope.BottomTab(
                 interactionSource = interactionSource,
                 indication = null
             )
+            .background(MaterialTheme.colors.surface)
             .weight(1f),
         contentAlignment = Alignment.Center
     ) {
@@ -87,7 +92,7 @@ private fun BottomNavigationTransition(
     activeColor: Color,
     inactiveColor: Color,
     selected: Boolean,
-    content: @Composable (animationProgress: Float) -> Unit
+    content: @Composable (animationProgress: Float) -> Unit,
 ) {
     val animationProgress by animateFloatAsState(
         targetValue = if (selected) 1f else 0f,

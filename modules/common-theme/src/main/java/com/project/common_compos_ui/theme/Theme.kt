@@ -6,27 +6,36 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
-
 private val LightColors = lightColors(
     primary = White,
     secondary = Red,
-    onSecondary = Gray88,
+    onSecondary = GrayMedium,
     background = White,
     surface = White,
+    onBackground = Black,
+    onSurface = Black,
+    onPrimary = Black,
+    primaryVariant = White,
+    secondaryVariant = GrayDark
 )
 
 private val DarkColors = darkColors(
     primary = Black,
     secondary = Red,
-    onSecondary = Gray88,
+    onSecondary = GrayMedium,
     background = Black,
     surface = Black,
+    onBackground = White,
+    onSurface = White,
+    onPrimary = White,
+    primaryVariant = Black,
+    secondaryVariant = GrayLight
 )
 
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     MaterialTheme(
         shapes = AppShape,
