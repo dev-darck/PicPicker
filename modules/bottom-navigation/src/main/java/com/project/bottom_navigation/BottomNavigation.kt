@@ -21,7 +21,7 @@ import com.project.navigationapi.config.BottomConfig
 
 private val BottomNavigationItemHorizontalPadding = 10.dp
 private val SizeIcon = 20.dp
-private val Elevation = 4.dp
+private val Elevation = 15.dp
 
 @Composable
 fun BottomNavigation(navController: NavController, bottomScreens: Sequence<BottomConfig>) {
