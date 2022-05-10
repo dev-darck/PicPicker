@@ -1,13 +1,10 @@
 package com.project.picpicker.plugins.options
 
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.project.picpicker.debug
-import com.project.picpicker.extensions.addBuildFields
 import com.project.picpicker.extensions.getSigningProperties
 import com.project.picpicker.extensions.setUp
 import com.project.picpicker.helper.VersionHelper
-import com.project.picpicker.managers.DefaultPropertiesManager
 import com.project.picpicker.release
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
@@ -42,9 +39,6 @@ internal fun Project.applicationOptions() = extensions.getByType<BaseAppModuleEx
         versionName = version.versionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val defaultPropertiesManager = DefaultPropertiesManager(gradleLocalProperties(rootDir))
-        addBuildFields(defaultPropertiesManager)
     }
 
     buildTypes {

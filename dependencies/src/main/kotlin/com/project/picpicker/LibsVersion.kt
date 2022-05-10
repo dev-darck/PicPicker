@@ -13,4 +13,5 @@ object LibsVersion {
     const val customViewPoolingcontainerVersion = "1.0.0-alpha01"
     const val uiToolingVersion = "1.1.1"
     const val customViewVersion = "1.2.0-alpha01"
+    const val retrofitVersion = "2.9.0"
 }

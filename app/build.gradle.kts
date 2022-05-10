@@ -8,6 +8,7 @@ import com.project.picpicker.Modules.commonTheme
 import com.project.picpicker.Modules.imageLoader
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.Modules.navigationImpl
+import com.project.picpicker.Modules.unsplashApi
 import com.project.picpicker.TabModule.collectionTab
 import com.project.picpicker.TabModule.downloadTab
 import com.project.picpicker.TabModule.homeTab
@@ -35,6 +36,7 @@ application(
         module(collectionTab),
         module(downloadTab),
         module(profileTab),
+        module(unsplashApi),
         module(imageLoader),
     ),
     plugins = addAppPlug(
