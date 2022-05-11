@@ -5,6 +5,7 @@ object Modules {
     const val navigationImpl = "navigation-impl"
     const val commonTheme = "common-theme"
     const val bottomNavigation = "bottom-navigation"
+    const val imageLoader = "Image-loader"
 }
 
 object TabModule {

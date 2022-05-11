@@ -1,9 +1,11 @@
 import com.project.picpicker.Dependency
+import com.project.picpicker.Dependency.coil
 import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.jetpackComposeActivity
 import com.project.picpicker.Dependency.jetpackComposeUi
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonTheme
+import com.project.picpicker.Modules.imageLoader
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.Modules.navigationImpl
 import com.project.picpicker.TabModule.collectionTab
@@ -23,6 +25,7 @@ application(
         jetpackComposeActivity,
         *jetpackComposeUi,
         *hilt,
+        coil,
     ) + addDep(
         module(navigationApi),
         module(navigationImpl),
@@ -32,6 +35,7 @@ application(
         module(collectionTab),
         module(downloadTab),
         module(profileTab),
+        module(imageLoader),
     ),
     plugins = addAppPlug(
         hiltPlugin
