@@ -10,8 +10,6 @@ repositories {
     google()
 }
 
-kotlin.sourceSets.getByName("main").kotlin.srcDir("../dependencies/src/main/kotlin")
-
 gradlePlugin {
     plugins {
         register("app-plugin") {

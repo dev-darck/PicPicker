@@ -6,6 +6,7 @@ object Modules {
     const val commonTheme = "common-theme"
     const val bottomNavigation = "bottom-navigation"
     const val imageLoader = "Image-loader"
+    const val unsplashApi = "unsplash-api"
 }
 
 object TabModule {
