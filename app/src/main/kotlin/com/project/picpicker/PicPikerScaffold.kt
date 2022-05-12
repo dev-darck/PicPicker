@@ -21,6 +21,7 @@ import com.project.navigationapi.navigation.Directions
 import com.project.navigationapi.navigation.NavigateUp
 import com.project.navigationapi.navigation.Navigation
 import com.project.navigationapi.navigation.PopBackStack
+import com.project.toolbar.Toolbar
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -31,7 +32,7 @@ fun PicPikerScaffold(
     config: Sequence<Config> = emptySequence(),
     bottomConfig: Sequence<BottomConfig> = emptySequence(),
     toolBarConfig: Sequence<ToolBarConfig> = emptySequence(),
-    startDestination: String = ""
+    startDestination: String = "",
 ) {
     Surface {
         val navController = rememberAnimatedNavController()
@@ -55,6 +56,12 @@ fun PicPikerScaffold(
 
         Scaffold(
             modifier = Modifier,
+            topBar = {
+                Toolbar(
+                    navController = navController,
+                    toolbarConfigs = toolBarConfig
+                )
+            },
             bottomBar = {
                 BottomNavigation(
                     navController = navController,

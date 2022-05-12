@@ -23,7 +23,14 @@ object CollectionsRoute : Route() {
 object HomeRoute : Route() {
     private const val route: String = "home"
     const val scheme: String = "type"
+    val tabVariant = Pair(first = "List", second = "Grid")
     override val routeScheme: String = "$route/{$scheme}"
 
     fun createRoute(type: String): String = "$route/$type"
+}
+
+object DefaultRoute : Route() {
+    override val routeScheme: String
+        get() = "Route"
+
 }

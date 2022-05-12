@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="preview_name">Root</string>
+    <string name="default_content_descriptions">""</string>
+    <string name="grid_tab">grid</string>
+    <string name="list_tab">list</string>
+</resources>
