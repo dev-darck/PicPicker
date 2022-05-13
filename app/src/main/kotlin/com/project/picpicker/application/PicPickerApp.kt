@@ -10,7 +10,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class PicPickerApp: Application(), ImageLoaderFactory {
+class PicPickerApp : Application(), ImageLoaderFactory {
 
     @Inject
     lateinit var imageLoader: ImageLoader

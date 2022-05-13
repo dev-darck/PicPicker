@@ -12,3 +12,5 @@ interface Config {
         get() = emptyList()
     val openScreen: @Composable () -> Unit
 }
+
+val <T: Config> T.root get() = this.route.routeScheme

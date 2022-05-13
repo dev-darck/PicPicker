@@ -8,12 +8,6 @@ val generatedCode = "import com.project.picpicker.plugins.config.module\n" +
 
 autoInclude()
 
-buildCache {
-    local {
-        directory = File(rootDir, ".gradle/build-cache")
-    }
-}
-
 fun Settings.autoInclude() {
     includeBuild("$rootDir/$buildSrc")
     includeCore()
