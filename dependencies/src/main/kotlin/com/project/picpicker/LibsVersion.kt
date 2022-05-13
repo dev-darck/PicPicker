@@ -3,7 +3,7 @@ package com.project.picpicker
 object LibsVersion {
     const val hiltVersion = 2.41
     const val kotlinVersion = "1.6.20"
-    const val composeVersion = "1.2.0-alpha08"
+    const val composeVersion = "1.2.0-beta01"
     const val systemUiControllerVersion = "0.24.7-alpha"
     const val accompanistNavigationVersion = "0.23.1"
     const val navigationComposeVersion = "2.4.2"
