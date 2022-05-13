@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    Toolbar labels
+    <string name="collections_label">Коллекции</string>
+    <string name="download_label">Загрузки</string>
+    <string name="profile_label">Профиль</string>
+
+    Other
+    <string name="photos">фото</string>
+    <string name="curated_text">Автор</string>
+</resources>

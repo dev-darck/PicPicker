@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PicPicker</string>
+
+    Non-translatable
+
+    <string name="app_name" translatable="false">PicPicker</string>
+    <string name="preview_name" translatable="false">Root</string>
+    <string name="default_content_descriptions" translatable="false">""</string>
+
+    Tabs
+    <string name="grid_tab" translatable="false">grid</string>
+    <string name="list_tab" translatable="false">list</string>
+
+    Translatable
+
+    Toolbar labels
     <string name="collections_label">Collections</string>
-    <string name="preview_name">Root</string>
-    <string name="default_content_descriptions">""</string>
-    <string name="grid_tab">grid</string>
-    <string name="list_tab">list</string>
     <string name="download_label">Download</string>
     <string name="profile_label">Profile</string>
+
+    Other
     <string name="photos">photo</string>
     <string name="curated_text">Curated by</string>
 </resources>
