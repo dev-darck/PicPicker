@@ -4,6 +4,7 @@ import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.jetpackComposeActivity
 import com.project.picpicker.Dependency.jetpackComposeUi
 import com.project.picpicker.Modules.bottomNavigation
+import com.project.picpicker.Modules.commonResources
 import com.project.picpicker.Modules.commonTheme
 import com.project.picpicker.Modules.imageLoader
 import com.project.picpicker.Modules.navigationApi
@@ -40,6 +41,7 @@ application(
         module(unsplashApi),
         module(imageLoader),
         module(toolBar),
+        module(commonResources),
     ),
     plugins = addAppPlug(
         hiltPlugin

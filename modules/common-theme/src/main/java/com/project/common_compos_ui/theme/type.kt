@@ -6,11 +6,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.project.common_compos_ui.R as Res
+import com.project.common_resources.R
 
 val fontFamily = FontFamily(
-    Font(Res.font.montserrat_regular, FontWeight.Normal),
-    Font(Res.font.montserrat_bold, FontWeight.Bold),
+    Font(R.font.montserrat_regular, FontWeight.Normal),
+    Font(R.font.montserrat_bold, FontWeight.Bold),
 )
 
 val AppTypography = Typography(

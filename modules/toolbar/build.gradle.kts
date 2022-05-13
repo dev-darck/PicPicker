@@ -1,6 +1,7 @@
 import com.project.picpicker.Dependency.composePreview
 import com.project.picpicker.Dependency.jetpackComposeUi
 import com.project.picpicker.Dependency.navigation
+import com.project.picpicker.Modules.commonResources
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.dependency.helper.addDep
 import com.project.picpicker.dependency.helper.module
@@ -13,6 +14,7 @@ module(
         *jetpackComposeUi,
         *composePreview,
     ) + addDep(
-        module(navigationApi)
+        module(navigationApi),
+        module(commonResources),
     )
 )

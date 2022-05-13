@@ -10,10 +10,10 @@ import com.project.navigationapi.config.HomeRoute
 import com.project.navigationapi.config.Route
 import com.project.navigationapi.config.ToolBarConfig
 import javax.inject.Inject
-import com.project.hometab.R as Res
+import com.project.common_resources.R
 
 class HomeConfig @Inject constructor() : BottomConfig, ToolBarConfig {
-    override val icon: Int = Res.drawable.home_tab
+    override val icon: Int = R.drawable.home_tab
     override val order: Int = 0
     override val route: Route = HomeRoute
     override val lable: Int = 0
