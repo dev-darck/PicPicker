@@ -8,6 +8,7 @@ object Modules {
     const val imageLoader = "Image-loader"
     const val unsplashApi = "unsplash-api"
     const val toolBar = "toolbar"
+    const val commonResources = "common-resources"
 }
 
 object TabModule {
