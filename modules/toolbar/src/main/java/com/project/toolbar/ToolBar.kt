@@ -1,35 +1,13 @@
 package com.project.toolbar
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalAbsoluteElevation
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -40,17 +18,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.project.common_resources.R
-import com.project.navigationapi.config.BottomIcon
-import com.project.navigationapi.config.DefaultRoute
-import com.project.navigationapi.config.HomeRoute
-import com.project.navigationapi.config.Route
-import com.project.navigationapi.config.ToolBarConfig
-import com.project.navigationapi.config.root
+import com.project.common_ui.tab.CustomTab
+import com.project.common_ui.tab.SizeProportion
+import com.project.common_ui.tab.TabIconWitchPoint
+import com.project.navigationapi.config.*
+import com.project.navigationapi.config.HomeRoute.tabVariant
 
 private val TOOLBAR_HORIZONTAL_PADDING = 30.dp
 private val Elevation = 15.dp
 private val SizeIcon = 24.dp
-private val BottomNavigationHeight = 50.dp
+private val ToolbarSize = 50.dp
 
 @Composable
 fun Toolbar(navController: NavController, toolbarConfigs: Sequence<ToolBarConfig>) {
@@ -64,13 +41,13 @@ fun Toolbar(navController: NavController, toolbarConfigs: Sequence<ToolBarConfig
 private fun ToolbarSurface(navController: NavController? = null, toolbarConfig: ToolBarConfig) {
     Surface(
         modifier = Modifier
-            .height(BottomNavigationHeight)
-            .background(MaterialTheme.colors.surface)
+            .height(ToolbarSize)
+            .background(colors.surface)
             .shadow(
                 Elevation + LocalAbsoluteElevation.current,
                 RectangleShape,
                 false,
-                MaterialTheme.colors.secondaryVariant
+                colors.secondaryVariant
             ),
     ) {
         if (toolbarConfig.route.routeScheme == HomeRoute.routeScheme) {
@@ -92,9 +69,9 @@ private fun HomeToolbar(navController: NavController? = null, config: ToolBarCon
 
 @Composable
 private fun HomeIcon(modifier: Modifier, click: (String) -> Unit = { }) {
-    val tabs = HomeRoute.tabVariant.toList()
+    val tabs = tabVariant.toList()
     var currentTab by remember { mutableStateOf(tabs[0]) }
-    Tab(modifier) {
+    CustomTab(modifier) {
         tabs.forEach { tab ->
             CustomTab(
                 selected = tab == currentTab,
@@ -103,48 +80,28 @@ private fun HomeIcon(modifier: Modifier, click: (String) -> Unit = { }) {
                     currentTab = tab
                     click(currentTab)
                 }, customTab = {
-                    TabIcon(animationProgress = it, tab = tab)
-                })
-        }
-    }
-}
-
-@Composable
-private fun TabIcon(animationProgress: Float, tab: String) {
-    val color = MaterialTheme.colors.onPrimary
-    Column(
-        modifier = Modifier
-            .width(SizeIcon + 20.dp)
-            .padding(top = 13.dp),
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = if (tab == HomeRoute.tabVariant.second) {
-                R.drawable.grid_icon
-            } else {
-                R.drawable.list_icon
-            }),
-            contentDescription = stringResource(id = if (tab == HomeRoute.tabVariant.second) {
-                R.string.grid_tab
-            } else {
-                R.string.list_tab
-            }),
-            modifier = Modifier
-                .size(SizeIcon)
-                .align(CenterHorizontally)
-        )
-        Canvas(
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(animationProgress)
-                .align(CenterHorizontally)
-        ) {
-            val canvasWidth = size.width
-            val canvasHeight = size.height
-            drawCircle(
-                color = color,
-                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
-                radius = size.minDimension / 5
+                    TabIconWitchPoint(
+                        contentDescription = stringResource(id = if (tab == tabVariant.second) {
+                            R.string.grid_tab
+                        } else {
+                            R.string.list_tab
+                        }),
+                        imageVector = ImageVector.vectorResource(id = if (tab == tabVariant.second) {
+                            R.drawable.grid_icon
+                        } else {
+                            R.drawable.list_icon
+                        }),
+                        modifier = Modifier
+                            .width(SizeIcon + 20.dp)
+                            .padding(top = 13.dp),
+                        sizeIcon = SizeIcon,
+                        animationProgress = it,
+                        sizeProportion = SizeProportion.MIDDLE,
+                        color = colors.onPrimary
+                    )
+                },
+                selectedContentColor = colors.onPrimary,
+                unselectedContentColor = colors.onSecondary
             )
         }
     }
@@ -162,14 +119,14 @@ private fun Toolbar(
         Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
 
         if (config.leftBottom != null) {
-            ToolBarBottom(config.leftBottom!!, Modifier)
+            ToolbarBottom(config.leftBottom!!, Modifier)
         }
 
         if (content == null) {
             Text(
                 text = stringResource(id = config.lable),
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onBackground,
+                color = colors.onBackground,
                 modifier = Modifier.weight(2F, true),
                 textAlign = TextAlign.Center
             )
@@ -178,7 +135,7 @@ private fun Toolbar(
         }
 
         if (config.rightBottom != null) {
-            ToolBarBottom(config.rightBottom!!, Modifier)
+            ToolbarBottom(config.rightBottom!!, Modifier)
         }
 
         Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
@@ -186,13 +143,13 @@ private fun Toolbar(
 }
 
 @Composable
-private fun ToolBarBottom(config: BottomIcon, modifier: Modifier = Modifier) {
+private fun ToolbarBottom(config: BottomIcon, modifier: Modifier = Modifier) {
     IconButton(config.click) {
         val icon = config.icon ?: return@IconButton
         val content = config.contentDescription ?: R.string.default_content_descriptions
         Icon(
             modifier = modifier,
-            tint = MaterialTheme.colors.secondary,
+            tint = colors.secondary,
             imageVector = ImageVector.vectorResource(id = icon),
             contentDescription = stringResource(id = content),
         )
