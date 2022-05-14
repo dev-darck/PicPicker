@@ -27,6 +27,7 @@ import com.project.navigationapi.config.HomeRoute.tabVariant
 private val TOOLBAR_HORIZONTAL_PADDING = 30.dp
 private val Elevation = 15.dp
 private val SizeIcon = 24.dp
+private val SizeNavigationIcon = 20.dp
 private val ToolbarSize = 50.dp
 
 @Composable
@@ -116,10 +117,12 @@ private fun Toolbar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
 
         if (config.leftBottom != null) {
+            Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
             ToolbarBottom(config.leftBottom!!, Modifier)
+        } else {
+            Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING + SizeNavigationIcon))
         }
 
         if (content == null) {
@@ -127,29 +130,29 @@ private fun Toolbar(
                 text = stringResource(id = config.lable),
                 style = MaterialTheme.typography.h6,
                 color = colors.onBackground,
-                modifier = Modifier.weight(2F, true),
+                modifier = Modifier.weight(1F, true),
                 textAlign = TextAlign.Center
             )
         } else {
-            content(Modifier.weight(1F, true))
+            content(Modifier.weight(1F, true).padding(start = SizeIcon, end = SizeIcon))
         }
 
         if (config.rightBottom != null) {
             ToolbarBottom(config.rightBottom!!, Modifier)
+            Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
+        } else {
+            Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING + SizeNavigationIcon))
         }
-
-        Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
     }
 }
 
 @Composable
 private fun ToolbarBottom(config: BottomIcon, modifier: Modifier = Modifier) {
-    IconButton(config.click) {
+    IconButton(config.click, modifier.size(SizeNavigationIcon)) {
         val icon = config.icon ?: return@IconButton
         val content = config.contentDescription ?: R.string.default_content_descriptions
         Icon(
-            modifier = modifier,
-            tint = colors.secondary,
+            tint = colors.onSecondary,
             imageVector = ImageVector.vectorResource(id = icon),
             contentDescription = stringResource(id = content),
         )
@@ -161,10 +164,10 @@ private fun ToolbarBottom(config: BottomIcon, modifier: Modifier = Modifier) {
 private fun PreviewToolBar() {
     ToolbarSurface(toolbarConfig = object : ToolBarConfig {
         override val leftBottom: BottomIcon = BottomIcon().apply {
-            icon = R.drawable.preview_icon
+            icon = R.drawable.settings_icon
         }
         override val rightBottom: BottomIcon = BottomIcon().apply {
-            icon = R.drawable.preview_icon
+            icon = R.drawable.settings_icon
         }
         override val route: Route = DefaultRoute
         override val lable: Int = R.string.preview_name
@@ -176,10 +179,10 @@ private fun PreviewToolBar() {
 private fun PreviewHomeToolBar() {
     ToolbarSurface(toolbarConfig = object : ToolBarConfig {
         override val leftBottom: BottomIcon = BottomIcon().apply {
-            icon = R.drawable.preview_icon
+            icon = R.drawable.settings_icon
         }
         override val rightBottom: BottomIcon = BottomIcon().apply {
-            icon = R.drawable.preview_icon
+            icon = R.drawable.settings_icon
         }
         override val route: Route = HomeRoute
         override val lable: Int = R.string.preview_name

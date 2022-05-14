@@ -1,17 +1,22 @@
 package com.project.profile.config
 
 import androidx.compose.runtime.Composable
-import com.project.navigationapi.config.BottomConfig
-import com.project.navigationapi.config.ProfileRoute
-import com.project.navigationapi.config.Route
+import com.project.common_resources.R
+import com.project.navigationapi.config.*
 import com.project.profile.screen.Profile
 import javax.inject.Inject
-import com.project.common_resources.R
 
-class ProfileConfig @Inject constructor() : BottomConfig {
+class ProfileConfig @Inject constructor() : BottomConfig, ToolBarConfig {
     override val route: Route = ProfileRoute
+    override val lable: Int = R.string.profile_label
     override val icon: Int = R.drawable.profile_tab
     override val order: Int = 3
+    override val leftBottom: BottomIcon = BottomIcon().apply {
+        icon = R.drawable.settings_icon
+        contentDescription = R.string.default_content_descriptions
+        click = {
+        }
+    }
     override val openScreen: @Composable () -> Unit = {
         Profile()
     }
