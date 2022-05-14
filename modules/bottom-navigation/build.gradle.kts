@@ -2,6 +2,7 @@ import com.project.picpicker.Dependency
 import com.project.picpicker.Dependency.composePreview
 import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.jetpackComposeUi
+import com.project.picpicker.Modules.commonUi
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.dependency.helper.addDep
 import com.project.picpicker.dependency.helper.addLibPlug
@@ -17,7 +18,8 @@ module(
         *jetpackComposeUi,
         *composePreview,
     ) + addDep(
-        module(navigationApi)
+        module(navigationApi),
+        module(commonUi),
     ),
     plugins = addLibPlug(
         hiltPlugin

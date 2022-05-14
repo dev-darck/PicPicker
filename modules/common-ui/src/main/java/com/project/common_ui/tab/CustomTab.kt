@@ -1,5 +1,6 @@
-package com.project.toolbar
+package com.project.common_ui.tab
 
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
@@ -25,7 +26,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.semantics.Role
 
 @Composable
-fun Tab(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
+fun CustomTab(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
     Row(
         modifier
             .selectableGroup()
@@ -37,17 +38,19 @@ fun Tab(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
 
 @Composable
 fun RowScope.CustomTab(
+    modifier: Modifier = Modifier,
     selected: Boolean = false,
     onClick: () -> Unit,
     customTab: @Composable (animationProgress: Float) -> Unit,
     enabled: Boolean = true,
     alwaysShowLabel: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    selectedContentColor: Color = MaterialTheme.colors.onPrimary,
-    unselectedContentColor: Color = MaterialTheme.colors.onSecondary,
+    selectedContentColor: Color,
+    unselectedContentColor: Color,
+    animation: AnimationSpec<Float> = AnimationSpec,
 ) {
     Box(
-        Modifier
+        modifier
             .selectable(
                 selected = selected,
                 onClick = onClick,
@@ -62,7 +65,8 @@ fun RowScope.CustomTab(
         BottomNavigationTransition(
             selectedContentColor,
             unselectedContentColor,
-            selected
+            selected,
+            animation
         ) { progress ->
             val animationProgress = if (alwaysShowLabel) 1f else progress
             customTab(animationProgress)
@@ -75,11 +79,12 @@ private fun BottomNavigationTransition(
     activeColor: Color,
     inactiveColor: Color,
     selected: Boolean,
+    durationAnimation: AnimationSpec<Float> = AnimationSpec,
     content: @Composable (animationProgress: Float) -> Unit,
 ) {
     val animationProgress by animateFloatAsState(
         targetValue = if (selected) 1f else 0f,
-        animationSpec = BottomNavigationAnimationSpec
+        animationSpec = durationAnimation
     )
 
     val color = lerp(inactiveColor, activeColor, animationProgress)
@@ -93,7 +98,7 @@ private fun BottomNavigationTransition(
 }
 
 
-private val BottomNavigationAnimationSpec = TweenSpec<Float>(
+private val AnimationSpec = TweenSpec<Float>(
     durationMillis = 300,
     easing = FastOutSlowInEasing
 )

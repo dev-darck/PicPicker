@@ -9,6 +9,7 @@ object Modules {
     const val unsplashApi = "unsplash-api"
     const val toolBar = "toolbar"
     const val commonResources = "common-resources"
+    const val commonUi = "common-ui"
 }
 
 object TabModule {

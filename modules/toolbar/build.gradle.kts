@@ -2,6 +2,7 @@ import com.project.picpicker.Dependency.composePreview
 import com.project.picpicker.Dependency.jetpackComposeUi
 import com.project.picpicker.Dependency.navigation
 import com.project.picpicker.Modules.commonResources
+import com.project.picpicker.Modules.commonUi
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.dependency.helper.addDep
 import com.project.picpicker.dependency.helper.module
@@ -16,5 +17,6 @@ module(
     ) + addDep(
         module(navigationApi),
         module(commonResources),
+        module(commonUi),
     )
 )
