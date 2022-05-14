@@ -1,3 +1,5 @@
 import com.project.picpicker.plugins.config.module
 
-module()
+module(
+    enabledCompose = false
+)
