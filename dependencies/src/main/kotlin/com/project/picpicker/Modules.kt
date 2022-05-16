@@ -18,3 +18,7 @@ object TabModule {
     const val downloadTab = "download-tab"
     const val profileTab = "profile-tab"
 }
+
+object Model {
+    const val collectionModel = "collection-model"
+}

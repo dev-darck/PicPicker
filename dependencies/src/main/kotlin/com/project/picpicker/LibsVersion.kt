@@ -14,4 +14,5 @@ object LibsVersion {
     const val uiToolingVersion = "1.1.1"
     const val customViewVersion = "1.2.0-alpha01"
     const val retrofitVersion = "2.9.0"
+    const val okhttpVersion = "4.9.3"
 }

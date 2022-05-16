@@ -9,6 +9,7 @@ import com.project.picpicker.LibsVersion.hiltNavigationComposeVersion
 import com.project.picpicker.LibsVersion.hiltVersion
 import com.project.picpicker.LibsVersion.kotlinVersion
 import com.project.picpicker.LibsVersion.navigationComposeVersion
+import com.project.picpicker.LibsVersion.okhttpVersion
 import com.project.picpicker.LibsVersion.retrofitVersion
 import com.project.picpicker.LibsVersion.systemUiControllerVersion
 import com.project.picpicker.LibsVersion.timberVersion
@@ -79,6 +80,7 @@ object Dependency {
         timber,
         leakCanary
     )
+    val okHttpLogger = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion".impl
     val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion".impl
     val gson = "com.squareup.retrofit2:converter-gson:$retrofitVersion".impl
 }
