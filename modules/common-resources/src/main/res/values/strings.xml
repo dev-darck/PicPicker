@@ -8,4 +8,6 @@
     <string name="list_tab">list</string>
     <string name="download_label">Download</string>
     <string name="profile_label">Profile</string>
+    <string name="photos">photo</string>
+    <string name="curated_text">Curated by</string>
 </resources>

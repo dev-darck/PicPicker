@@ -1,6 +1,6 @@
 package com.project.unsplash_api.di
 
-import android.app.Application
+import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -17,6 +17,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
@@ -34,9 +36,12 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideClient(@ApplicationContext context: Application): OkHttpClient {
+    fun provideClient(@ApplicationContext context: Context): OkHttpClient {
         val cacheFile = File(context.cacheDir, CACHE_END_PATH)
         val cache = Cache(cacheFile, CACHE_SIZE)
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = BASIC
+        loggingInterceptor.redactHeader("Authorization")
         return OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -44,6 +49,7 @@ object ApiModule {
             .writeTimeout(20, TimeUnit.SECONDS)
             .addNetworkInterceptor(NetworkInterceptor)
             .addInterceptor(OfflineInterceptor)
+            .addInterceptor(loggingInterceptor)
             .cache(cache)
             .build()
     }

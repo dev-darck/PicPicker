@@ -1,10 +1,15 @@
 import com.project.picpicker.Dependency.composePreview
+import com.project.picpicker.Dependency.gson
 import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.hiltNavigation
 import com.project.picpicker.Dependency.jetpackComposeUi
+import com.project.picpicker.Model.collectionModel
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonResources
+import com.project.picpicker.Modules.commonUi
+import com.project.picpicker.Modules.imageLoader
 import com.project.picpicker.Modules.navigationApi
+import com.project.picpicker.Modules.unsplashApi
 import com.project.picpicker.dependency.helper.addDep
 import com.project.picpicker.dependency.helper.module
 import com.project.picpicker.dependency.helper.plus
@@ -16,9 +21,15 @@ module(
         *jetpackComposeUi,
         *hilt,
         *composePreview,
+        //Уйдет в следующих пр
+        gson
     ) + addDep(
         module(bottomNavigation),
         module(navigationApi),
         module(commonResources),
+        module(unsplashApi),
+        module(collectionModel),
+        module(imageLoader),
+        module(commonUi),
     )
 )

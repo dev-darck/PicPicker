@@ -25,7 +25,7 @@ class PicPickerApp : Application(), ImageLoaderFactory {
 
     override fun newImageLoader(): ImageLoader = imageLoader
 
-    //    private fun configureLeakCanary() {
+//    private fun configureLeakCanary() {
 //        LeakCanary.config = LeakCanary.config.copy(dumpHeap = true)
 //        LeakCanary.showLeakDisplayActivityLauncherIcon(true)
 //    }

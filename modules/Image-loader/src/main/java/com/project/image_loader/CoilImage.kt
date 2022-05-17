@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
@@ -37,9 +39,13 @@ fun CoilImage(
     gradient: List<Color> = defaultGradient,
     alphaDuration: Int = shimmerDuration,
     contentDescription: String = "",
+    contentScale: ContentScale = ContentScale.Crop,
     errorState: @Composable () -> Unit = { },
 ) {
-    val painter = rememberAsyncImagePainter(model = requestImage(data))
+    val painter = rememberAsyncImagePainter(
+        model = requestImage(data),
+        contentScale = contentScale,
+    )
 
     when (painter.state) {
         is AsyncImagePainter.State.Loading -> {
@@ -57,17 +63,25 @@ fun CoilImage(
                         .background(it))
                 }
             }
-            Timber.i("Loading")
+            Timber.i("Loading $data")
         }
         is AsyncImagePainter.State.Success -> {
-            Box(modifier = modifier, contentAlignment = Alignment.Center) {
-                Image(painter = painter, contentDescription = contentDescription)
+            Box(
+                modifier = modifier.clip(shapes),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    modifier = modifier.fillMaxSize(),
+                    painter = painter,
+                    contentDescription = contentDescription,
+                    contentScale = contentScale
+                )
             }
             Timber.i("Success")
         }
         is AsyncImagePainter.State.Error -> {
             errorState()
-            Timber.i("error")
+            Timber.i("error $data")
         }
         is AsyncImagePainter.State.Empty -> {
             Timber.i("Empty")
