@@ -1,10 +1,12 @@
 package com.project.collectionstab.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.project.collection_model.PreviewPhotos
@@ -36,7 +38,7 @@ fun CollagePhoto(
         when {
             count >= TripleImage -> MaxImage(previewPhotos)
             count >= DoubleImage -> MiddleCount(previewPhotos)
-            count >= SingleImage -> LoweCount(previewPhotos)
+            count >= SingleImage -> SingleImage(previewPhotos)
         }
     }
 }
@@ -97,10 +99,21 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
 }
 
 @Composable
-private fun RowScope.LoweCount(previewPhotos: List<PreviewPhotos>) {
+private fun RowScope.SingleImage(previewPhotos: List<PreviewPhotos>) {
     CoilImage(
         data = previewPhotos.smallPhoto(0),
         modifier = Modifier,
         shapes = RoundedCornerShape(20.dp),
+    )
+}
+
+@Composable
+internal fun ShimmeringCollagePhoto(brush: Brush) {
+    Spacer(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .height(253.dp)
+            .fillMaxWidth()
+            .background(brush, shape = RoundedCornerShape(20.dp))
     )
 }

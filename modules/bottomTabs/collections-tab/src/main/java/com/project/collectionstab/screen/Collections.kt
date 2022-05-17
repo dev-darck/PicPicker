@@ -1,6 +1,8 @@
 package com.project.collectionstab.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -8,6 +10,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +25,7 @@ import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion.MIDDLE
+import com.project.image_loader.Shimmering
 
 @Composable
 fun Collections() {
@@ -29,7 +33,7 @@ fun Collections() {
     viewModel.collections()
     when (val state = viewModel.collectionResult.collectAsState().value) {
         is Loading -> {
-
+            Shimmer()
         }
         is Success -> {
             LazyList(state.result)
@@ -96,6 +100,43 @@ private fun CardCollection(collectionModel: CollectionModel) {
             contentPadding = PaddingValues(horizontal = 16.dp),
             tags = collectionModel.tags.orEmpty()
         )
+    }
+}
+
+@Composable
+private fun Shimmer() {
+    val twoCollectionCard = listOf(1, 2)
+    LazyColumn(
+        modifier = Modifier,
+        verticalArrangement = Center,
+        horizontalAlignment = CenterHorizontally,
+        userScrollEnabled = false
+    ) {
+        items(twoCollectionCard.size) {
+            Shimmering {
+                Spacer(modifier = Modifier.padding(top = 10.dp))
+                ShimmeringCollagePhoto(it)
+                Spacer(modifier = Modifier.padding(top = 10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .width(200.dp)
+                        .height(15.dp)
+                        .padding(horizontal = 20.dp)
+                        .background(it)
+                )
+                Spacer(modifier = Modifier.padding(top = 10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .width(200.dp)
+                        .height(15.dp)
+                        .padding(horizontal = 20.dp)
+                        .background(it)
+                )
+                Spacer(modifier = Modifier.padding(top = 10.dp))
+                TagsShimmering(it)
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+            }
+        }
     }
 }
 

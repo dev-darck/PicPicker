@@ -36,8 +36,9 @@ fun CoilImage(
     shapes: CornerBasedShape = MaterialTheme.shapes.medium,
     shimmerDelayDuration: Int = 300,
     shimmerDuration: Int = 1600,
+    enableAlpha: Boolean = false,
     gradient: List<Color> = defaultGradient,
-    alphaDuration: Int = shimmerDuration,
+    alphaDuration: Int = 1000,
     contentDescription: String = "",
     contentScale: ContentScale = ContentScale.Crop,
     errorState: @Composable () -> Unit = { },
@@ -51,7 +52,7 @@ fun CoilImage(
         is AsyncImagePainter.State.Loading -> {
             if (enableShimmer) {
                 Shimmering(
-                    modifier,
+                    enableAlpha,
                     shimmerDelayDuration,
                     shimmerDuration,
                     gradient,

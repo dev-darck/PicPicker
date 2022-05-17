@@ -1,11 +1,9 @@
 package com.project.collectionstab.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.project.collection_model.Tags
@@ -63,4 +62,23 @@ private fun ButtonTag(tagName: String, onClick: () -> Unit = { }) {
         )
     }
     Spacer(modifier = Modifier.padding(end = 10.dp))
+}
+
+@Composable
+fun TagsShimmering(brush: Brush) {
+    val tagsShim = listOf(1, 2, 3, 4, 5)
+    LazyRow(
+        modifier = Modifier.padding(start = 20.dp),
+        userScrollEnabled = false
+    ) {
+        items(tagsShim.size) {
+            Spacer(
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(31.dp)
+                    .background(brush, shape = RoundedCornerShape(20.dp))
+            )
+            Spacer(modifier = Modifier.padding(end = 10.dp))
+        }
+    }
 }
