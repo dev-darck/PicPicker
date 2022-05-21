@@ -21,6 +21,12 @@ class CollectionViewModel @Inject constructor(
     private val collectionFlow = MutableStateFlow<CollectionState>(CollectionState.Loading)
     val collection = collectionFlow.asStateFlow()
 
+    fun collectionFirstPage() {
+        val state = collectionFlow.value
+        if (state is CollectionState.Success && state.result.isNotEmpty()) return
+        collections(1)
+    }
+
     fun collections(page: Int) {
         viewModelScope.launch {
             when (val result = unsplashRepository.collections(page.toString())) {

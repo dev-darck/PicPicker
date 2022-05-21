@@ -1,5 +1,4 @@
 import com.project.picpicker.Dependency.composePreview
-import com.project.picpicker.Dependency.gson
 import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.hiltNavigation
 import com.project.picpicker.Dependency.jetpackComposeUi
@@ -21,8 +20,6 @@ module(
         *jetpackComposeUi,
         *hilt,
         *composePreview,
-        //Уйдет в следующих пр
-        gson
     ) + addDep(
         module(bottomNavigation),
         module(navigationApi),
