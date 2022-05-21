@@ -76,7 +76,7 @@ fun PicPikerScaffold(
                 enterTransition = { fadeIn(animationSpec = tween(0)) },
                 exitTransition = { fadeOut(animationSpec = tween(0)) },
             ) {
-                addDestinations(config)
+                addDestinations(navController, config)
             }
         }
     }

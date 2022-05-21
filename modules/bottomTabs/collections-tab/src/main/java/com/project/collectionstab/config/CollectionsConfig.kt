@@ -1,7 +1,11 @@
 package com.project.collectionstab.config
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import com.project.collectionstab.screen.Collections
+import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
 import com.project.navigationapi.config.*
 import com.project.navigationapi.navigation.Navigation
@@ -21,7 +25,8 @@ class CollectionsConfig @Inject constructor(
         }
     }
     override val order: Int = 1
-    override val openScreen: @Composable () -> Unit = {
-        Collections()
+    override val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit = {
+        val viewModel: CollectionViewModel = hiltViewModel(it)
+        Collections(viewModel)
     }
 }

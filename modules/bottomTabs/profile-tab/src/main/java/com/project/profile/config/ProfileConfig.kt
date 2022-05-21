@@ -1,6 +1,8 @@
 package com.project.profile.config
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavBackStackEntry
 import com.project.common_resources.R
 import com.project.navigationapi.config.*
 import com.project.profile.screen.Profile
@@ -17,7 +19,7 @@ class ProfileConfig @Inject constructor() : BottomConfig, ToolBarConfig {
         click = {
         }
     }
-    override val openScreen: @Composable () -> Unit = {
+    override val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit = {
         Profile()
     }
 }
