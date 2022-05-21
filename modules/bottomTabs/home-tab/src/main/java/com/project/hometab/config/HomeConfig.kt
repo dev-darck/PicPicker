@@ -1,7 +1,9 @@
 package com.project.hometab.config
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.project.common_resources.R
@@ -36,7 +38,7 @@ class HomeConfig @Inject constructor(
             defaultValue = HomeRoute.tabVariant.first
         }
     )
-    override val openScreen: @Composable () -> Unit = {
+    override val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit = {
         Home()
     }
 }
