@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.project.collection_model.PreviewPhotos
-import com.project.collection_model.smallPhoto
 import com.project.image_loader.CoilImage
+import com.project.model.PreviewPhotos
+import com.project.model.smallPhoto
 
 private const val TripleImage = 3
 private const val DoubleImage = 2
@@ -99,7 +99,7 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
 }
 
 @Composable
-private fun RowScope.SingleImage(previewPhotos: List<PreviewPhotos>) {
+private fun SingleImage(previewPhotos: List<PreviewPhotos>) {
     CoilImage(
         data = previewPhotos.smallPhoto(0),
         modifier = Modifier,

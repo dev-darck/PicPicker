@@ -1,8 +1,8 @@
-package com.project.collection_model
+package com.project.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Experimental(
+data class Wallpapers(
     @SerializedName("status") val status: String? = null,
     @SerializedName("approved_on") val approvedOn: String? = null,
 )

@@ -1,6 +1,8 @@
 package com.project.unsplash_api.api
 
 import androidx.annotation.CheckResult
+import com.project.model.CollectionModel
+import com.project.model.User
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -11,7 +13,7 @@ import retrofit2.http.Query
 
 interface UnsplashApi {
     @GET("me")
-    suspend fun currentUser(): Response<ResponseBody>
+    suspend fun currentUser(): Response<User>
 
     @PUT("me")
     suspend fun updateUser(@Body requestBody: RequestBody): Response<ResponseBody>
@@ -21,5 +23,5 @@ interface UnsplashApi {
     suspend fun collections(
         @Query("page") page: String,
         @Query("per_page") perPage: String = "30",
-    ): Response<ResponseBody>
+    ): Response<List<CollectionModel>>
 }

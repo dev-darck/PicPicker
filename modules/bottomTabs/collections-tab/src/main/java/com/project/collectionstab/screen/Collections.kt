@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -17,19 +18,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.project.collection_model.CollectionModel
-import com.project.collection_model.name
 import com.project.collectionstab.viewmodel.CollectionState.*
 import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion.MIDDLE
 import com.project.image_loader.Shimmering
+import com.project.model.CollectionModel
+import com.project.model.name
 
 @Composable
 fun Collections() {
     val viewModel: CollectionViewModel = hiltViewModel()
-    viewModel.collections()
+    LaunchedEffect(key1 = viewModel) {
+        viewModel.collections(1)
+    }
     val state = viewModel.collection.collectAsState().value
     when (state) {
         is Loading -> {

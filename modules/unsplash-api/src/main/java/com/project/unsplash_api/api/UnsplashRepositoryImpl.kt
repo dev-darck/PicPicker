@@ -1,18 +1,18 @@
 package com.project.unsplash_api.api
 
+import com.project.model.CollectionModel
+import com.project.model.User
 import com.project.unsplash_api.ResultWrapper
-import com.project.unsplash_api.safeCall
-import com.project.unsplash_api.safeListCall
+import com.project.unsplash_api.extensions.safeCall
 
 class UnsplashRepositoryImpl(
     private val unsplashApi: UnsplashApi,
 ) : UnsplashRepository {
 
-    override suspend fun <T : Any> user(classType: Class<T>): ResultWrapper<T> =
-        unsplashApi.currentUser().safeCall(classType)
+    override suspend fun user(): ResultWrapper<User> =
+        unsplashApi.currentUser().safeCall()
 
-    override suspend fun <T : Any> collections(
+    override suspend fun collections(
         page: String,
-        classType: Class<T>,
-    ): ResultWrapper<List<T>> = unsplashApi.collections(page).safeListCall(classType)
+    ): ResultWrapper<List<CollectionModel>> = unsplashApi.collections(page).safeCall()
 }
