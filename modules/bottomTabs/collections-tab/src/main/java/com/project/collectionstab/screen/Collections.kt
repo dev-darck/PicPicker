@@ -19,8 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.collection_model.CollectionModel
 import com.project.collection_model.name
-import com.project.collectionstab.viewmodel.CollectionState.Loading
-import com.project.collectionstab.viewmodel.CollectionState.Success
+import com.project.collectionstab.viewmodel.CollectionState.*
 import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
 import com.project.common_ui.tab.Point
@@ -31,12 +30,16 @@ import com.project.image_loader.Shimmering
 fun Collections() {
     val viewModel: CollectionViewModel = hiltViewModel()
     viewModel.collections()
-    when (val state = viewModel.collectionResult.collectAsState().value) {
+    val state = viewModel.collection.collectAsState().value
+    when (state) {
         is Loading -> {
             Shimmer()
         }
         is Success -> {
             LazyList(state.result)
+        }
+        is Exception -> {
+
         }
     }
 }
