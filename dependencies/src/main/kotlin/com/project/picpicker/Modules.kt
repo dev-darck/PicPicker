@@ -20,5 +20,5 @@ object TabModule {
 }
 
 object Model {
-    const val collectionModel = "collection-model"
+    const val commonModel = "model"
 }

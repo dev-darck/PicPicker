@@ -3,7 +3,7 @@ import com.project.picpicker.Dependency.gson
 import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.hiltNavigation
 import com.project.picpicker.Dependency.jetpackComposeUi
-import com.project.picpicker.Model.collectionModel
+import com.project.picpicker.Model.commonModel
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonResources
 import com.project.picpicker.Modules.commonUi
@@ -28,7 +28,7 @@ module(
         module(navigationApi),
         module(commonResources),
         module(unsplashApi),
-        module(collectionModel),
+        module(commonModel),
         module(imageLoader),
         module(commonUi),
     )

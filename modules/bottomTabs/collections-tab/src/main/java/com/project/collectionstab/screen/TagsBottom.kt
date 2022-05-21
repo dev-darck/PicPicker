@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.project.collection_model.Tags
+import com.project.model.Tags
 
 @Composable
 fun TagsBottom(
