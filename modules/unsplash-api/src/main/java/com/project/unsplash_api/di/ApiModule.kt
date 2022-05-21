@@ -43,8 +43,8 @@ object ApiModule {
         loggingInterceptor.level = BASIC
         loggingInterceptor.redactHeader("Authorization")
         return OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
-            .connectTimeout(15, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(false)
+            .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .addNetworkInterceptor(NetworkInterceptor)
