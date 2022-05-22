@@ -29,7 +29,7 @@ import com.project.model.name
 @Composable
 fun Collections(viewModel: CollectionViewModel) {
     LaunchedEffect(key1 = viewModel) {
-        viewModel.collections(1)
+        viewModel.collectionFirstPage()
     }
     val state = viewModel.collection.collectAsState().value
     when (state) {
