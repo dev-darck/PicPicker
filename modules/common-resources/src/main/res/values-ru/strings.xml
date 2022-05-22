@@ -8,4 +8,5 @@
     Other
     <string name="photos">фото</string>
     <string name="curated_text">Автор</string>
+    <string name="error_message">Произошла ошибка. Повторите попытку.</string>
 </resources>
