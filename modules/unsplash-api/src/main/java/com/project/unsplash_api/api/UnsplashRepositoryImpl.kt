@@ -13,6 +13,7 @@ class UnsplashRepositoryImpl(
         unsplashApi.currentUser().safeCall()
 
     override suspend fun collections(
-        page: String,
-    ): ResultWrapper<List<CollectionModel>> = unsplashApi.collections(page).safeCall()
+        page: Int,
+        maxPage: Int,
+    ): ResultWrapper<List<CollectionModel>> = unsplashApi.collections(page.toString(), maxPage.toString()).safeCall()
 }
