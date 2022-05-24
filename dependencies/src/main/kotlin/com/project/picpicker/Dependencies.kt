@@ -93,5 +93,10 @@ object Dependency {
     val okHttp = "com.squareup.okhttp3:okhttp:$okhttpVersion".impl
     val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion".impl
     val gson = "com.squareup.retrofit2:converter-gson:$retrofitVersion".impl
+
+    val pager = arrayOf(
+        "com.google.accompanist:accompanist-pager:0.24.9-beta".impl,
+        "com.google.accompanist:accompanist-pager-indicators:0.24.9-beta".impl
+    )
 }
 
