@@ -1,8 +1,8 @@
 package com.project.collectionstab.viewmodel
 
 import com.project.collectionstab.MaxCollectionPage
-import com.project.common_ui.tab.paging.PagingData
-import com.project.common_ui.tab.paging.SettingsPaging
+import com.project.common_ui.paging.PagingData
+import com.project.common_ui.paging.SettingsPaging
 import com.project.model.CollectionModel
 
 sealed class CollectionState {

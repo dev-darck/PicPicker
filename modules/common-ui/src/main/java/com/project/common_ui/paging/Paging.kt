@@ -1,12 +1,14 @@
-package com.project.common_ui.tab.paging
+package com.project.common_ui.paging
 
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 sealed class PagingState {
     object Loading : PagingState()
@@ -53,11 +55,11 @@ class Paging<T : Any>(
     pagingData: PagingData<T>,
 ) {
     private val scrollState = MutableStateFlow(0)
-    private val items: MutableList<T> = pagingData.item.toMutableList()
+    private val items = ArrayList(pagingData.item)
     private val settingsPaging: SettingsPaging = pagingData.settingsPaging
     private val state = MutableStateFlow<PagingState>(PagingState.Success)
     var statePaging = state.asStateFlow()
-    var itemCount = items.size
+    var itemCount = items.count()
 
     init {
         settingsPaging.updateState = {
@@ -66,9 +68,12 @@ class Paging<T : Any>(
         }
     }
 
-    fun get(index: Int): T {
+    fun emitNewItem(index: Int) {
         scrollState.tryEmit(index)
-        return items.elementAt(index)
+    }
+
+    fun get(index: Int): T? {
+        return items.getOrNull(index)
     }
 
     fun updateState(state: PagingState) {
@@ -76,16 +81,20 @@ class Paging<T : Any>(
     }
 
     fun get(): List<T> {
-        return items
+        return items.toList()
     }
 
     suspend fun collectPosition(onNewPaging: (Int) -> Unit) {
         state.combine(scrollState, ::Pair)
-            .flowOn(Dispatchers.Main)
+            .flowOn(Dispatchers.IO)
             .distinctUntilChanged()
             .collect { (currentState, position) ->
                 val last = itemCount - settingsPaging.countForNextPage
-                if (position >= last && settingsPaging.isNextPage() && currentState != PagingState.Loading) {
+                if (position >= last
+                    && settingsPaging.isNextPage()
+                    && currentState != PagingState.Loading
+                    && currentState != PagingState.Error
+                ) {
                     state.tryEmit(PagingState.Loading)
                     settingsPaging.updateCurrentPage()
                     onNewPaging(settingsPaging.currentPage)
@@ -103,8 +112,10 @@ fun <T : Any> PagingData<T>.rememberAsNewPage(
     }
 
     LaunchedEffect(key1 = this) {
-        items.updateState(PagingState.Success)
-        items.collectPosition(onNewPaging)
+        launch {
+            items.updateState(PagingState.Success)
+            items.collectPosition(onNewPaging)
+        }
     }
     return items
 }
@@ -115,7 +126,22 @@ fun <T : Any> LazyListScope.pagingItems(
 ) {
     items(
         count = items.itemCount,
-        key = { it }
+        key = { it },
+        itemContent = { index ->
+            LaunchedEffect(key1 = index) {
+                items.emitNewItem(index)
+            }
+            itemContent(items.get(index))
+        }
+    )
+}
+
+fun <T : Any> LazyGridScope.pagingItems(
+    items: Paging<T>,
+    itemContent: @Composable ((value: T?) -> Unit),
+) {
+    items(
+        count = items.itemCount,
     ) { index ->
         itemContent(items.get(index))
     }

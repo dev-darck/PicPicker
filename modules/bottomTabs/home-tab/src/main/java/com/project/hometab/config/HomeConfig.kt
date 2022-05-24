@@ -7,7 +7,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.project.common_resources.R
-import com.project.hometab.screen.Home
+import com.project.hometab.screen.HomeScreen
 import com.project.navigationapi.config.*
 import com.project.navigationapi.navigation.Navigation
 import javax.inject.Inject
@@ -39,6 +39,6 @@ class HomeConfig @Inject constructor(
         }
     )
     override val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit = {
-        Home()
+        HomeScreen()
     }
 }

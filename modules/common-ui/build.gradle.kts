@@ -11,6 +11,6 @@ module(
         *jetpackComposeUi,
         *composePreview,
     ) + addDep(
-       module(commonResources)
+        module(commonResources)
     )
 )

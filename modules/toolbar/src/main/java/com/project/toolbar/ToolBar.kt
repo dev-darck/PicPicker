@@ -1,10 +1,26 @@
 package com.project.toolbar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalAbsoluteElevation
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.runtime.*
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -21,8 +37,13 @@ import com.project.common_resources.R
 import com.project.common_ui.tab.CustomTab
 import com.project.common_ui.tab.SizeProportion
 import com.project.common_ui.tab.TabIconWitchPoint
-import com.project.navigationapi.config.*
+import com.project.navigationapi.config.BottomIcon
+import com.project.navigationapi.config.DefaultRoute
+import com.project.navigationapi.config.HomeRoute
 import com.project.navigationapi.config.HomeRoute.tabVariant
+import com.project.navigationapi.config.Route
+import com.project.navigationapi.config.ToolBarConfig
+import com.project.navigationapi.config.root
 
 private val TOOLBAR_HORIZONTAL_PADDING = 30.dp
 private val Elevation = 15.dp
@@ -31,15 +52,29 @@ private val SizeNavigationIcon = 20.dp
 private val ToolbarSize = 50.dp
 
 @Composable
-fun Toolbar(navController: NavController, toolbarConfigs: Sequence<ToolBarConfig>) {
+fun Toolbar(
+    navController: NavController,
+    toolbarConfigs: Sequence<ToolBarConfig>,
+    toolbarStateManager: ToolbarStateManager
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     toolbarConfigs.firstOrNull { screen -> screen.root == currentRoute }
-        ?.let { ToolbarSurface(toolbarConfig = it, navController = navController) }
+        ?.let {
+            ToolbarSurface(
+                toolbarConfig = it,
+                navController = navController,
+                toolbarStateManager = toolbarStateManager
+            )
+        }
 }
 
 @Composable
-private fun ToolbarSurface(navController: NavController? = null, toolbarConfig: ToolBarConfig) {
+private fun ToolbarSurface(
+    navController: NavController? = null,
+    toolbarConfig: ToolBarConfig,
+    toolbarStateManager: ToolbarStateManager? = null
+) {
     Surface(
         modifier = Modifier
             .height(ToolbarSize)
@@ -52,7 +87,10 @@ private fun ToolbarSurface(navController: NavController? = null, toolbarConfig: 
             ),
     ) {
         if (toolbarConfig.route.routeScheme == HomeRoute.routeScheme) {
-            HomeToolbar(navController = navController, config = toolbarConfig)
+            HomeToolbar(
+                config = toolbarConfig,
+                toolbarStateManager = toolbarStateManager
+            )
         } else {
             Toolbar(toolbarConfig)
         }
@@ -60,10 +98,15 @@ private fun ToolbarSurface(navController: NavController? = null, toolbarConfig: 
 }
 
 @Composable
-private fun HomeToolbar(navController: NavController? = null, config: ToolBarConfig) {
+private fun HomeToolbar(
+    config: ToolBarConfig,
+    toolbarStateManager: ToolbarStateManager?
+) {
     Toolbar(config = config) { modifier ->
         HomeIcon(modifier) { tab ->
-            navController?.navigate(HomeRoute.createRoute(tab))
+            toolbarStateManager?.setState(
+                if (tab == "List") ToolbarState.List else ToolbarState.Grid
+            )
         }
     }
 }
@@ -82,16 +125,20 @@ private fun HomeIcon(modifier: Modifier, click: (String) -> Unit = { }) {
                     click(currentTab)
                 }, customTab = {
                     TabIconWitchPoint(
-                        contentDescription = stringResource(id = if (tab == tabVariant.second) {
-                            R.string.grid_tab
-                        } else {
-                            R.string.list_tab
-                        }),
-                        imageVector = ImageVector.vectorResource(id = if (tab == tabVariant.second) {
-                            R.drawable.grid_icon
-                        } else {
-                            R.drawable.list_icon
-                        }),
+                        contentDescription = stringResource(
+                            id = if (tab == tabVariant.second) {
+                                R.string.grid_tab
+                            } else {
+                                R.string.list_tab
+                            }
+                        ),
+                        imageVector = ImageVector.vectorResource(
+                            id = if (tab == tabVariant.second) {
+                                R.drawable.grid_icon
+                            } else {
+                                R.drawable.list_icon
+                            }
+                        ),
                         modifier = Modifier
                             .width(SizeIcon + 20.dp)
                             .padding(top = 13.dp),
@@ -134,7 +181,11 @@ private fun Toolbar(
                 textAlign = TextAlign.Center
             )
         } else {
-            content(Modifier.weight(1F, true).padding(start = SizeIcon, end = SizeIcon))
+            content(
+                Modifier
+                    .weight(1F, true)
+                    .padding(start = SizeIcon, end = SizeIcon)
+            )
         }
 
         if (config.rightBottom != null) {

@@ -1,4 +1,4 @@
-package com.project.common_ui.tab.common_error
+package com.project.common_ui.common_error
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

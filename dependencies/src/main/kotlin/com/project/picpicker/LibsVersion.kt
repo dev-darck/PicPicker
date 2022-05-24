@@ -16,4 +16,5 @@ object LibsVersion {
     const val retrofitVersion = "2.9.0"
     const val okhttpVersion = "4.9.3"
     const val glideVersion = "4.11.0"
+    const val pagerVersion = "0.24.9-beta"
 }
