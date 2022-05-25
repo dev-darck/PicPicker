@@ -11,6 +11,7 @@ import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.Modules.navigationImpl
 import com.project.picpicker.Modules.toolBar
 import com.project.picpicker.Modules.unsplashApi
+import com.project.picpicker.Screen.webViewScreen
 import com.project.picpicker.TabModule.collectionTab
 import com.project.picpicker.TabModule.downloadTab
 import com.project.picpicker.TabModule.homeTab
@@ -42,6 +43,7 @@ application(
         module(imageLoader),
         module(toolBar),
         module(commonResources),
+        module(webViewScreen),
     ),
     plugins = addAppPlug(
         hiltPlugin

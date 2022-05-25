@@ -39,7 +39,7 @@ val Deps.names: Sequence<NameSpec>
 val Deps.targets: Sequence<ProjectSpec>
     get(): Sequence<ProjectSpec> = filterIsInstance(ProjectSpec::class.java)
 
-fun Project.module(name: String): ProjectSpec = ProjectSpec(Target(project(":$name")), Impl)
+fun Project.module(projName: String): ProjectSpec = ProjectSpec(Target(project(":$projName")), Impl)
 
 infix operator fun Dependency.plus(dep: Dependency): MixedDependency = MixedDependency(
     dependency.names + dep.dependency.names,

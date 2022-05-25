@@ -17,7 +17,21 @@ object DownloadRoute : Route() {
 object CollectionsRoute : Route() {
     private const val route: String = "collections"
     override val routeScheme: String = route
+}
 
+object WebViewRoute : Route() {
+    private const val route: String = "webview"
+    const val schemeUrl: String = "url"
+    const val schemeType: String = "type"
+    override val routeScheme: String = "$route/{$schemeUrl}/{$schemeType}"
+
+    fun createRoute(url: String, type: TypeUrl): String = "$route/$url/${type.type}"
+
+    enum class TypeUrl(val type: String) {
+        URL_INSIDE("INSIDE"),
+        URL_WITH_LOAD_FILE("LOAD_FILE"),
+        UNKNOWN("UNKNOWN")
+    }
 }
 
 object HomeRoute : Route() {

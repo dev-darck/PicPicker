@@ -4,6 +4,7 @@
     <string name="collections_label">Коллекции</string>
     <string name="download_label">Загрузки</string>
     <string name="profile_label">Профиль</string>
+    <string name="add_collections">Добавить коллекции</string>
 
     Other
     <string name="photos">фото</string>

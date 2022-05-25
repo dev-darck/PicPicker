@@ -20,6 +20,10 @@ object TabModule {
     const val profileTab = "profile-tab"
 }
 
+object Screen {
+    const val webViewScreen = "web-view-screen"
+}
+
 object Model {
     const val commonModel = "model"
 }

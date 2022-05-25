@@ -27,9 +27,9 @@ private val Elevation = 15.dp
 fun BottomNavigation(navController: NavController, bottomScreens: Sequence<BottomConfig>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val hideBottomNav = false
+    val hideBottomNav = bottomScreens.any { it.route.routeScheme == currentRoute }
 
-    val size = if (hideBottomNav) {
+    val size = if (!hideBottomNav) {
         Modifier.size(animateDpAsState(targetValue = 0.dp, animationSpec = tween()).value)
     } else {
         Modifier
