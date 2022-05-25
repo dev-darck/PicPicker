@@ -23,7 +23,8 @@ import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion.MIDDLE
-import com.project.common_ui.tab.loasder.PulsingLoader
+import com.project.common_ui.tab.common_error.Error
+import com.project.common_ui.tab.loader.PulsingLoader
 import com.project.common_ui.tab.paging.PagingData
 import com.project.common_ui.tab.paging.PagingState
 import com.project.common_ui.tab.paging.pagingItems
@@ -37,8 +38,7 @@ fun Collections(viewModel: CollectionViewModel) {
     LaunchedEffect(key1 = viewModel) {
         viewModel.collectionFirstPage()
     }
-    val state = viewModel.collection.collectAsState().value
-    when (state) {
+    when (val state = viewModel.collection.collectAsState().value) {
         is Loading -> {
             Shimmer()
         }
@@ -46,7 +46,7 @@ fun Collections(viewModel: CollectionViewModel) {
             LazyList(state.result, viewModel)
         }
         is Exception -> {
-
+            Error()
         }
     }
 }

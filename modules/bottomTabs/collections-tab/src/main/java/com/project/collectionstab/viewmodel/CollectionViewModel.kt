@@ -40,6 +40,8 @@ class CollectionViewModel @Inject constructor(
                     val state = collectionFlow.value
                     if (state is CollectionState.Success && state.result.item.isNotEmpty()) {
                         state.result.settingsPaging.errorState()
+                    } else {
+                        collectionFlow.emit(CollectionState.Exception)
                     }
                 }
             }
