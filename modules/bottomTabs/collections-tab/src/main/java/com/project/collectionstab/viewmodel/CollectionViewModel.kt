@@ -2,6 +2,7 @@ package com.project.collectionstab.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.collectionstab.MaxCollectionPage
 import com.project.navigationapi.navigation.Navigation
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
@@ -23,20 +24,23 @@ class CollectionViewModel @Inject constructor(
 
     fun collectionFirstPage() {
         val state = collectionFlow.value
-        if (state is CollectionState.Success && state.result.isNotEmpty()) return
+        if (state is CollectionState.Success && state.result.item.isNotEmpty()) return
         collections(1)
     }
 
     fun collections(page: Int) {
         viewModelScope.launch {
-            when (val result = unsplashRepository.collections(page.toString())) {
+            when (val result = unsplashRepository.collections(page, MaxCollectionPage)) {
                 is ResultWrapper.Success -> {
                     collectionFlow.update {
-                        it.updateResult(result.value)
+                        it.updateResult(result.value, page)
                     }
                 }
                 else -> {
-
+                    val state = collectionFlow.value
+                    if (state is CollectionState.Success && state.result.item.isNotEmpty()) {
+                        state.result.settingsPaging.errorState()
+                    }
                 }
             }
         }

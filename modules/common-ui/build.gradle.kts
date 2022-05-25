@@ -4,6 +4,6 @@ import com.project.picpicker.plugins.config.module
 
 module(
     appDependency = addDep(
-        *jetpackComposeUi
+        *jetpackComposeUi,
     )
 )
