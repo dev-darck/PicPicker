@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImagePainter
 import coil.compose.AsyncImagePainter.State.Loading
 import coil.compose.AsyncImagePainter.State.Success
@@ -26,12 +27,30 @@ import com.project.util.BlurHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.math.roundToInt
+
+/**
+ * The image must be larger than the container.
+ * */
+data class ImageSize(
+    private val _width: Dp,
+    private val _height: Dp,
+    val scaleSize: Float = 1.5F
+) {
+    val width: Int
+        get() = (_width.value * scaleSize).roundToInt()
+    val height: Int
+        get() = (_height.value * scaleSize).roundToInt()
+}
 
 @Composable
-private fun requestImage(data: Any) = ImageRequest
+private fun requestImage(data: Any, size: ImageSize? = null) = ImageRequest
     .Builder(LocalContext.current)
     .data(data)
-    .size(Size.ORIGINAL)
+    .let {
+        if (size != null) it.size(size.width, size.height)
+        else it.size(Size.ORIGINAL)
+    }
     .build()
 
 @Composable
@@ -42,10 +61,11 @@ fun CoilImage(
     contentDescription: String = "",
     contentScale: ContentScale = ContentScale.Crop,
     blurHash: String? = null,
+    size: ImageSize? = null,
     errorState: @Composable () -> Unit = { },
 ) {
     val painter = rememberAsyncImagePainter(
-        model = requestImage(data),
+        model = requestImage(data, size),
         contentScale = contentScale,
     )
 

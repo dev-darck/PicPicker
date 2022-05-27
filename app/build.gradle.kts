@@ -1,3 +1,4 @@
+import com.project.picpicker.BottomSheet.imagePicker
 import com.project.picpicker.Dependency
 import com.project.picpicker.Dependency.coil
 import com.project.picpicker.Dependency.hilt
@@ -41,6 +42,7 @@ application(
         module(unsplashApi),
         module(imageLoader),
         module(toolBar),
+        module(imagePicker),
         module(commonResources),
     ),
     plugins = addAppPlug(

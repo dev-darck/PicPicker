@@ -20,6 +20,11 @@ object CollectionsRoute : Route() {
 
 }
 
+object ImagePickerBottomSheet : Route() {
+    private const val route: String = "bottomsheet"
+    override val routeScheme: String = route
+}
+
 object HomeRoute : Route() {
     private const val route: String = "home"
     const val scheme: String = "type"

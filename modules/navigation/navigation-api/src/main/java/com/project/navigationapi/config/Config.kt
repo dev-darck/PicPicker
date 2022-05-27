@@ -12,7 +12,7 @@ interface Config {
         get() = emptyList()
     val deepLinks: List<NavDeepLink>
         get() = emptyList()
-    val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
+    val openScreen: @Composable (AnimatedVisibilityScope.(NavBackStackEntry) -> Unit)?
 }
 
 val <T: Config> T.root get() = this.route.routeScheme

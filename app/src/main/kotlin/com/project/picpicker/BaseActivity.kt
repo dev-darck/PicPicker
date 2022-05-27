@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import com.project.common_compos_ui.theme.AppTheme
 import com.project.common_compos_ui.theme.StatusBarColorProvider
 import com.project.navigationapi.config.BottomConfig
+import com.project.navigationapi.config.BottomSheetConfig
 import com.project.navigationapi.config.Config
 import com.project.navigationapi.config.ToolBarConfig
 import com.project.navigationapi.navigation.Navigation
@@ -25,6 +26,7 @@ class BaseActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val screens = screens?.asSequence() ?: emptySequence()
         val bottomScreen = screens.convertTo<BottomConfig>().sortedBy(BottomConfig::order)
+        val bottomSheetConfig = screens.convertTo<BottomSheetConfig>()
         val startDestination = bottomScreen.find(BottomConfig::isRoot)?.route?.routeScheme.orEmpty()
         val toolBarConfig: Sequence<ToolBarConfig> = screens.convertTo()
         setContent {
@@ -33,8 +35,11 @@ class BaseActivity : ComponentActivity() {
                 if (startDestination.isNotEmpty() && appNavigation != null) {
                     PicPikerScaffold(
                         appNavigation = appNavigation!!,
-                        screens, bottomScreen,
-                        toolBarConfig, startDestination
+                        screens,
+                        bottomScreen,
+                        toolBarConfig,
+                        bottomSheetConfig,
+                        startDestination
                     )
                 } else {
                     //Ошибочное состояние ввывести ошибку!

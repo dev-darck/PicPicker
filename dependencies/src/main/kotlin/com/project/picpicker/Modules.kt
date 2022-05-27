@@ -21,6 +21,10 @@ object TabModule {
     const val profileTab = "profile-tab"
 }
 
+object BottomSheet {
+    const val imagePicker = "bottomsheet-image-piker"
+}
+
 object Model {
     const val commonModel = "model"
 }
