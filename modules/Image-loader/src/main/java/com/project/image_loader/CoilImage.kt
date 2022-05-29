@@ -1,24 +1,30 @@
 package com.project.image_loader
 
+import android.graphics.Bitmap
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImagePainter
+import coil.compose.AsyncImagePainter.State.Loading
+import coil.compose.AsyncImagePainter.State.Success
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.project.util.BlurHash
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
@@ -32,15 +38,10 @@ private fun requestImage(data: Any) = ImageRequest
 fun CoilImage(
     data: Any,
     modifier: Modifier = Modifier,
-    enableShimmer: Boolean = true,
     shapes: CornerBasedShape = MaterialTheme.shapes.medium,
-    shimmerDelayDuration: Int = 300,
-    shimmerDuration: Int = 1600,
-    enableAlpha: Boolean = false,
-    gradient: List<Color> = defaultGradient,
-    alphaDuration: Int = 1000,
     contentDescription: String = "",
     contentScale: ContentScale = ContentScale.Crop,
+    blurHash: String? = null,
     errorState: @Composable () -> Unit = { },
 ) {
     val painter = rememberAsyncImagePainter(
@@ -49,34 +50,41 @@ fun CoilImage(
     )
 
     when (painter.state) {
-        is AsyncImagePainter.State.Loading -> {
-            if (enableShimmer) {
-                Shimmering(
-                    enableAlpha,
-                    shimmerDelayDuration,
-                    shimmerDuration,
-                    gradient,
-                    alphaDuration
+        is Loading -> {
+            if (blurHash != null) {
+                AnimatedVisibility(
+                    painter.state is Loading,
+                    modifier = modifier,
+                    enter = fadeIn(animationSpec = tween(1000))
                 ) {
-                    Spacer(modifier = modifier
-                        .fillMaxWidth()
-                        .clip(shapes)
-                        .background(it))
+                    BlurHash(
+                        blurHash,
+                        modifier,
+                        shapes,
+                        contentScale
+                    )
                 }
             }
             Timber.i("Loading $data")
         }
-        is AsyncImagePainter.State.Success -> {
-            Box(
-                modifier = modifier.clip(shapes),
-                contentAlignment = Alignment.Center
+        is Success -> {
+            AnimatedVisibility(
+                painter.state is Success,
+                modifier = modifier,
+                enter = fadeIn(animationSpec = tween(1000))
             ) {
-                Image(
-                    modifier = modifier.fillMaxSize(),
-                    painter = painter,
-                    contentDescription = contentDescription,
-                    contentScale = contentScale
-                )
+                Box(
+                    modifier = modifier
+                        .clip(shapes),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        modifier = modifier.fillMaxSize(),
+                        painter = painter,
+                        contentDescription = contentDescription,
+                        contentScale = contentScale
+                    )
+                }
             }
             Timber.i("Success")
         }
@@ -86,6 +94,37 @@ fun CoilImage(
         }
         is AsyncImagePainter.State.Empty -> {
             Timber.i("Empty")
+        }
+    }
+}
+
+@Composable
+private fun BlurHash(
+    blurHash: String,
+    modifier: Modifier,
+    shapes: CornerBasedShape = MaterialTheme.shapes.medium,
+    contentScale: ContentScale,
+) {
+    var rememberBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    LaunchedEffect(key1 = blurHash) {
+        launch(Dispatchers.IO) {
+            BlurHash().execute(blurHash, 200, 200) {
+                rememberBitmap = it
+            }
+        }
+    }
+
+    if (rememberBitmap != null) {
+        Box(
+            modifier = modifier.clip(shapes),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                bitmap = rememberBitmap!!.asImageBitmap(),
+                contentDescription = "",
+                modifier = modifier.fillMaxSize(),
+                contentScale = contentScale
+            )
         }
     }
 }

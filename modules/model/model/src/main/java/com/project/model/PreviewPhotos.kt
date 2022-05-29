@@ -14,6 +14,14 @@ fun List<PreviewPhotos>.smallPhoto(index: Int): String {
     return getOrNull(index)?.urls?.small.orEmpty()
 }
 
+fun List<PreviewPhotos>.regularPhoto(index: Int): String {
+	return getOrNull(index)?.urls?.regular.orEmpty()
+}
+
+fun List<PreviewPhotos>.blurHash(index: Int): String {
+	return getOrNull(index)?.blurHash.orEmpty()
+}
+
 fun List<PreviewPhotos>.thumbPhoto(index: Int): String {
     return getOrNull(index)?.urls?.thumb.orEmpty()
 }

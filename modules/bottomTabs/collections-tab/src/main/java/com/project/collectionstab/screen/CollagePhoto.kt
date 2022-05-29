@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.project.image_loader.CoilImage
 import com.project.model.PreviewPhotos
+import com.project.model.blurHash
+import com.project.model.regularPhoto
 import com.project.model.smallPhoto
 
 private const val TripleImage = 3
@@ -46,7 +48,7 @@ fun CollagePhoto(
 @Composable
 private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
     CoilImage(
-        data = previewPhotos.smallPhoto(0),
+        data = previewPhotos.regularPhoto(0),
         modifier = Modifier
             .padding(end = SpacingBetweenVertical)
             .weight(2F),
@@ -54,6 +56,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
             bottomStart = RoundCorner,
             topStart = RoundCorner,
         ),
+        blurHash = previewPhotos.blurHash(0)
     )
     Column(modifier = Modifier.weight(1F)) {
         CoilImage(
@@ -64,6 +67,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
             shapes = RoundedCornerShape(
                 topEnd = RoundCorner
             ),
+            blurHash = previewPhotos.blurHash(1)
         )
         CoilImage(
             data = previewPhotos.smallPhoto(2),
@@ -71,6 +75,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
             shapes = RoundedCornerShape(
                 bottomEnd = RoundCorner,
             ),
+            blurHash = previewPhotos.blurHash(2)
         )
     }
 }
@@ -78,7 +83,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
 @Composable
 private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
     CoilImage(
-        data = previewPhotos.smallPhoto(0),
+        data = previewPhotos.regularPhoto(0),
         modifier = Modifier
             .padding(end = 2.dp)
             .weight(1F),
@@ -86,24 +91,27 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
             bottomStart = 20.dp,
             topStart = 20.dp,
         ),
+        blurHash = previewPhotos.blurHash(0)
     )
     CoilImage(
-        data = previewPhotos.smallPhoto(1),
+        data = previewPhotos.regularPhoto(1),
         modifier = Modifier
             .weight(1F),
         shapes = RoundedCornerShape(
             bottomEnd = 20.dp,
             topEnd = 20.dp,
         ),
+        blurHash = previewPhotos.blurHash(1)
     )
 }
 
 @Composable
 private fun SingleImage(previewPhotos: List<PreviewPhotos>) {
     CoilImage(
-        data = previewPhotos.smallPhoto(0),
+        data = previewPhotos.regularPhoto(0),
         modifier = Modifier,
         shapes = RoundedCornerShape(20.dp),
+        blurHash = previewPhotos.blurHash(1)
     )
 }
 
