@@ -11,6 +11,7 @@ object Modules {
     const val commonResources = "common-resources"
     const val commonUi = "common-ui"
     const val scrollableTabRow = "scrollable-tab-row"
+    const val util = "util"
 }
 
 object TabModule {
