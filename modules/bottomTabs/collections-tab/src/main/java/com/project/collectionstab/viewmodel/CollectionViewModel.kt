@@ -3,6 +3,7 @@ package com.project.collectionstab.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.collectionstab.MaxCollectionPage
+import com.project.model.Tags
 import com.project.navigationapi.navigation.Navigation
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
@@ -21,6 +22,9 @@ class CollectionViewModel @Inject constructor(
 
     private val collectionFlow = MutableStateFlow<CollectionState>(CollectionState.Loading)
     val collection = collectionFlow.asStateFlow()
+
+    private val tagsFlow = MutableStateFlow<List<Tags>>(emptyList())
+    val tags = tagsFlow.asStateFlow()
 
     fun collectionFirstPage() {
         val state = collectionFlow.value
