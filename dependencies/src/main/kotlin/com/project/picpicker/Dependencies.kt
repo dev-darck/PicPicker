@@ -5,6 +5,7 @@ import com.project.picpicker.LibsVersion.activityComposeVersion
 import com.project.picpicker.LibsVersion.composeVersion
 import com.project.picpicker.LibsVersion.customViewPoolingcontainerVersion
 import com.project.picpicker.LibsVersion.customViewVersion
+import com.project.picpicker.LibsVersion.glideVersion
 import com.project.picpicker.LibsVersion.hiltNavigationComposeVersion
 import com.project.picpicker.LibsVersion.hiltVersion
 import com.project.picpicker.LibsVersion.kotlinVersion
@@ -18,6 +19,7 @@ import com.project.picpicker.dependency.helper.androidTest
 import com.project.picpicker.dependency.helper.debugImpl
 import com.project.picpicker.dependency.helper.impl
 import com.project.picpicker.dependency.helper.kapt
+import org.gradle.kotlin.dsl.exclude
 
 object Dependency {
     val composMaterial = "androidx.compose.material:material:$composeVersion".impl
@@ -26,7 +28,14 @@ object Dependency {
         "androidx.compose.foundation:foundation-layout:$composeVersion".impl
     val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion".impl
 
-    val coil = "io.coil-kt:coil-compose:2.1.0".impl
+    val glide = arrayOf(
+        "com.github.bumptech.glide:glide:$glideVersion".impl,
+        "com.github.bumptech.glide:okhttp3-integration:$glideVersion".impl {
+            exclude(group = "com.squareup.okhttp3", module = "okhttp")
+        },
+        "com.github.bumptech.glide:compiler:$glideVersion".kapt,
+    )
+
 
     val jetpackComposeUi = arrayOf(
         "androidx.compose.ui:ui:$composeVersion".impl,
@@ -81,6 +90,7 @@ object Dependency {
         leakCanary
     )
     val okHttpLogger = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion".impl
+    val okHttp = "com.squareup.okhttp3:okhttp:$okhttpVersion".impl
     val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion".impl
     val gson = "com.squareup.retrofit2:converter-gson:$retrofitVersion".impl
 }

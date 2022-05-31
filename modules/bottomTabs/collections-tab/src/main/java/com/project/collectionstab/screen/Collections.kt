@@ -184,35 +184,41 @@ private fun CardCollection(collectionModel: CollectionModel) {
 @Composable
 private fun Shimmer() {
     val twoCollectionCard = listOf(1, 2)
-    LazyColumn(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = CenterHorizontally,
-        userScrollEnabled = false
-    ) {
-        items(twoCollectionCard.size) {
-            Shimmering {
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-                ShimmeringCollagePhoto(it)
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-                Spacer(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(15.dp)
-                        .padding(horizontal = 20.dp)
-                        .background(it)
-                )
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-                Spacer(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(15.dp)
-                        .padding(horizontal = 20.dp)
-                        .background(it)
-                )
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-                TagsShimmering(it)
-                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) { paddingValue ->
+        LazyColumn(
+            modifier = Modifier,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = CenterHorizontally,
+            userScrollEnabled = false,
+            contentPadding = paddingValue
+        ) {
+            items(twoCollectionCard.size) {
+                Shimmering {
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
+                    ShimmeringCollagePhoto(it)
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(15.dp)
+                            .padding(horizontal = 20.dp)
+                            .background(it)
+                    )
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(15.dp)
+                            .padding(horizontal = 20.dp)
+                            .background(it)
+                    )
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
+                    TagsShimmering(it)
+                    Spacer(modifier = Modifier.padding(bottom = 10.dp))
+                }
             }
         }
     }

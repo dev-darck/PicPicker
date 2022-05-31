@@ -21,6 +21,7 @@ fun Project.applyDependency(
                     addDependencyTo(
                         dep.configurationName.name,
                         dep.name,
+                        dep.externalModuleAction
                     )
                 }
             }

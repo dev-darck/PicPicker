@@ -1,22 +1,24 @@
 package com.project.picpicker.dependency.helper
 
 import com.project.picpicker.dependency.*
+import com.project.picpicker.dependency.Annotation
 import com.project.picpicker.dependency.Target
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ExternalModuleDependency
 
 
 sealed class Dependency(
-    val dependency: Deps = emptySequence()
+    val dependency: Deps = emptySequence(),
 )
 
 object EmptyDependency : Dependency()
 
 data class ProjectDependency(
-    val targets: Sequence<ProjectSpec> = emptySequence()
+    val targets: Sequence<ProjectSpec> = emptySequence(),
 ) : Dependency(targets)
 
 class NamedDependency(
-    private val names: Sequence<NameSpec> = emptySequence()
+    private val names: Sequence<NameSpec> = emptySequence(),
 ) : Dependency(names)
 
 data class MixedDependency(
@@ -52,8 +54,14 @@ infix operator fun Dependency.plus(dep: NamedDependency): NamedDependency = Name
 
 val String.impl: NameSpec
     get() = NameSpec(this, Impl)
+
+fun String.impl(externalModuleAction: (ExternalModuleDependency.() -> Unit)): NameSpec =
+    NameSpec(this, Impl, externalModuleAction)
+
 val String.test: NameSpec
     get() = NameSpec(this, TestImpl)
+val String.annotation: NameSpec
+    get() = NameSpec(this, Annotation)
 val String.androidTest: NameSpec
     get() = NameSpec(this, AndroidTestImpl)
 val String.kapt: NameSpec
