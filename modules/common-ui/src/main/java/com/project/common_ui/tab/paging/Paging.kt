@@ -85,7 +85,7 @@ class Paging<T : Any>(
             .distinctUntilChanged()
             .collect { (currentState, position) ->
                 val last = itemCount - settingsPaging.countForNextPage
-                if (position == last && settingsPaging.isNextPage() && currentState != PagingState.Loading) {
+                if (position >= last && settingsPaging.isNextPage() && currentState != PagingState.Loading) {
                     state.tryEmit(PagingState.Loading)
                     settingsPaging.updateCurrentPage()
                     onNewPaging(settingsPaging.currentPage)
