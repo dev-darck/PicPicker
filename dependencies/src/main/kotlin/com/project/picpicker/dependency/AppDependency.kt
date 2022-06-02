@@ -1,10 +1,12 @@
 package com.project.picpicker.dependency
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ExternalModuleDependency
 
 sealed class ConfigurationName(val name: String)
 object Impl : ConfigurationName("implementation")
 object TestImpl : ConfigurationName("testImplementation")
+object Annotation : ConfigurationName("annotationProcessor")
 object Kapt : ConfigurationName("kapt")
 object AndroidTestImpl : ConfigurationName("androidTestImplementation")
 object CompileOnly : ConfigurationName("compileOnly")
@@ -28,6 +30,7 @@ data class ProjectSpec(
 data class NameSpec(
     override val name: String,
     val config: ConfigurationName,
+    val externalModuleAction: ExternalModuleDependency.() -> Unit = {}
 ) : AppDependency(name, config)
 
 class Target(val project: Project) {

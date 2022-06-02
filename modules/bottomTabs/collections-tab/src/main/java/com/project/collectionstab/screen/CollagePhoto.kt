@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.project.image_loader.CoilImage
+import com.project.image_loader.GlideImage
 import com.project.model.PreviewPhotos
 import com.project.model.blurHash
 import com.project.model.regularPhoto
@@ -47,7 +47,7 @@ fun CollagePhoto(
 
 @Composable
 private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
-    CoilImage(
+    GlideImage(
         data = previewPhotos.regularPhoto(0),
         modifier = Modifier
             .padding(end = SpacingBetweenVertical)
@@ -59,7 +59,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
         blurHash = previewPhotos.blurHash(0)
     )
     Column(modifier = Modifier.weight(1F)) {
-        CoilImage(
+        GlideImage(
             data = previewPhotos.smallPhoto(1),
             modifier = Modifier
                 .padding(bottom = SpacingBetweenHorizontal)
@@ -69,7 +69,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
             ),
             blurHash = previewPhotos.blurHash(1)
         )
-        CoilImage(
+        GlideImage(
             data = previewPhotos.smallPhoto(2),
             modifier = Modifier.weight(0.5F),
             shapes = RoundedCornerShape(
@@ -82,7 +82,7 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
 
 @Composable
 private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
-    CoilImage(
+    GlideImage(
         data = previewPhotos.regularPhoto(0),
         modifier = Modifier
             .padding(end = 2.dp)
@@ -93,7 +93,7 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
         ),
         blurHash = previewPhotos.blurHash(0)
     )
-    CoilImage(
+    GlideImage(
         data = previewPhotos.regularPhoto(1),
         modifier = Modifier
             .weight(1F),
@@ -107,7 +107,7 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
 
 @Composable
 private fun SingleImage(previewPhotos: List<PreviewPhotos>) {
-    CoilImage(
+    GlideImage(
         data = previewPhotos.regularPhoto(0),
         modifier = Modifier,
         shapes = RoundedCornerShape(20.dp),

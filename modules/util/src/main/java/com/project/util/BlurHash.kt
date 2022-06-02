@@ -1,21 +1,22 @@
 package com.project.util
 
-import android.graphics.Bitmap
+import android.content.res.Resources
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 
-class BlurHash(
-    private var punch: Float = 1F,
-) {
+object BlurHash {
     fun execute(
+        resources: Resources,
         blurString: String,
         width: Int,
         height: Int,
-        callBack: (Bitmap?) -> Unit = { },
-    ) {
-        BlurHashDecoder.decode(
-            blurString,
-            width,
-            height,
-            punch,
-        ).run(callBack)
+        punch: Float = 1F,
+    ): Drawable = BlurHashDecoder.decode(
+        blurString,
+        width,
+        height,
+        punch,
+    ).run {
+        BitmapDrawable(resources, this)
     }
 }
