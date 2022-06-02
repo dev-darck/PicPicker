@@ -17,6 +17,7 @@
     <string name="collections_label">Collections</string>
     <string name="download_label">Download</string>
     <string name="profile_label">Profile</string>
+    <string name="add_collections">Add collections</string>
 
     Other
     <string name="photos">photo</string>
