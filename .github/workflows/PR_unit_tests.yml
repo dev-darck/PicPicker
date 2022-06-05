@@ -74,7 +74,7 @@ jobs:
 
       - name: Check lint
         if: always()
-        run: ./gradlew lint --stacktrace
+        run: ./gradlew lintRelease --stacktrace
 
   Unit-test:
     needs: lint

@@ -32,10 +32,6 @@ internal fun Project.applicationOptions() = extensions.getByType<BaseAppModuleEx
         }
     }
 
-    lint {
-        baseline = file("lint_rule.xml")
-    }
-
     defaultConfig {
         applicationId = "com.project.PicPicker"
         minSdk = 21
