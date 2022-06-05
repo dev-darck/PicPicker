@@ -1,4 +1,4 @@
-package com.project.common_ui.tab.loader
+package com.project.common_ui.loader
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background

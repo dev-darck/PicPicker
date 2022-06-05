@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -28,12 +29,12 @@ import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion.MIDDLE
-import com.project.common_ui.tab.common_error.Error
-import com.project.common_ui.tab.loader.PulsingLoader
-import com.project.common_ui.tab.paging.PagingData
-import com.project.common_ui.tab.paging.PagingState
-import com.project.common_ui.tab.paging.pagingItems
-import com.project.common_ui.tab.paging.rememberAsNewPage
+import com.project.common_ui.common_error.Error
+import com.project.common_ui.loader.PulsingLoader
+import com.project.common_ui.paging.PagingData
+import com.project.common_ui.paging.PagingState
+import com.project.common_ui.paging.pagingItems
+import com.project.common_ui.paging.rememberAsNewPage
 import com.project.image_loader.Shimmering
 import com.project.model.CollectionModel
 import com.project.model.name
@@ -61,51 +62,53 @@ private fun LazyList(
     pagingData: PagingData<CollectionModel>,
     viewModel: CollectionViewModel,
 ) {
+    val lazyState = rememberLazyListState()
     val items = pagingData.rememberAsNewPage(onNewPaging = {
         viewModel.collections(it)
     })
     val state = items.statePaging.collectAsState().value
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
     ) { paddingValue ->
         LazyColumn(
             contentPadding = paddingValue,
-            modifier = Modifier,
-        ) {
-            item {
-                AddTag(viewModel)
-            }
-            pagingItems(items) { collectionModel ->
-                collectionModel?.let { CardCollection(collectionModel = it) }
-            }
-            item {
-                when (state) {
-                    is PagingState.Loading -> {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = CenterHorizontally
-                        ) {
-                            Spacer(modifier = Modifier.padding(top = 15.dp))
-                            PulsingLoader()
-                            Spacer(modifier = Modifier.padding(bottom = 15.dp))
+            state = lazyState,
+            modifier = Modifier.fillMaxSize(),
+            content = {
+                item {
+                    AddTag(viewModel)
+                }
+                pagingItems(items) { collectionModel ->
+                    collectionModel?.let { CardCollection(collectionModel = it) }
+                }
+                item {
+                    when (state) {
+                        is PagingState.Loading -> {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = CenterHorizontally
+                            ) {
+                                Spacer(modifier = Modifier.padding(top = 15.dp))
+                                PulsingLoader()
+                                Spacer(modifier = Modifier.padding(bottom = 15.dp))
+                            }
                         }
-                    }
-                    is PagingState.Error -> {
-                        val context = LocalContext.current
-                        Toast.makeText(
-                            context,
-                            "Connection error, please try later",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        items.updateState(PagingState.Success)
-                    }
-                    else -> {
+                        is PagingState.Error -> {
+                            val context = LocalContext.current
+                            Toast.makeText(
+                                context,
+                                "Connection error, please try later",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            items.updateState(PagingState.Success)
+                        }
+                        else -> {
 
+                        }
                     }
                 }
             }
-        }
+        )
     }
 }
 
@@ -141,7 +144,7 @@ private fun CardCollection(collectionModel: CollectionModel) {
     Column(
         Modifier
             .padding(vertical = 10.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         CollagePhoto(
             modifier = Modifier.padding(horizontal = 16.dp),

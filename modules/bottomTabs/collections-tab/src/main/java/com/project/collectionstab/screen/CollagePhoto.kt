@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.project.image_loader.GlideImage
+import com.project.image_loader.ImageSize
 import com.project.model.PreviewPhotos
 import com.project.model.blurHash
 import com.project.model.regularPhoto
@@ -34,23 +35,25 @@ fun CollagePhoto(
     Row(
         modifier = modifier
             .height(height)
-            .fillMaxWidth(),
+            .fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         when {
-            count >= TripleImage -> MaxImage(previewPhotos)
-            count >= DoubleImage -> MiddleCount(previewPhotos)
-            count >= SingleImage -> SingleImage(previewPhotos)
+            count >= TripleImage -> MaxImage(previewPhotos, height)
+            count >= DoubleImage -> MiddleCount(previewPhotos, height)
+            count >= SingleImage -> SingleImage(previewPhotos, height)
         }
     }
 }
 
 @Composable
-private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
+private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>, height: Dp) {
     GlideImage(
         data = previewPhotos.regularPhoto(0),
+        imageSize = ImageSize(_height = height),
         modifier = Modifier
             .padding(end = SpacingBetweenVertical)
+            .height(height)
             .weight(2F),
         shapes = RoundedCornerShape(
             bottomStart = RoundCorner,
@@ -59,11 +62,14 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
         blurHash = previewPhotos.blurHash(0)
     )
     Column(modifier = Modifier.weight(1F)) {
+        val smallHeight = height / 2
         GlideImage(
             data = previewPhotos.smallPhoto(1),
+            imageSize = ImageSize(_height = smallHeight),
             modifier = Modifier
                 .padding(bottom = SpacingBetweenHorizontal)
-                .weight(0.5F),
+                .height(smallHeight)
+                .weight(.5F),
             shapes = RoundedCornerShape(
                 topEnd = RoundCorner
             ),
@@ -71,7 +77,10 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
         )
         GlideImage(
             data = previewPhotos.smallPhoto(2),
-            modifier = Modifier.weight(0.5F),
+            imageSize = ImageSize(_height = smallHeight),
+            modifier = Modifier
+                .height(smallHeight)
+                .weight(0.5F),
             shapes = RoundedCornerShape(
                 bottomEnd = RoundCorner,
             ),
@@ -81,10 +90,12 @@ private fun RowScope.MaxImage(previewPhotos: List<PreviewPhotos>) {
 }
 
 @Composable
-private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
+private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>, height: Dp) {
     GlideImage(
         data = previewPhotos.regularPhoto(0),
+        imageSize = ImageSize(_height = height),
         modifier = Modifier
+            .height(height)
             .padding(end = 2.dp)
             .weight(1F),
         shapes = RoundedCornerShape(
@@ -95,7 +106,9 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
     )
     GlideImage(
         data = previewPhotos.regularPhoto(1),
+        imageSize = ImageSize(_height = height),
         modifier = Modifier
+            .height(height)
             .weight(1F),
         shapes = RoundedCornerShape(
             bottomEnd = 20.dp,
@@ -106,10 +119,11 @@ private fun RowScope.MiddleCount(previewPhotos: List<PreviewPhotos>) {
 }
 
 @Composable
-private fun SingleImage(previewPhotos: List<PreviewPhotos>) {
+private fun SingleImage(previewPhotos: List<PreviewPhotos>, height: Dp) {
     GlideImage(
         data = previewPhotos.regularPhoto(0),
-        modifier = Modifier,
+        imageSize = ImageSize(_height = height),
+        modifier = Modifier.height(height),
         shapes = RoundedCornerShape(20.dp),
         blurHash = previewPhotos.blurHash(1)
     )

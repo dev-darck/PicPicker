@@ -9,6 +9,7 @@ import com.project.navigationapi.config.BottomConfig
 import com.project.navigationapi.config.Config
 import com.project.navigationapi.config.ToolBarConfig
 import com.project.navigationapi.navigation.Navigation
+import com.project.toolbar.ToolbarStateManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -20,6 +21,9 @@ class BaseActivity : ComponentActivity() {
 
     @set:Inject
     var screens: Set<@JvmSuppressWildcards Config>? = null
+
+    @Inject
+    lateinit var toolbarStateManager: ToolbarStateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +38,8 @@ class BaseActivity : ComponentActivity() {
                     PicPikerScaffold(
                         appNavigation = appNavigation!!,
                         screens, bottomScreen,
-                        toolBarConfig, startDestination
+                        toolBarConfig, startDestination,
+                        toolbarStateManager
                     )
                 } else {
                     //Ошибочное состояние ввывести ошибку!

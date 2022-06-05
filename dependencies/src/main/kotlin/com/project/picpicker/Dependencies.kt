@@ -11,6 +11,7 @@ import com.project.picpicker.LibsVersion.hiltVersion
 import com.project.picpicker.LibsVersion.kotlinVersion
 import com.project.picpicker.LibsVersion.navigationComposeVersion
 import com.project.picpicker.LibsVersion.okhttpVersion
+import com.project.picpicker.LibsVersion.pagerVersion
 import com.project.picpicker.LibsVersion.retrofitVersion
 import com.project.picpicker.LibsVersion.systemUiControllerVersion
 import com.project.picpicker.LibsVersion.timberVersion
@@ -93,5 +94,10 @@ object Dependency {
     val okHttp = "com.squareup.okhttp3:okhttp:$okhttpVersion".impl
     val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion".impl
     val gson = "com.squareup.retrofit2:converter-gson:$retrofitVersion".impl
+
+    val pager = arrayOf(
+        "com.google.accompanist:accompanist-pager:$pagerVersion".impl,
+        "com.google.accompanist:accompanist-pager-indicators:$pagerVersion".impl,
+    )
 }
 

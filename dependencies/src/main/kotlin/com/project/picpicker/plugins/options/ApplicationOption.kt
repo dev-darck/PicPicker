@@ -37,6 +37,7 @@ internal fun Project.applicationOptions() = extensions.getByType<BaseAppModuleEx
         compileSdk = 32
         versionCode = version.versionCode()
         versionName = version.versionName()
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

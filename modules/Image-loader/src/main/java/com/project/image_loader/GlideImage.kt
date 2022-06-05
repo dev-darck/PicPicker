@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
@@ -40,7 +41,7 @@ import kotlin.math.roundToInt
 data class ImageSize(
     private val _width: Dp? = null,
     private val _height: Dp? = null,
-    val scaleSize: Float = 1.5F,
+    val scaleSize: Float = 1F,
 ) {
     val width: Int
         get() = if (_width == null) SIZE_ORIGINAL else (_width.value * scaleSize).roundToInt()
@@ -84,17 +85,11 @@ fun GlideImage(
             }
         }
         val job = scope.launch {
-            target = GlideDelegate.targetListener(
-                data,
-                callback = {
-                    state = it
-                },
-            ).value
-
+            val placeHolder = blur.await()
+            target = GlideDelegate.targetListener(data) { state = it }
             glide.asBitmap()
                 .override(imageSize.width, imageSize.height)
                 .let { builder ->
-                    val placeHolder = blur.await()
                     if (placeHolder != null) {
                         builder.placeholder(placeHolder)
                     } else {
@@ -108,7 +103,6 @@ fun GlideImage(
         onDispose {
             glide.clear(target)
             job.cancel()
-            blur.cancel()
         }
     })
 
@@ -166,7 +160,7 @@ private fun ActiveView(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = modifier,
                     bitmap = state.image,
                     contentDescription = contentDescription,
                     contentScale = contentScale
@@ -177,7 +171,7 @@ private fun ActiveView(
 
         }
         is State.Default -> {
-
+            Spacer(modifier = modifier)
         }
     }
 }
@@ -210,7 +204,7 @@ private object GlideDelegate {
     fun targetListener(
         data: Any,
         callback: (State) -> Unit = {},
-    ): Lazy<CustomTarget<Bitmap>> = lazy {
+    ): CustomTarget<Bitmap> =
         object : CustomTarget<Bitmap>() {
 
             override fun onLoadStarted(placeholder: Drawable?) {
@@ -237,5 +231,4 @@ private object GlideDelegate {
                 Timber.i("Success load error $data")
             }
         }
-    }
 }
