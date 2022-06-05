@@ -65,6 +65,7 @@ fun GlideImage(
     shapes: CornerBasedShape = MaterialTheme.shapes.medium,
     blurHash: String? = null,
     imageSize: ImageSize = ImageSize(),
+    loadSuccess: () -> Unit = {},
 ) {
     var state by remember { mutableStateOf<State>(State.Default) }
     val context = LocalContext.current
@@ -112,6 +113,7 @@ fun GlideImage(
         modifier = modifier,
         contentScale = contentScale,
         shapes = shapes,
+        loadSuccess = loadSuccess
     )
 }
 
@@ -122,6 +124,7 @@ private fun ActiveView(
     contentScale: ContentScale = ContentScale.Crop,
     shapes: CornerBasedShape = MaterialTheme.shapes.medium,
     state: State,
+    loadSuccess: () -> Unit = {},
 ) {
     val transition = updateTransition(
         targetState = state,
@@ -166,6 +169,7 @@ private fun ActiveView(
                     contentScale = contentScale
                 )
             }
+            loadSuccess()
         }
         is State.Error -> {
 

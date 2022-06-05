@@ -18,7 +18,7 @@ class HomeConfig @Inject constructor(
     override val icon: Int = R.drawable.home_tab
     override val order: Int = 0
     override val route: Route = HomeRoute
-    override val lable: Int = 0
+    override val lable: Int = R.string.home_tab
     override val isRoot: Boolean = true
     override val leftBottom: BottomIcon = BottomIcon().apply {
         icon = R.drawable.settings_icon

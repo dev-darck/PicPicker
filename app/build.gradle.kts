@@ -2,6 +2,7 @@ import com.project.picpicker.Dependency.glide
 import com.project.picpicker.Dependency.hilt
 import com.project.picpicker.Dependency.jetpackComposeActivity
 import com.project.picpicker.Dependency.jetpackComposeUi
+import com.project.picpicker.Dependency.leakCanary
 import com.project.picpicker.Dependency.navigation
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonResources

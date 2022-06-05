@@ -5,6 +5,7 @@ import com.project.model.CollectionModel
 import com.project.model.PhotoModel
 import com.project.model.User
 import com.project.unsplash_api.ResultWrapper
+import com.project.unsplash_api.models.OrderBy
 
 interface UnsplashRepository {
 
@@ -15,5 +16,5 @@ interface UnsplashRepository {
         @IntRange(from = 1, to = 30) maxPage: Int,
     ): ResultWrapper<List<CollectionModel>>
 
-    suspend fun new(page: Int): ResultWrapper<List<PhotoModel>>
+    suspend fun photos(page: Int, orderBy: OrderBy): ResultWrapper<List<PhotoModel>>
 }

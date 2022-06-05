@@ -5,6 +5,7 @@
     <string name="download_label">Загрузки</string>
     <string name="profile_label">Профиль</string>
     <string name="add_collections">Добавить коллекции</string>
+    <string name="home_tab">Главная</string>
 
     Other
     <string name="photos">фото</string>

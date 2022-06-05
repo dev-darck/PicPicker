@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.model.PhotoModel
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
+import com.project.unsplash_api.models.OrderBy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +45,7 @@ class HomeViewModel @Inject constructor(
 
     fun photos(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = unsplashRepository.new(page)
+            val result = unsplashRepository.photos(page, OrderBy.Popular)
             if (result is ResultWrapper.Success) {
                 _newPhotosFlow.update {
                     val homeModel = measureResult(result.value)
@@ -57,7 +58,7 @@ class HomeViewModel @Inject constructor(
     private fun measureResult(result: List<PhotoModel>): List<PhotoModel> =
         result.map { photoModel ->
             photoModel.aspectRatio = photoModel.width / photoModel.height
-            photoModel.measureheight =
+            photoModel.measureHeight =
                 ((columnWidth.value / (photoModel.width / screenDensity)) * photoModel.height + 20 * screenDensity).toInt()
             photoModel
         }

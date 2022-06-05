@@ -14,8 +14,8 @@ import org.gradle.api.Project
 class AppModulePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
+            addCommonPlugins()
             plugins.all {
-                addCommonPlugins()
                 when (this) {
                     is AppPlugin -> {
                         autoInc()

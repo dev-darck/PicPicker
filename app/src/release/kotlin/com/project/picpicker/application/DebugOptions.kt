@@ -1,0 +1,4 @@
+object DebugOptions {
+    fun initLeakCanary() {
+    }
+}

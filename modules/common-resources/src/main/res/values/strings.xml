@@ -2,14 +2,8 @@
 <resources>
 
     Non-translatable
-
-    <string name="app_name" translatable="false">PicPicker</string>
     <string name="preview_name" translatable="false">Root</string>
     <string name="default_content_descriptions" translatable="false">""</string>
-
-    Tabs
-    <string name="grid_tab" translatable="false">grid</string>
-    <string name="list_tab" translatable="false">list</string>
 
     Translatable
 
@@ -18,6 +12,7 @@
     <string name="download_label">Download</string>
     <string name="profile_label">Profile</string>
     <string name="add_collections">Add collections</string>
+    <string name="home_tab">Home</string>
 
     Other
     <string name="photos">photo</string>

@@ -12,6 +12,7 @@ import com.project.scrollable_tab_row.PicPickerScrollableTabRow
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun HomeScrollableTabRow(
+    modifier: Modifier,
     tabs: List<String>,
     selectedTabIndex: Int,
     pagerState: PagerState,
@@ -19,7 +20,7 @@ internal fun HomeScrollableTabRow(
     val scope = rememberCoroutineScope()
 
     PicPickerScrollableTabRow(
-        modifier = Modifier,
+        modifier = modifier,
         selectedTabIndex = selectedTabIndex,
         edgePadding = tabRowHorizontalPaddings.dp,
         tab = {

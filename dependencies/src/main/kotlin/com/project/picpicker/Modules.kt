@@ -7,6 +7,7 @@ object Modules {
     const val bottomNavigation = "bottom-navigation"
     const val imageLoader = "Image-loader"
     const val unsplashApi = "unsplash-api"
+    const val app = "app"
     const val toolBar = "toolbar"
     const val commonResources = "common-resources"
     const val commonUi = "common-ui"
