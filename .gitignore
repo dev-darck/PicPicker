@@ -22,6 +22,7 @@ local.properties
 .idea/tasks.xml
 .idea/dictionaries
 .idea/vcs.xml
+app/lint_rule.xml
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/

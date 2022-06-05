@@ -5,6 +5,7 @@ import com.project.picpicker.debug
 import com.project.picpicker.extensions.getSigningProperties
 import com.project.picpicker.extensions.setUp
 import com.project.picpicker.helper.VersionHelper
+import com.project.picpicker.plugins.config.application
 import com.project.picpicker.release
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
@@ -13,6 +14,7 @@ import org.gradle.kotlin.dsl.repositories
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import java.io.File
 
 internal fun Project.applicationOptions() = extensions.getByType<BaseAppModuleExtension>().run {
     val version = VersionHelper(project.rootDir.path)
@@ -28,6 +30,10 @@ internal fun Project.applicationOptions() = extensions.getByType<BaseAppModuleEx
         getByName(debug) {
             setUp(getSigningProperties(this.name))
         }
+    }
+
+    lint {
+        baseline = file("lint_rule.xml")
     }
 
     defaultConfig {
