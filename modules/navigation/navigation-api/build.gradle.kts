@@ -1,14 +1,14 @@
-import com.project.picpicker.Dependency.hilt
-import com.project.picpicker.Dependency.navigation
-import com.project.picpicker.dependency.helper.addDep
+import com.project.picpicker.Dependency.hiltDeps
+import com.project.picpicker.Dependency.navigationDeps
+import com.project.picpicker.dependency.helper.deps
 import com.project.picpicker.dependency.helper.addLibPlug
 import com.project.picpicker.hiltPlugin
 import com.project.picpicker.plugins.config.module
 
 module(
-    appDependency = addDep(
-        *navigation,
-        *hilt,
+    appDependency = deps(
+        navigationDeps,
+        hiltDeps,
     ),
     plugins = addLibPlug(
         hiltPlugin

@@ -1,12 +1,12 @@
 
-import com.project.picpicker.Dependency.composePreview
-import com.project.picpicker.Dependency.jetpackComposeUi
-import com.project.picpicker.dependency.helper.addDep
+import com.project.picpicker.Dependency.composePreviewDeps
+import com.project.picpicker.Dependency.jetpackComposeUiDeps
+import com.project.picpicker.dependency.helper.deps
 import com.project.picpicker.plugins.config.module
 
 module(
-    appDependency = addDep(
-        *jetpackComposeUi,
-        *composePreview,
+    appDependency = deps(
+        jetpackComposeUiDeps,
+        composePreviewDeps,
     )
 )
