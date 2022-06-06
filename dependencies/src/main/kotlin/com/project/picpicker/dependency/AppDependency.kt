@@ -5,6 +5,7 @@ import org.gradle.api.artifacts.ExternalModuleDependency
 
 sealed class ConfigurationName(val name: String)
 object Impl : ConfigurationName("implementation")
+object Api : ConfigurationName("api")
 object TestImpl : ConfigurationName("testImplementation")
 object Annotation : ConfigurationName("annotationProcessor")
 object Kapt : ConfigurationName("kapt")

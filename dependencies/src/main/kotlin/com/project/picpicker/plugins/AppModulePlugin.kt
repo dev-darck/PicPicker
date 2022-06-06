@@ -2,15 +2,14 @@ package com.project.picpicker.plugins
 
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.internal.plugins.AppPlugin
-import com.project.picpicker.Dependency.baseDependency
-import com.project.picpicker.dependency.helper.addDep
+import com.project.picpicker.Dependency.baseDependencyDeps
+import com.project.picpicker.dependency.helper.deps
 import com.project.picpicker.dependency.helper.applyDependency
 import com.project.picpicker.plugins.options.applicationOptions
 import com.project.picpicker.plugins.options.libraryOptions
 import com.project.picpicker.tasks.AutoInc
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-
 class AppModulePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
@@ -38,8 +37,8 @@ private fun Project.addCommonPlugins() {
     plugins.apply("kotlin-kapt")
 
     applyDependency(
-        addDep(
-            *baseDependency
+        deps(
+            baseDependencyDeps
         )
     )
 }

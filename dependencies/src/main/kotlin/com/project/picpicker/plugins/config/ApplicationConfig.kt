@@ -7,7 +7,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
 fun Project.application(
-    appDependency: Dependency = EmptyDependency,
+    appDependency: Dependency = Dependency.EMPTY,
     plugins: Plugin = EmptyPlugins,
     enabledCompose: Boolean = true,
     baseAppModuleExtension: (BaseAppModuleExtension.() -> Unit) = {}

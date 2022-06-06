@@ -2,58 +2,31 @@ package com.project.picpicker.dependency.helper
 
 import com.project.picpicker.dependency.*
 import com.project.picpicker.dependency.Annotation
-import com.project.picpicker.dependency.Target
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ExternalModuleDependency
 
+fun deps(vararg project: ProjectSpec): Dependency =
+    Dependency(project.asSequence())
 
-sealed class Dependency(
-    val dependency: Deps = emptySequence(),
-)
+fun deps(vararg dependencies: NameSpec): Dependency =
+    dependencies.asSequence().let(::Dependency)
 
-object EmptyDependency : Dependency()
+fun deps(vararg dependencies: Dependency): Dependency = dependencies.reduce(Dependency::plus)
 
-data class ProjectDependency(
-    val targets: Sequence<ProjectSpec> = emptySequence(),
-) : Dependency(targets)
-
-class NamedDependency(
-    private val names: Sequence<NameSpec> = emptySequence(),
-) : Dependency(names)
-
-data class MixedDependency(
-    val names: Sequence<NameSpec> = emptySequence(),
-    val targets: Sequence<ProjectSpec> = emptySequence(),
-) : Dependency(targets + names)
-
-
-typealias Deps = Sequence<AppDependency>
-
-fun addDep(vararg project: ProjectSpec): ProjectDependency =
-    ProjectDependency(project.asSequence())
-
-fun addDep(vararg dependencies: NameSpec): NamedDependency =
-    dependencies.asSequence().let(::NamedDependency)
-
-val Deps.names: Sequence<NameSpec>
-    get(): Sequence<NameSpec> = filterIsInstance(NameSpec::class.java)
-
-val Deps.targets: Sequence<ProjectSpec>
-    get(): Sequence<ProjectSpec> = filterIsInstance(ProjectSpec::class.java)
+fun deps(vararg dependencies: AppDependency): Dependency = Dependency(dependencies.asSequence())
 
 fun Project.module(projName: String): ProjectSpec = ProjectSpec(Target(project(":$projName")), Impl)
 
-infix operator fun Dependency.plus(dep: Dependency): MixedDependency = MixedDependency(
-    dependency.names + dep.dependency.names,
-    dependency.targets + dep.dependency.targets,
-)
+fun Project.apiModule(projName: String): ProjectSpec = ProjectSpec(Target(project(":$projName")), Api)
 
-infix operator fun Dependency.plus(dep: NamedDependency): NamedDependency = NamedDependency(
-    dependency.names + dep.dependency.names
+infix operator fun Dependency.plus(dep: Dependency): Dependency = Dependency(
+    dependency + dep.dependency
 )
 
 val String.impl: NameSpec
     get() = NameSpec(this, Impl)
+val String.api: NameSpec
+    get() = NameSpec(this, Api)
 
 fun String.impl(externalModuleAction: (ExternalModuleDependency.() -> Unit)): NameSpec =
     NameSpec(this, Impl, externalModuleAction)

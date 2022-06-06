@@ -1,30 +1,25 @@
 package com.project.picpicker.dependency.helper
 
-import com.project.picpicker.dependency.NameSpec
-import com.project.picpicker.dependency.ProjectSpec
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
 fun Project.applyDependency(
-    appDependency: Dependency = EmptyDependency
+    appDependency: Dependency = Dependency()
 ) {
     dependencies {
-        appDependency.dependency.forEach { dep ->
-            when (dep) {
-                is ProjectSpec -> {
-                    addModuleTo(
-                        dep.configurationName.name,
-                        dep.target.project,
-                    )
-                }
-                is NameSpec -> {
-                    addDependencyTo(
-                        dep.configurationName.name,
-                        dep.name,
-                        dep.externalModuleAction
-                    )
-                }
-            }
-        }
+        appDependency.forEach(
+            { nameSpec ->
+                addDependencyTo(
+                    nameSpec.configurationName.name,
+                    nameSpec.name,
+                    nameSpec.externalModuleAction
+                )
+            },
+            { projectSpec ->
+                addModuleTo(
+                    projectSpec.configurationName.name,
+                    projectSpec.target.project,
+                )
+            })
     }
 }

@@ -1,22 +1,22 @@
-import com.project.picpicker.Dependency.composePreview
-import com.project.picpicker.Dependency.hilt
+import com.project.picpicker.Dependency.composePreviewDeps
+import com.project.picpicker.Dependency.hiltDeps
 import com.project.picpicker.Dependency.hiltNavigation
-import com.project.picpicker.Dependency.jetpackComposeUi
+import com.project.picpicker.Dependency.jetpackComposeUiDeps
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonResources
 import com.project.picpicker.Modules.navigationApi
-import com.project.picpicker.dependency.helper.addDep
+import com.project.picpicker.dependency.helper.deps
 import com.project.picpicker.dependency.helper.module
 import com.project.picpicker.dependency.helper.plus
 import com.project.picpicker.plugins.config.module
 
 module(
-    appDependency = addDep(
+    appDependency = deps(
+        jetpackComposeUiDeps,
+        hiltDeps,
+        composePreviewDeps,
+    ) + deps(
         hiltNavigation,
-        *jetpackComposeUi,
-        *hilt,
-        *composePreview,
-    ) + addDep(
         module(bottomNavigation),
         module(navigationApi),
         module(commonResources),

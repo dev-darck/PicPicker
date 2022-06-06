@@ -31,7 +31,7 @@ object Dependency {
         "androidx.compose.foundation:foundation-layout:$composeVersion".impl
     val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion".impl
 
-    val glide = arrayOf(
+    val glideDeps = deps(
         "com.github.bumptech.glide:glide:$glideVersion".impl,
         "com.github.bumptech.glide:okhttp3-integration:$glideVersion".impl {
             exclude(group = "com.squareup.okhttp3", module = "okhttp")
@@ -40,7 +40,7 @@ object Dependency {
     )
 
 
-    val jetpackComposeUi = arrayOf(
+    val jetpackComposeUiDeps = deps(
         "androidx.compose.ui:ui:$composeVersion".impl,
         "androidx.compose.ui:ui-tooling:$composeVersion".impl,
         composeFoundation,
@@ -55,7 +55,7 @@ object Dependency {
     val systemuiController =
         "com.google.accompanist:accompanist-systemuicontroller:$systemUiControllerVersion".impl
 
-    val composePreview = arrayOf(
+    val composePreviewDeps = deps(
         "androidx.compose.ui:ui-tooling-preview:$uiToolingVersion".impl,
         "androidx.compose.ui:ui-tooling:$uiToolingVersion".debugImpl,
         "androidx.customview:customview-poolingcontainer:$customViewPoolingcontainerVersion".debugImpl,
@@ -66,14 +66,14 @@ object Dependency {
 
     val hiltNavigation = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion".impl
 
-    val navigation = arrayOf(
+    val navigationDeps = deps(
         "androidx.navigation:navigation-compose:$navigationComposeVersion".impl,
         "com.google.accompanist:accompanist-navigation-animation:$accompanistNavigationVersion".impl,
         "com.google.accompanist:accompanist-navigation-material:$accompanistNavigationVersion".impl,
         hiltNavigation
     )
 
-    val hilt = arrayOf(
+    val hiltDeps = deps(
         "com.google.dagger:hilt-android:$hiltVersion".impl,
         "com.google.dagger:hilt-android-compiler:$hiltVersion".kapt,
     )
@@ -81,7 +81,7 @@ object Dependency {
     val timber = "com.jakewharton.timber:timber:$timberVersion".impl
     val leakCanary = "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion".debugImpl
 
-    val baseDependency = arrayOf(
+    val baseDependencyDeps = deps(
         "androidx.core:core-ktx:$coreVersion".impl,
         "androidx.appcompat:appcompat:$appComponentVersion".impl,
         "com.google.android.material:material:$materialVersion".impl,
@@ -97,7 +97,7 @@ object Dependency {
     val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion".impl
     val gson = "com.squareup.retrofit2:converter-gson:$retrofitVersion".impl
 
-    val pager = arrayOf(
+    val pagerDeps = deps(
         "com.google.accompanist:accompanist-pager:$pagerVersion".impl,
         "com.google.accompanist:accompanist-pager-indicators:$pagerVersion".impl,
     )
