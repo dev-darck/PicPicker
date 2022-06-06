@@ -2,24 +2,26 @@ package com.project.picpicker
 
 import com.project.picpicker.LibsVersion.accompanistNavigationVersion
 import com.project.picpicker.LibsVersion.activityComposeVersion
+import com.project.picpicker.LibsVersion.appComponentVersion
 import com.project.picpicker.LibsVersion.composeVersion
+import com.project.picpicker.LibsVersion.coreVersion
 import com.project.picpicker.LibsVersion.customViewPoolingcontainerVersion
 import com.project.picpicker.LibsVersion.customViewVersion
 import com.project.picpicker.LibsVersion.glideVersion
 import com.project.picpicker.LibsVersion.hiltNavigationComposeVersion
 import com.project.picpicker.LibsVersion.hiltVersion
 import com.project.picpicker.LibsVersion.kotlinVersion
+import com.project.picpicker.LibsVersion.leakcanaryVersion
+import com.project.picpicker.LibsVersion.materialVersion
 import com.project.picpicker.LibsVersion.navigationComposeVersion
 import com.project.picpicker.LibsVersion.okhttpVersion
 import com.project.picpicker.LibsVersion.pagerVersion
 import com.project.picpicker.LibsVersion.retrofitVersion
 import com.project.picpicker.LibsVersion.systemUiControllerVersion
+import com.project.picpicker.LibsVersion.testVersion
 import com.project.picpicker.LibsVersion.timberVersion
 import com.project.picpicker.LibsVersion.uiToolingVersion
-import com.project.picpicker.dependency.helper.androidTest
-import com.project.picpicker.dependency.helper.debugImpl
-import com.project.picpicker.dependency.helper.impl
-import com.project.picpicker.dependency.helper.kapt
+import com.project.picpicker.dependency.helper.*
 import org.gradle.kotlin.dsl.exclude
 
 object Dependency {
@@ -77,14 +79,14 @@ object Dependency {
     )
 
     val timber = "com.jakewharton.timber:timber:$timberVersion".impl
-    val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.9.1".debugImpl
+    val leakCanary = "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion".debugImpl
 
     val baseDependency = arrayOf(
-        "androidx.core:core-ktx:1.7.0".impl,
-        "androidx.appcompat:appcompat:1.4.1".impl,
-        "com.google.android.material:material:1.5.0".impl,
+        "androidx.core:core-ktx:$coreVersion".impl,
+        "androidx.appcompat:appcompat:$appComponentVersion".impl,
+        "com.google.android.material:material:$materialVersion".impl,
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion".impl,
-        "junit:junit:4.13.2".impl,
+        "org.junit.jupiter:junit-jupiter-api:$testVersion".test,
         "androidx.test.ext:junit:1.1.3".impl,
         "androidx.test.espresso:espresso-core:3.4.0".impl,
         timber,
