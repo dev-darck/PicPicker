@@ -39,20 +39,16 @@ fun HomePager(
     spanCount: Int,
     scrollState: RecyclerView.OnScrollListener? = null,
     pagerState: PagerState,
-    viewModel: HomeViewModel,
+    state: HomeState.Success,
+    onNewPage: (Int) -> Unit = { }
 ) {
-    val state = viewModel.newPhotosFlow.collectAsState().value
-    if (state is HomeState.Success) {
-        HorizontalPager(
-            count = count,
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            if (page != pagerState.currentPage) return@HorizontalPager
-            Page(spanCount = spanCount, scrollState = scrollState, state = state) {
-                viewModel.photos(it)
-            }
-        }
+    HorizontalPager(
+        count = count,
+        state = pagerState,
+        modifier = Modifier.fillMaxSize()
+    ) { page ->
+        if (page != pagerState.currentPage) return@HorizontalPager
+        Page(spanCount = spanCount, scrollState = scrollState, state = state, onNewPage)
     }
 }
 
@@ -100,6 +96,7 @@ private fun PageLoadUi(newPageState: PagingState, error: () -> Unit) {
                 Spacer(modifier = Modifier.size(15.dp))
             }
         }
+
         is PagingState.Error -> {
             val context = LocalContext.current
             Toast.makeText(
@@ -109,6 +106,7 @@ private fun PageLoadUi(newPageState: PagingState, error: () -> Unit) {
             ).show()
             error()
         }
+
         else -> {
 
         }
