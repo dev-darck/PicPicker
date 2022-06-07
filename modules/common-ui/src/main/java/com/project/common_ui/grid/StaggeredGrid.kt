@@ -42,16 +42,16 @@ fun <T : Any> StaggeredGrid(
     modifier: Modifier = Modifier,
     spanCount: Int = 2,
     data: Paging<T>,
+    isScrollEnabled: Boolean = false,
     scrollState: RecyclerView.OnScrollListener? = null,
     content: @Composable (T) -> Unit,
     measureHeight: (T) -> Int = { MATCH_PARENT },
 ) {
     var removeListener by remember { mutableStateOf(false) }
     AndroidView(modifier = modifier, factory = {
-        val manager =
-            StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL).apply {
-                gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-            }
+        val manager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL).apply {
+            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        }
         val adapter = StaggeredAdapter(content, measureHeight)
         RecyclerView(it).apply {
             setHasFixedSize(true)
@@ -60,6 +60,7 @@ fun <T : Any> StaggeredGrid(
             layoutManager = manager
             this.adapter = adapter
             adapter.setItem(data)
+            suppressLayout(isScrollEnabled)
             animation = null
             overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         }

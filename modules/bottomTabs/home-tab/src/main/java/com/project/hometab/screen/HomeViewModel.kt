@@ -45,11 +45,21 @@ class HomeViewModel @Inject constructor(
 
     fun photos(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = unsplashRepository.photos(page, OrderBy.Popular)
-            if (result is ResultWrapper.Success) {
-                _newPhotosFlow.update {
-                    val homeModel = measureResult(result.value)
-                    it.updateResult(homeModel, page)
+            when (val result = unsplashRepository.photos(page, OrderBy.Popular)) {
+                is ResultWrapper.Success -> {
+                    _newPhotosFlow.update {
+                        val homeModel = measureResult(result.value)
+                        it.updateResult(homeModel, page)
+                    }
+                }
+
+                else -> {
+                    val state = _newPhotosFlow.value
+                    if (state is HomeState.Success && state.result.item.isNotEmpty()) {
+                        state.result.settingsPaging.errorState()
+                    } else {
+                        _newPhotosFlow.emit(HomeState.Exception)
+                    }
                 }
             }
         }

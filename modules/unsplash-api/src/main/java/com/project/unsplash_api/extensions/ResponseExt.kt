@@ -29,6 +29,7 @@ private fun <T> errorState(throwable: Throwable): ResultWrapper<T> {
             val code = throwable.code()
             ResultWrapper.GenericError(code, throwable)
         }
+
         else -> {
             ResultWrapper.GenericError(null, null)
         }

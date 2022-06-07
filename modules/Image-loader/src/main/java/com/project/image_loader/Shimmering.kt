@@ -26,6 +26,7 @@ val defaultGradient = listOf(
 @Composable
 fun Shimmering(
     enableAlpha: Boolean = false,
+    modifier: Modifier = Modifier,
     shimmerDelayDuration: Int = 300,
     shimmerDuration: Int = 1300,
     gradient: List<Color> = defaultGradient,
@@ -57,7 +58,7 @@ fun Shimmering(
         end = Offset(x = translateAnim.value, y = translateAnim.value)
     )
 
-    Column(modifier = Modifier.alpha(alpha)) {
+    Column(modifier = modifier.alpha(alpha)) {
         content(brush)
     }
 }
