@@ -3,11 +3,14 @@ package com.project.navigationapi.config
 
 interface ToolBarConfig {
     val route: Route
-    val lable: Int
+    val label: Int?
+        get() = null
     val leftBottom: BottomIcon?
         get() = null
     val rightBottom: BottomIcon?
         get() = null
+    val isTransparentBackground: Boolean
+        get() = false
     val toolbarArgument: List<String>
         get() = emptyList()
 }

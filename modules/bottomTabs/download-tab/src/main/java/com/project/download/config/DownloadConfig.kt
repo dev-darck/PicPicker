@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class DownloadConfig @Inject constructor(): BottomConfig, ToolBarConfig {
     override val route: Route = DownloadRoute
-    override val lable: Int = R.string.download_label
+    override val label: Int = R.string.download_label
     override val icon: Int = R.drawable.download_tab
     override val order: Int = 2
     override val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit = {

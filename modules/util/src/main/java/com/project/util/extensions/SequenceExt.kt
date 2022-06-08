@@ -1,4 +1,4 @@
-package com.project.picpicker
+package com.project.util.extensions
 
 inline fun <reified R> Sequence<Any>.convertTo(): Sequence<R> {
     val typeSet = mutableSetOf<R>()

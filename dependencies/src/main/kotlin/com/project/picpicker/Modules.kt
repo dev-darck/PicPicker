@@ -13,6 +13,7 @@ object Modules {
     const val commonUi = "common-ui"
     const val scrollableTabRow = "scrollable-tab-row"
     const val util = "util"
+    const val baseNavigation = "basenavigation"
 }
 
 object TabModule {
@@ -24,6 +25,7 @@ object TabModule {
 
 object Screen {
     const val webViewScreen = "web-view-screen"
+    const val photoDetail = "PhotoDetail"
 }
 
 object Model {

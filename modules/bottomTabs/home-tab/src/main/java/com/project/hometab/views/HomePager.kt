@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,15 +24,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
+import com.project.common_ui.animation.alphaAnimation
+import com.project.common_ui.animation.transition
+import com.project.common_ui.extansions.*
+import com.project.common_ui.extansions.ClickState.*
 import com.project.common_ui.grid.StaggeredGrid
 import com.project.common_ui.loader.PulsingLoader
 import com.project.common_ui.paging.PagingState
 import com.project.common_ui.paging.PagingState.Loading
 import com.project.common_ui.paging.rememberAsNewPage
 import com.project.hometab.screen.HomeState
-import com.project.hometab.screen.HomeViewModel
 import com.project.image_loader.GlideImage
 import com.project.model.PhotoModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -40,15 +46,16 @@ fun HomePager(
     scrollState: RecyclerView.OnScrollListener? = null,
     pagerState: PagerState,
     state: HomeState.Success,
-    onNewPage: (Int) -> Unit = { }
+    onNewPage: (Int) -> Unit = { },
+    clickPhoto: (String) -> Unit = { }
 ) {
     HorizontalPager(
         count = count,
         state = pagerState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { page ->
         if (page != pagerState.currentPage) return@HorizontalPager
-        Page(spanCount = spanCount, scrollState = scrollState, state = state, onNewPage)
+        Page(spanCount = spanCount, scrollState = scrollState, state = state, onNewPage, clickPhoto)
     }
 }
 
@@ -58,6 +65,7 @@ private fun Page(
     scrollState: RecyclerView.OnScrollListener? = null,
     state: HomeState.Success,
     newPage: (Int) -> Unit,
+    clickPhoto: (String) -> Unit = { },
 ) {
     val paging = state.result.rememberAsNewPage {
         newPage(it)
@@ -74,7 +82,7 @@ private fun Page(
             data = paging,
             measureHeight = { it.measureHeight },
             content = { photo ->
-                PhotoCard(photo)
+                PhotoCard(photo, clickPhoto)
             }
         )
         PageLoadUi(newPageState) {
@@ -114,14 +122,26 @@ private fun PageLoadUi(newPageState: PagingState, error: () -> Unit) {
 }
 
 @Composable
-private fun PhotoCard(photo: PhotoModel) {
+private fun PhotoCard(photo: PhotoModel, clickPhoto: (String) -> Unit = { }) {
+    var isVisible by remember { mutableStateOf(false) }
+    var state by remember { mutableStateOf(Cancel) }
+    val alpha by transition(isVisible, photo.id.orEmpty()).alphaAnimation()
+    val scale by transition(state).clickAnimation(isVisible)
+    if (state == Up && scale == DEFAULT_SIZE) {
+        LaunchedEffect(key1 = state) { clickPhoto(photo.id.orEmpty()) }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
+            .padding(10.dp)
+            .scale(scale)
+            .addTouch(
+                downAction = { state = Pressed },
+                upAction = { state = Up },
+                cancel = { state = Cancel }
+            ),
         contentAlignment = Alignment.TopStart
     ) {
-        var isVisible by remember { mutableStateOf(false) }
         GlideImage(
             modifier = Modifier.aspectRatio(photo.aspectRatio),
             data = photo.urls?.small.orEmpty(),
@@ -129,16 +149,7 @@ private fun PhotoCard(photo: PhotoModel) {
         ) {
             isVisible = true
         }
-        val transition = updateTransition(
-            targetState = isVisible,
-            label = photo.id.orEmpty()
-        )
-        val alpha by transition.animateFloat(
-            transitionSpec = { tween(1000, easing = LinearOutSlowInEasing) },
-            label = photo.id.orEmpty()
-        ) { animationState ->
-            if (animationState) 1F else 0F
-        }
+
         Row(
             modifier = Modifier
                 .background(

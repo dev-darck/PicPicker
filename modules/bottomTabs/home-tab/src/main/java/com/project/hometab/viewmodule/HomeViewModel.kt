@@ -1,10 +1,13 @@
-package com.project.hometab.screen
+package com.project.hometab.viewmodule
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.hometab.screen.HomeState
+import com.project.hometab.screen.updateResult
 import com.project.model.PhotoModel
+import com.project.navigationapi.navigation.Navigation
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
 import com.project.unsplash_api.models.OrderBy
@@ -19,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val unsplashRepository: UnsplashRepository,
-) : ViewModel() {
+    private val navigation: Navigation
+) : ViewModel(), Navigation by navigation {
 
     private var screenDensity = 0F
     private var screenWidthDp = 0.dp
