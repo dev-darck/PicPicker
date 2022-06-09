@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -43,10 +44,11 @@ fun Toolbar(
 private fun ToolbarSurface(
     toolbarConfig: ToolBarConfig,
 ) {
+    val background = if (toolbarConfig.isTransparentBackground) Color.Transparent else colors.surface
     Surface(
         modifier = Modifier
             .height(ToolbarSize)
-            .background(colors.surface)
+            .background(background)
             .shadow(
                 Elevation + LocalAbsoluteElevation.current,
                 RectangleShape,
@@ -72,13 +74,17 @@ private fun Toolbar(config: ToolBarConfig) {
             Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING + SizeNavigationIcon))
         }
 
-        Text(
-            text = stringResource(id = config.lable),
-            style = MaterialTheme.typography.h1,
-            color = colors.onBackground,
-            modifier = Modifier.weight(1F, true),
-            textAlign = TextAlign.Center
-        )
+        val label = config.label
+        if (label != null) {
+            Text(
+                text = stringResource(id = label),
+                style = MaterialTheme.typography.h1,
+                color = colors.onBackground,
+                modifier = Modifier.weight(1F, true),
+                textAlign = TextAlign.Center
+            )
+        }
+
 
         if (config.rightBottom != null) {
             ToolbarBottom(config.rightBottom!!, Modifier)
@@ -113,6 +119,6 @@ private fun PreviewToolBar() {
             icon = R.drawable.settings_icon
         }
         override val route: Route = DefaultRoute
-        override val lable: Int = R.string.preview_name
+        override val label: Int = R.string.preview_name
     })
 }

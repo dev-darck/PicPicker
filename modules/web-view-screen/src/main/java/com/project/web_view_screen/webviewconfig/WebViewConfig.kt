@@ -18,7 +18,7 @@ class WebViewConfig @Inject constructor(
     navigation: Navigation,
 ) : Config, ToolBarConfig {
     override val route: Route = WebViewRoute
-    override val lable: Int = R.string.add_collections
+    override val label: Int = R.string.add_collections
     override val arguments: List<NamedNavArgument> = listOf(
         navArgument(WebViewRoute.schemeUrl) { type = NavType.StringType },
         navArgument(WebViewRoute.schemeType) { type = NavType.StringType },

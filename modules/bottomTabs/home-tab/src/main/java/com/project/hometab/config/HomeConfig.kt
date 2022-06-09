@@ -18,7 +18,7 @@ class HomeConfig @Inject constructor(
     override val icon: Int = R.drawable.home_tab
     override val order: Int = 0
     override val route: Route = HomeRoute
-    override val lable: Int = R.string.home_tab
+    override val label: Int = R.string.home_tab
     override val isRoot: Boolean = true
     override val leftBottom: BottomIcon = BottomIcon().apply {
         icon = R.drawable.settings_icon
@@ -32,12 +32,7 @@ class HomeConfig @Inject constructor(
         click = {
         }
     }
-    override val arguments: List<NamedNavArgument> = listOf(
-        navArgument(HomeRoute.scheme) {
-            type = NavType.StringType
-            defaultValue = HomeRoute.tabVariant.first
-        }
-    )
+
     override val openScreen: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit = {
         HomeScreen()
     }

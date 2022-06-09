@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class ProfileConfig @Inject constructor() : BottomConfig, ToolBarConfig {
     override val route: Route = ProfileRoute
-    override val lable: Int = R.string.profile_label
+    override val label: Int = R.string.profile_label
     override val icon: Int = R.drawable.profile_tab
     override val order: Int = 3
     override val leftBottom: BottomIcon = BottomIcon().apply {

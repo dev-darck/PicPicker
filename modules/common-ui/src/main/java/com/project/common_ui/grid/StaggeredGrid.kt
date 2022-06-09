@@ -10,10 +10,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING
-import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
+import androidx.recyclerview.widget.RecyclerView.*
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.project.common_ui.paging.Paging
+import timber.log.Timber
 
 enum class ScrollState {
     SCROLL_STATE_IDLE,
@@ -26,7 +26,7 @@ fun rememberScrollState(state: (ScrollState) -> Unit = {}): RecyclerView.OnScrol
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             when (newState) {
                 SCROLL_STATE_IDLE -> state(ScrollState.SCROLL_STATE_IDLE)
-                SCROLL_STATE_DRAGGING -> state(ScrollState.SCROLL_STATE_DRAGGING)
+                SCROLL_STATE_SETTLING -> state(ScrollState.SCROLL_STATE_DRAGGING)
             }
             super.onScrollStateChanged(recyclerView, newState)
         }

@@ -3,6 +3,7 @@ package com.project.picpicker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.project.basenavigation.manager.NavigationManager
 import com.project.common_compos_ui.theme.AppTheme
 import com.project.common_compos_ui.theme.StatusBarColorProvider
 import com.project.navigationapi.config.BottomConfig
@@ -16,23 +17,23 @@ import javax.inject.Inject
 class BaseActivity : ComponentActivity() {
 
     @set:Inject
-    var appNavigation: Navigation? = null
+    lateinit var appNavigation: Navigation
 
     @set:Inject
-    var screens: Set<@JvmSuppressWildcards Config>? = null
+    lateinit var navigationManager: NavigationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val screens = screens?.asSequence() ?: emptySequence()
-        val bottomScreen = screens.convertTo<BottomConfig>().sortedBy(BottomConfig::order)
-        val startDestination = bottomScreen.find(BottomConfig::isRoot)?.route?.routeScheme.orEmpty()
-        val toolBarConfig: Sequence<ToolBarConfig> = screens.convertTo()
+        val screens = navigationManager.lisScreens()
+        val bottomScreen = navigationManager.listBottomScreen()
+        val startDestination = navigationManager.startDestination()
+        val toolBarConfig = navigationManager.listToolbar()
         setContent {
             AppTheme {
                 StatusBarColorProvider()
-                if (startDestination.isNotEmpty() && appNavigation != null) {
+                if (startDestination.isNotEmpty()) {
                     PicPikerScaffold(
-                        appNavigation = appNavigation!!,
+                        appNavigation,
                         screens, bottomScreen,
                         toolBarConfig, startDestination,
                     )
@@ -41,5 +42,10 @@ class BaseActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navigationManager.deleteScreens()
     }
 }

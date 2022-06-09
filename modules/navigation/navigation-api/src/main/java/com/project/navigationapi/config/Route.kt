@@ -37,10 +37,16 @@ object WebViewRoute : Route() {
 object HomeRoute : Route() {
     private const val route: String = "home"
     const val scheme: String = "type"
-    val tabVariant = Pair(first = "List", second = "Grid")
     override val routeScheme: String = "$route/{$scheme}"
 
     fun createRoute(type: String): String = "$route/$type"
+}
+
+object PhotoDetail : Route() {
+    private const val route: String = "photodetail"
+    const val scheme: String = "id"
+    override val routeScheme: String = "$route/{$scheme}"
+    fun createRoute(photoId: String): String = "$route/$photoId"
 }
 
 object DefaultRoute : Route() {

@@ -22,9 +22,11 @@ import com.project.common_ui.grid.StaggeredGrid
 import com.project.common_ui.grid.rememberScrollState
 import com.project.common_ui.paging.*
 import com.project.hometab.screen.HomeState.Exception
+import com.project.hometab.viewmodule.HomeViewModel
 import com.project.hometab.views.HomePager
 import com.project.hometab.views.HomeScrollableTabRow
 import com.project.image_loader.Shimmering
+import com.project.navigationapi.config.PhotoDetail
 
 private val titles = listOf("Trending", "New")
 
@@ -103,7 +105,10 @@ private fun Home(
             scrollState,
             pagerState,
             state,
-            viewModel::photos
+            viewModel::photos,
+            clickPhoto = {
+                viewModel.navigate(PhotoDetail.createRoute(it))
+            }
         )
     }
 }

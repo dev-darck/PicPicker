@@ -15,7 +15,7 @@ class CollectionsConfig @Inject constructor(
     val navigation: Navigation,
 ) : BottomConfig, ToolBarConfig {
     override val route: Route = CollectionsRoute
-    override val lable: Int = R.string.collections_label
+    override val label: Int = R.string.collections_label
     override val icon: Int = R.drawable.collections_tab
     override val rightBottom: BottomIcon = BottomIcon().apply {
         icon = R.drawable.shearch_icon
