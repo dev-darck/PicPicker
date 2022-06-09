@@ -82,9 +82,7 @@ private fun Page(
                 PhotoCard(photo, clickPhoto)
             }
         )
-        PageLoadUi(newPageState) {
-            paging.updateState(PagingState.Success)
-        }
+        PageLoadUi(newPageState) { }
     }
 }
 

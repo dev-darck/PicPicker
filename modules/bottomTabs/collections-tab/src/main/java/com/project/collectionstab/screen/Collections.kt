@@ -66,7 +66,7 @@ private fun LazyList(
     val items = pagingData.rememberAsNewPage(onNewPaging = {
         viewModel.collections(it)
     })
-    val state = items.statePaging.collectAsState().value
+    val state = items.statePaging.collectAsState(Loading).value
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { paddingValue ->
