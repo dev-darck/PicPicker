@@ -137,14 +137,14 @@ class DiffUtilCallback<T : Any>(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldProduct: T = old.get()[oldItemPosition]
-        val newProduct: T = new.get()[newItemPosition]
+        val oldProduct: T? = old.get().getOrNull(oldItemPosition)
+        val newProduct: T? = new.get().getOrNull(newItemPosition)
         return oldProduct == newProduct
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldProduct: T = old.get()[oldItemPosition]
-        val newProduct: T = new.get()[newItemPosition]
+        val oldProduct: T? = old.get().getOrNull(oldItemPosition)
+        val newProduct: T? = new.get().getOrNull(newItemPosition)
         return oldProduct.hashCode() == newProduct.hashCode() && oldProduct == newProduct
     }
 }

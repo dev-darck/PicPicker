@@ -3,12 +3,8 @@ package com.project.common_ui.paging
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import kotlinx.coroutines.Dispatchers
+import androidx.compose.runtime.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 sealed class PagingState {
     object Loading : PagingState()
@@ -51,7 +47,7 @@ data class PagingData<T : Any>(
     }
 }
 
-class Paging<T : Any>(
+open class Paging<T : Any>(
     pagingData: PagingData<T>,
 ) {
     private val scrollState = MutableStateFlow(0)
@@ -86,7 +82,6 @@ class Paging<T : Any>(
 
     suspend fun collectPosition(onNewPaging: (Int) -> Unit) {
         state.combine(scrollState, ::Pair)
-            .flowOn(Dispatchers.IO)
             .distinctUntilChanged()
             .collect { (currentState, position) ->
                 val last = itemCount - settingsPaging.countForNextPage
@@ -110,12 +105,9 @@ fun <T : Any> PagingData<T>.rememberAsNewPage(
     val items = remember(this) {
         Paging(this)
     }
-
     LaunchedEffect(key1 = this) {
-        launch {
-            items.updateState(PagingState.Success)
-            items.collectPosition(onNewPaging)
-        }
+        items.updateState(PagingState.Success)
+        items.collectPosition(onNewPaging)
     }
     return items
 }

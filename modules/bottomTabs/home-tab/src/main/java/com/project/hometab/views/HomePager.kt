@@ -1,12 +1,7 @@
 package com.project.hometab.views
 
 import android.widget.Toast
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -35,8 +30,12 @@ import com.project.common_ui.paging.PagingState.Loading
 import com.project.common_ui.paging.rememberAsNewPage
 import com.project.hometab.screen.HomeState
 import com.project.image_loader.GlideImage
+import com.project.image_loader.ImageSize
 import com.project.model.PhotoModel
-import kotlinx.coroutines.delay
+
+private val userIconSize = 24.dp
+private val rounded = 15.dp
+private val padding = 10.dp
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -67,9 +66,7 @@ private fun Page(
     newPage: (Int) -> Unit,
     clickPhoto: (String) -> Unit = { },
 ) {
-    val paging = state.result.rememberAsNewPage {
-        newPage(it)
-    }
+    val paging = state.result.rememberAsNewPage(newPage)
     val newPageState = paging.statePaging.collectAsState().value
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize(),
@@ -143,28 +140,31 @@ private fun PhotoCard(photo: PhotoModel, clickPhoto: (String) -> Unit = { }) {
         contentAlignment = Alignment.TopStart
     ) {
         GlideImage(
-            modifier = Modifier.aspectRatio(photo.aspectRatio),
+            modifier = Modifier
+                .height(photo.measureHeight.dp)
+                .fillMaxWidth(),
             data = photo.urls?.small.orEmpty(),
             blurHash = photo.blurHash.orEmpty(),
-        ) {
-            isVisible = true
-        }
-
+            loadSuccess = {
+                isVisible = true
+            }
+        )
         Row(
             modifier = Modifier
                 .background(
                     brush = Brush.verticalGradient(colors = gradient),
-                    shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
+                    shape = RoundedCornerShape(topStart = rounded, topEnd = rounded)
                 )
                 .alpha(alpha)
-                .padding(top = 10.dp)
-                .height(24.dp)
+                .padding(top = padding)
+                .height(userIconSize)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.size(10.dp))
             GlideImage(
-                modifier = Modifier.size(24.dp),
+                imageSize = ImageSize(userIconSize, userIconSize, 1.5F),
+                modifier = Modifier.size(userIconSize),
                 data = photo.user.profileImage?.medium.orEmpty(),
             )
             Spacer(modifier = Modifier.size(10.dp))

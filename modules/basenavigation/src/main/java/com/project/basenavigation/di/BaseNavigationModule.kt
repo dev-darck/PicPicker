@@ -3,6 +3,7 @@ package com.project.basenavigation.di
 import com.project.basenavigation.manager.NavigationManager
 import com.project.basenavigation.manager.NavigationManagerLogic
 import com.project.navigationapi.config.Config
+import com.project.navigationapi.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +17,6 @@ class BaseNavigationModule() {
     @Singleton
     @Provides
     fun provideManagerNavigation(
-        screens: Set<@JvmSuppressWildcards Config>
+        screens: Set<@JvmSuppressWildcards Config>,
     ): NavigationManager = NavigationManagerLogic(screens.asSequence())
 }
