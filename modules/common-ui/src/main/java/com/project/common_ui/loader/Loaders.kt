@@ -75,12 +75,12 @@ fun TypingLoader(
 
 @Composable
 fun PulsingLoader(
+    modifier: Modifier = Modifier,
     circleSize: Dp = 14.dp,
     delay: Int = 350,
     spaceSize: Dp = 2.dp,
     circleColor: Color = MaterialTheme.colors.secondary,
 ) {
-
     val circles = circlesAnimation()
 
     circles.forEachIndexed { index, animatable ->
@@ -105,7 +105,7 @@ fun PulsingLoader(
     Row {
         circleValues.forEachIndexed { _, value ->
             Dot(
-                Modifier
+                modifier
                     .scale(value)
                     .size(circleSize),
                 circleColor
@@ -117,7 +117,7 @@ fun PulsingLoader(
 
 
 @Composable
-private fun Dot(
+fun Dot(
     modifier: Modifier = Modifier,
     circleColor: Color = MaterialTheme.colors.secondary,
 ) = Spacer(

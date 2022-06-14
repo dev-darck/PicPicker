@@ -5,17 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.util.LruCache
-import com.project.util.extensions.add
-import com.project.util.extensions.containsKey
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.withSign
 
-private val cacheCosinesX = LruCache<Int, DoubleArray>(100)
-private val cacheCosinesY = LruCache<Int, DoubleArray>(100)
-
-
+private val cacheCosinesX = HashMap<Int, DoubleArray>()
+private val cacheCosinesY = HashMap<Int, DoubleArray>()
 
 private val charMap = listOf(
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
@@ -146,13 +141,13 @@ class BlurHash {
     private fun getArrayForCosinesY(calculate: Boolean, height: Int, numCompY: Int) = when {
         calculate -> {
             DoubleArray(height * numCompY).also {
-                cacheCosinesY.add(height * numCompY, it)
+                cacheCosinesY[height * numCompY] = it
             }
         }
 
         else -> {
             cacheCosinesY[height * numCompY] ?: DoubleArray(height * numCompY).also {
-                cacheCosinesY.add(height * numCompY, it)
+                cacheCosinesY[height * numCompY] = it
             }
         }
     }
@@ -160,12 +155,12 @@ class BlurHash {
     private fun getArrayForCosinesX(calculate: Boolean, width: Int, numCompX: Int) = when {
         calculate -> {
             DoubleArray(width * numCompX).also {
-                cacheCosinesX.add(width * numCompX, it)
+                cacheCosinesX[width * numCompX] = it
             }
         }
 
         else -> cacheCosinesX[width * numCompX] ?: DoubleArray(width * numCompX).also {
-            cacheCosinesX.add(width * numCompX, it)
+            cacheCosinesX[width * numCompX] = it
         }
     }
 

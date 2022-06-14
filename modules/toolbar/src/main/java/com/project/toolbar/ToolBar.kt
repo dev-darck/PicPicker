@@ -46,7 +46,7 @@ private fun ToolbarSurface(
 ) {
     val background = if (toolbarConfig.isTransparentBackground) Color.Transparent else colors.surface
     Surface(
-        modifier = Modifier
+        modifier = Modifier.statusBarsPadding()
             .height(ToolbarSize)
             .background(background)
             .shadow(

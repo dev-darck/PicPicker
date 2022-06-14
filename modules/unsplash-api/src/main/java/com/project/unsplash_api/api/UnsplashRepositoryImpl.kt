@@ -1,6 +1,7 @@
 package com.project.unsplash_api.api
 
 import com.project.model.CollectionModel
+import com.project.model.Photo
 import com.project.model.PhotoModel
 import com.project.model.User
 import com.project.unsplash_api.ResultWrapper
@@ -22,4 +23,7 @@ class UnsplashRepositoryImpl(
 
     override suspend fun photos(page: Int, orderBy: OrderBy): ResultWrapper<List<PhotoModel>> =
         unsplashApi.photos(page = page.toString(), orderBy = orderBy.jsonName).safeCall()
+
+    override suspend fun photo(id: String): ResultWrapper<Photo> =
+        unsplashApi.photo(id).safeCall()
 }

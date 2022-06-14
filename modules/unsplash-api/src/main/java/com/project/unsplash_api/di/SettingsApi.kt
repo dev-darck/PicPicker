@@ -107,7 +107,7 @@ object SettingsApi {
     @Singleton
     fun provideLoggerInterceptor(): Interceptor {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         loggingInterceptor.redactHeader("Authorization")
         return loggingInterceptor
     }

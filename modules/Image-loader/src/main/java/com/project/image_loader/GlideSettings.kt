@@ -4,9 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
@@ -24,7 +23,7 @@ public val LocalGlideRequestBuilder: ProvidableCompositionLocal<RequestBuilder<D
 public val LocalGlideRequestManager: ProvidableCompositionLocal<RequestManager?> =
     staticCompositionLocalOf { null }
 
-internal object LocalGlideProvider {
+object LocalGlideProvider {
 
     @Composable
     fun getGlideRequestOptions(): RequestOptions {
@@ -47,13 +46,21 @@ internal object LocalGlideProvider {
     fun clear(context: Context, target: Target<Drawable>) {
         Glide.with(context).clear(target)
     }
+
+    fun glideOnTrimMemory(context: Context, level: Int) {
+        Glide.with(context).onTrimMemory(level)
+    }
+
+    fun glideOnLowMemory(context: Context) {
+        Glide.with(context).onLowMemory()
+    }
 }
 
 sealed class GlideImageState {
     object None : GlideImageState()
-    data class Loading(val placeholder: ImageBitmap) : GlideImageState()
-    data class Success(val imageBitmap: ImageBitmap) : GlideImageState()
-    data class Failure(val errorDrawable: Drawable?) : GlideImageState()
+    data class Loading(val placeholder: BitmapPainter) : GlideImageState()
+    data class Success(val imageBitmap: BitmapPainter, val bitmap: Bitmap) : GlideImageState()
+    data class Failure(val errorDrawable: BitmapPainter?) : GlideImageState()
 }
 
 
@@ -65,8 +72,7 @@ private suspend fun executeImageLoading(
 }.catch {
     // emit a failure loading state
     emit(GlideImageState.Failure(null))
-}.distinctUntilChanged().flowOn(Dispatchers.IO)
-
+}.distinctUntilChanged().flowOn(Dispatchers.Default)
 
 @Composable
 fun <T : Any> ImageLoad(

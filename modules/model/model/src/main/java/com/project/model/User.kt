@@ -24,7 +24,7 @@ data class User(
     @SerializedName("social") val social: Social? = null,
 )
 
-fun User?.name(prefix: String): String {
+fun User?.name(prefix: String = ""): String {
     return this?.let {
         val userName = when {
             name?.isNotEmpty() == true -> name

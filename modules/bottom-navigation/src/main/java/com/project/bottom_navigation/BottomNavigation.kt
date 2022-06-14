@@ -2,10 +2,8 @@ package com.project.bottom_navigation
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +34,7 @@ fun BottomNavigation(navController: NavController, bottomScreens: Sequence<Botto
     }
 
     CustomBottomNavigation(
-        modifier = size,
+        modifier = size.navigationBarsPadding(),
         elevation = Elevation
     ) {
         bottomScreens.forEach { bottomEntry ->

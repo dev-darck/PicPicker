@@ -76,6 +76,7 @@ private fun Page(
             modifier = Modifier.padding(bottom = if (newPageState is Loading) 30.dp else 0.dp),
             spanCount = spanCount,
             scrollState = scrollState,
+            scrollToPosition = state.result.settingsPaging.lastPosition,
             data = paging,
             measureHeight = { it.measureHeight },
             content = { photo ->
@@ -122,13 +123,14 @@ private fun PhotoCard(photo: PhotoModel, clickPhoto: (String) -> Unit = { }) {
     var state by remember { mutableStateOf(Cancel) }
     val alpha by transition(isVisible, photo.id.orEmpty()).alphaAnimation()
     val scale by transition(state).clickAnimation(isVisible)
-    if (state == Up && scale == DEFAULT_SIZE) {
+    if (state == Up && scale == DEFAULT_SIZE && isVisible) {
         LaunchedEffect(key1 = state) { clickPhoto(photo.id.orEmpty()) }
     }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
+            .aspectRatio(photo.aspectRatio)
             .scale(scale)
             .addTouch(
                 downAction = { state = Pressed },

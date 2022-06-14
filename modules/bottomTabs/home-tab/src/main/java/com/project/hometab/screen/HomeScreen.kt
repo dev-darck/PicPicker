@@ -1,9 +1,6 @@
 package com.project.hometab.screen
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +24,7 @@ import com.project.hometab.views.HomePager
 import com.project.hometab.views.HomeScrollableTabRow
 import com.project.image_loader.Shimmering
 import com.project.navigationapi.config.PhotoDetail
+import kotlinx.coroutines.delay
 
 private val titles = listOf("Trending", "New")
 
@@ -84,9 +82,8 @@ private fun Home(
         val size by transition.animateDp(
             transitionSpec = {
                 tween(
-                    durationMillis = if (!isVisible) 100 else 500,
-                    delayMillis = if (!isVisible) 0 else 500,
-                    easing = LinearOutSlowInEasing
+                    delayMillis = 300,
+                    easing = LinearEasing
                 )
             },
             label = ""
@@ -107,7 +104,7 @@ private fun Home(
             state,
             viewModel::photos,
             clickPhoto = {
-                viewModel.navigate(PhotoDetail.createRoute(it))
+                viewModel.clickPhoto(it)
             }
         )
     }

@@ -16,6 +16,7 @@ import com.project.picpicker.LibsVersion.materialVersion
 import com.project.picpicker.LibsVersion.navigationComposeVersion
 import com.project.picpicker.LibsVersion.okhttpVersion
 import com.project.picpicker.LibsVersion.pagerVersion
+import com.project.picpicker.LibsVersion.paletteVersion
 import com.project.picpicker.LibsVersion.retrofitVersion
 import com.project.picpicker.LibsVersion.systemUiControllerVersion
 import com.project.picpicker.LibsVersion.testVersion
@@ -63,6 +64,7 @@ object Dependency {
     )
 
     val jetpackComposeActivity = "androidx.activity:activity-compose:$activityComposeVersion".impl
+    val palette = "com.android.support:palette-v7:$paletteVersion".impl
 
     val hiltNavigation = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion".impl
 

@@ -1,10 +1,11 @@
 package com.project.image_loader
 
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -13,10 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.project.common_resources.R
 import com.project.image_loader.LocalGlideProvider.clear
@@ -49,8 +53,9 @@ fun GlideImage(
     contentScale: ContentScale = ContentScale.Crop,
     shapes: CornerBasedShape = MaterialTheme.shapes.medium,
     blurHash: String? = null,
+    color: String? = null,
     imageSize: ImageSize = ImageSize(),
-    loadSuccess: () -> Unit = {},
+    loadSuccess: (Bitmap) -> Unit = {},
 ) {
     val context = LocalContext.current
     val localManager = LocalGlideProvider.getGlideRequestBuilder()
@@ -60,17 +65,26 @@ fun GlideImage(
             executeImageRequest = {
                 callbackFlow {
                     var target: FlowCustomTarget? = FlowCustomTarget(this)
-                    val placeHolder = if (blurHash != null) {
-                        BlurHash().execute(
-                            context.resources,
-                            blurHash,
-                            100, 100
-                        )
-                    } else {
-                        null
+                    val blur = async {
+                        when {
+                            blurHash != null -> BlurHash().execute(
+                                context.resources,
+                                blurHash,
+                                20, 20
+                            )
+                            color != null -> Color.parseColor(color).toDrawable().run {
+                                BitmapDrawable(
+                                    context.resources,
+                                    toBitmap(100, 100, Bitmap.Config.ARGB_8888)
+                                )
+                            }
+                            else -> null
+                        }
                     }
+
                     localManager.override(imageSize.width, imageSize.height)
                         .let { builder ->
+                            val placeHolder = blur.await()
                             if (placeHolder != null) {
                                 builder.placeholder(placeHolder)
                             } else {
@@ -81,6 +95,7 @@ fun GlideImage(
 
                     awaitClose {
                         clear(context, target!!)
+                        blur.cancel()
                         target = null
                     }
                 }
@@ -94,7 +109,7 @@ fun GlideImage(
                     shapes = shapes,
                 )
                 if (it is GlideImageState.Success) {
-                    loadSuccess()
+                    loadSuccess(it.bitmap)
                 }
             }
         )
@@ -114,26 +129,12 @@ private fun ActiveView(
         label = contentDescription
     )
 
-    val alpha by transition.animateFloat(
-        transitionSpec = { tween(1000, easing = LinearOutSlowInEasing) }, label = ""
-    ) { animationState ->
-        if (animationState is GlideImageState.Success) 1F else .6F
-    }
-
-    val blurAlpha by transition.animateFloat(
-        transitionSpec = { tween(500, easing = LinearOutSlowInEasing) }, label = ""
-    ) { animationState ->
-        if (animationState is GlideImageState.Loading) 1F else .6F
-    }
-
     when (state) {
         is GlideImageState.Loading -> {
             Image(
-                bitmap = state.placeholder,
+                painter = state.placeholder,
                 contentDescription = contentDescription,
                 modifier = modifier
-                    .alpha(blurAlpha)
-                    .fillMaxSize()
                     .clip(shapes),
                 contentScale = contentScale,
             )
@@ -142,10 +143,8 @@ private fun ActiveView(
         is GlideImageState.Success -> {
             Image(
                 modifier = modifier
-                    .alpha(alpha)
-                    .fillMaxSize()
                     .clip(shapes),
-                bitmap = state.imageBitmap,
+                painter = state.imageBitmap,
                 contentDescription = contentDescription,
                 contentScale = contentScale,
             )
