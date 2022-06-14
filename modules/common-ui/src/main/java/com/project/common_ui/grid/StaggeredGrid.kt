@@ -1,5 +1,6 @@
 package com.project.common_ui.grid
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.project.common_ui.paging.Paging
-import timber.log.Timber
 
 enum class ScrollState {
     SCROLL_STATE_IDLE,
@@ -21,14 +21,26 @@ enum class ScrollState {
 }
 
 @Composable
-fun rememberScrollState(state: (ScrollState) -> Unit = {}): RecyclerView.OnScrollListener {
-    return object : RecyclerView.OnScrollListener() {
+fun rememberScrollState(state: (ScrollState) -> Unit = {}): OnScrollListener {
+    var y = 0
+    return object : OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            y = dy
+        }
+
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            when (newState) {
-                SCROLL_STATE_IDLE -> state(ScrollState.SCROLL_STATE_IDLE)
-                SCROLL_STATE_SETTLING -> state(ScrollState.SCROLL_STATE_DRAGGING)
-            }
             super.onScrollStateChanged(recyclerView, newState)
+            if (SCROLL_STATE_IDLE == newState) {
+                if (y <= 0) {
+                    state(ScrollState.SCROLL_STATE_IDLE)
+                }
+            }
+            if (SCROLL_STATE_DRAGGING == newState) {
+                if (y > 0) {
+                    state(ScrollState.SCROLL_STATE_DRAGGING)
+                }
+            }
         }
     }
 }
@@ -43,15 +55,17 @@ fun <T : Any> StaggeredGrid(
     spanCount: Int = 2,
     data: Paging<T>,
     isScrollEnabled: Boolean = false,
-    scrollState: RecyclerView.OnScrollListener? = null,
+    scrollState: OnScrollListener? = null,
+    scrollToPosition: Int = 0,
     content: @Composable (T) -> Unit,
     measureHeight: (T) -> Int = { MATCH_PARENT },
 ) {
     var removeListener by remember { mutableStateOf(false) }
+    val manager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL).apply {
+        gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+    }
+
     AndroidView(modifier = modifier, factory = {
-        val manager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL).apply {
-            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-        }
         val adapter = StaggeredAdapter(content, measureHeight)
         RecyclerView(it).apply {
             setHasFixedSize(true)
@@ -61,22 +75,27 @@ fun <T : Any> StaggeredGrid(
             this.adapter = adapter
             adapter.setItem(data)
             suppressLayout(isScrollEnabled)
+            scrollToPosition(scrollToPosition)
             animation = null
-            overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            overScrollMode = OVER_SCROLL_NEVER
+            scrollState?.let { state -> addOnScrollListener(state) }
         }
     }, update = {
         val adapter: StaggeredAdapter<T>? = it.adapter as? StaggeredAdapter<T>
-        val oldData = adapter?.items ?: return@AndroidView
-        val diffUtilCallback: DiffUtilCallback<*> =
-            DiffUtilCallback(oldData, data)
-        val result = DiffUtil.calculateDiff(diffUtilCallback)
-        adapter.setItem(data)
-        result.dispatchUpdatesTo(adapter)
-        scrollState?.let { state -> it.addOnScrollListener(state) }
+        if (data != adapter?.items) {
+            val oldData = adapter?.items ?: return@AndroidView
+            val diffUtilCallback: DiffUtilCallback<*> =
+                DiffUtilCallback(oldData, data)
+            val result = DiffUtil.calculateDiff(diffUtilCallback)
+            adapter.setItem(data)
+            result.dispatchUpdatesTo(adapter)
+            manager.invalidateSpanAssignments()
+        }
         if (removeListener) {
-            scrollState?.let { state -> it.addOnScrollListener(state) }
+            scrollState?.let { state -> it.removeOnScrollListener(state) }
         }
     })
+
     DisposableEffect(key1 = removeListener) {
         onDispose {
             removeListener = true
@@ -87,7 +106,7 @@ fun <T : Any> StaggeredGrid(
 class StaggeredAdapter<T : Any>(
     private val content: @Composable (T) -> Unit,
     val measureHeight: (T) -> Int = { MATCH_PARENT },
-) : RecyclerView.Adapter<ViewHolder<T>>() {
+) : Adapter<ViewHolder<T>>() {
 
     var items: Paging<T>? = null
 

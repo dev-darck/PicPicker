@@ -5,6 +5,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemGesturesPadding
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -17,10 +19,7 @@ import com.project.bottom_navigation.graph.addDestinations
 import com.project.navigationapi.config.BottomConfig
 import com.project.navigationapi.config.Config
 import com.project.navigationapi.config.ToolBarConfig
-import com.project.navigationapi.navigation.Directions
-import com.project.navigationapi.navigation.NavigateUp
-import com.project.navigationapi.navigation.Navigation
-import com.project.navigationapi.navigation.PopBackStack
+import com.project.navigationapi.navigation.*
 import com.project.toolbar.Toolbar
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -34,9 +33,8 @@ fun PicPikerScaffold(
     toolBarConfig: Sequence<ToolBarConfig> = emptySequence(),
     startDestination: String = "",
 ) {
+    val navController = rememberAnimatedNavController()
     Surface {
-        val navController = rememberAnimatedNavController()
-
         LaunchedEffect(navController) {
             appNavigation.destinations.onEach { event ->
                 when (event) {

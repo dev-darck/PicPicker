@@ -22,4 +22,5 @@ object LibsVersion {
     const val appComponentVersion = "1.6.0-alpha04"
     const val materialVersion = "1.7.0-alpha02"
     const val testVersion = "5.8.2"
+    const val paletteVersion = "28.0.0"
 }

@@ -3,6 +3,7 @@ package com.project.picpicker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.view.WindowCompat
 import com.project.basenavigation.manager.NavigationManager
 import com.project.common_compos_ui.theme.AppTheme
 import com.project.common_compos_ui.theme.StatusBarColorProvider
@@ -24,6 +25,7 @@ class BaseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         val screens = navigationManager.lisScreens()
         val bottomScreen = navigationManager.listBottomScreen()
         val startDestination = navigationManager.startDestination()

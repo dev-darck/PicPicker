@@ -4,15 +4,16 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
 import com.project.common_ui.extansions.ClickState.Pressed
 
 const val DEFAULT_SIZE = 1F
-const val DURATION = 100
+const val DURATION = 200
 
 private const val LABEL = "animationClick"
 private const val TRANSACTION_LABEL = "transactionClick"
-private const val SCALE_SIZE = .9F
+private const val SCALE_SIZE = .95F
 
 enum class ClickState {
     Pressed,
@@ -20,13 +21,12 @@ enum class ClickState {
     Cancel,
 }
 
-@Composable
 fun Modifier.addTouch(
     downAction: () -> Unit = { },
     upAction: () -> Unit = { },
     cancel: () -> Unit = { }
-): Modifier {
-    return pointerInput("") {
+): Modifier = composed {
+    pointerInput("") {
         detectTapGestures(onPress = {
             downAction()
             val success = tryAwaitRelease()

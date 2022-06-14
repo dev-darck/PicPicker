@@ -18,6 +18,7 @@ data class SettingsPaging(
     val countForNextPage: Int,
     var updateState: (PagingState) -> Unit = { },
 ) {
+    var lastPosition = 0
     fun isNextPage(): Boolean {
         return currentPage != maxPage
     }
@@ -84,6 +85,7 @@ open class Paging<T : Any>(
         state.combine(scrollState, ::Pair)
             .distinctUntilChanged()
             .collect { (currentState, position) ->
+                settingsPaging.lastPosition = position
                 val last = itemCount - settingsPaging.countForNextPage
                 if (position >= last
                     && settingsPaging.isNextPage()
