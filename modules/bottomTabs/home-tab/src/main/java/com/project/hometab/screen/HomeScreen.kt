@@ -1,6 +1,9 @@
 package com.project.hometab.screen
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,14 +20,14 @@ import com.project.common_ui.common_error.Error
 import com.project.common_ui.grid.ScrollState
 import com.project.common_ui.grid.StaggeredGrid
 import com.project.common_ui.grid.rememberScrollState
-import com.project.common_ui.paging.*
+import com.project.common_ui.paging.PagingData
+import com.project.common_ui.paging.SettingsPaging
+import com.project.common_ui.paging.rememberAsNewPage
 import com.project.hometab.screen.HomeState.Exception
 import com.project.hometab.viewmodule.HomeViewModel
 import com.project.hometab.views.HomePager
 import com.project.hometab.views.HomeScrollableTabRow
 import com.project.image_loader.Shimmering
-import com.project.navigationapi.config.PhotoDetail
-import kotlinx.coroutines.delay
 
 private val titles = listOf("Trending", "New")
 
@@ -71,7 +74,7 @@ private fun Home(
     spanCount: Int,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.wrapContentSize()
     ) {
         var isVisible by remember { mutableStateOf(true) }
         val scrollState = rememberScrollState {
@@ -115,7 +118,7 @@ private fun Home(
 @Composable
 fun Shimmer(spanCount: Int) {
     val paging = PagingData(listShimmerModel, SettingsPaging(10, countForNextPage = 0)).rememberAsNewPage { }
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.wrapContentSize()) {
         StaggeredGrid(
             modifier = Modifier,
             spanCount = spanCount,

@@ -21,8 +21,11 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.project.common_ui.animation.alphaAnimation
 import com.project.common_ui.animation.transition
-import com.project.common_ui.extansions.*
 import com.project.common_ui.extansions.ClickState.*
+import com.project.common_ui.extansions.DEFAULT_SIZE
+import com.project.common_ui.extansions.addTouch
+import com.project.common_ui.extansions.clickAnimation
+import com.project.common_ui.extansions.transition
 import com.project.common_ui.grid.StaggeredGrid
 import com.project.common_ui.loader.PulsingLoader
 import com.project.common_ui.paging.PagingState
@@ -51,7 +54,7 @@ fun HomePager(
     HorizontalPager(
         count = count,
         state = pagerState,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.wrapContentSize(),
     ) { page ->
         if (page != pagerState.currentPage) return@HorizontalPager
         Page(spanCount = spanCount, scrollState = scrollState, state = state, onNewPage, clickPhoto)
@@ -69,7 +72,7 @@ private fun Page(
     val paging = state.result.rememberAsNewPage(newPage)
     val newPageState = paging.statePaging.collectAsState().value
     BoxWithConstraints(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.wrapContentSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         StaggeredGrid(
@@ -92,7 +95,7 @@ private fun PageLoadUi(newPageState: PagingState, error: () -> Unit) {
     when (newPageState) {
         is Loading -> {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.wrapContentWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.size(15.dp))
@@ -128,7 +131,7 @@ private fun PhotoCard(photo: PhotoModel, clickPhoto: (String) -> Unit = { }) {
     }
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .wrapContentSize()
             .padding(10.dp)
             .aspectRatio(photo.aspectRatio)
             .scale(scale)

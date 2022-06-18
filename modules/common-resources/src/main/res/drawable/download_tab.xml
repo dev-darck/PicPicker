@@ -5,8 +5,8 @@
     android:viewportWidth="20"
     android:viewportHeight="20">
     <path
-        android:fillColor="#1d1d1b"
-        android:pathData="M 19.966 7.07 C 19.666 2.993 16.267 -0.19
+            android:fillColor="@color/colorIcon"
+            android:pathData="M 19.966 7.07 C 19.666 2.993 16.267 -0.19
         12.368 0.009 C 9.469 0.208 6.97 1.998 5.97 4.683 C 4.97 4.484 3.97 4.484 2.971 4.982
         C 1.471 5.579 0.271 6.871 0.071 8.363 C -0.229 10.452 0.471 11.844 1.171 12.64
         C 2.171 13.734 3.57 14.331 5.37 14.331 L 6.37 14.331 L 6.37 12.242 L 5.37 12.242

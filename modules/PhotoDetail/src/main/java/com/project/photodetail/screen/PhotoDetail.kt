@@ -9,10 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,35 +17,28 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
-import com.project.util.extensions.toPrettyString
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.project.common_ui.TagsBottom
-import com.project.common_ui.CollagePhoto
 import com.project.common_compos_ui.theme.appTypographyH4
 import com.project.common_resources.R
-import com.project.common_ui.DotModel
-import com.project.common_ui.DotState
-import com.project.common_ui.RowDot
+import com.project.common_ui.*
 import com.project.common_ui.common_error.Error
-import com.project.common_ui.createSpacing
-import com.project.image_loader.GlideImage
-import com.project.photodetail.viewmodel.PhotoDetailViewModel
-import com.project.photodetail.viewmodel.PhotoState
 import com.project.common_ui.extansions.dominateSelectionColor
 import com.project.common_ui.loader.PulsingLoader
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion
+import com.project.image_loader.GlideImage
 import com.project.image_loader.ImageSize
 import com.project.model.*
-import com.project.util.extensions.openMap
+import com.project.photodetail.viewmodel.PhotoDetailViewModel
+import com.project.photodetail.viewmodel.PhotoState
+import com.project.util.extensions.toPrettyString
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
@@ -97,8 +87,8 @@ private fun Photo(
     }
 
     val lazyState = rememberLazyListState()
-    val offset = remember { derivedStateOf { lazyState.firstVisibleItemScrollOffset } }
-    val itemIndex = remember { derivedStateOf { lazyState.firstVisibleItemIndex } }
+    val offset = remember { derivedStateOf { lazyState.firstVisibleItemScrollOffset * 2 } }
+    val itemIndex = remember { derivedStateOf { lazyState.firstVisibleItemIndex * 2 } }
     var state by remember { mutableStateOf(true) }
 
     val transition = updateTransition(
@@ -120,7 +110,7 @@ private fun Photo(
         )
     )
 
-    val animationSize by animateDpAsState(size, tween(200, easing = LinearEasing))
+    val animationSize by animateDpAsState(size, tween(150, easing = LinearEasing))
 
     Column(modifier = Modifier.fillMaxSize()) {
         Header(
@@ -133,16 +123,9 @@ private fun Photo(
             photo, modifier = Modifier.alpha(alpha), animationSize
         )
         photo.tags?.takeIf { it.isNotEmpty() }?.let {
-            val tagSize = max(
-                0.dp, 30.dp * min(
-                    1f, 1 - (offset.value / 1000F + itemIndex.value)
-                )
-            )
-            val animationSizeTags by animateDpAsState(tagSize, tween(200, easing = LinearEasing))
-            Spacer(Modifier.size(10.dp).alpha(alpha))
             TagsBottom(
-                modifier = Modifier.alpha(alpha).height(animationSizeTags),
-                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier.alpha(alpha).height(size),
+                contentPadding = PaddingValues(vertical = 10.dp, horizontal = 16.dp),
                 tags = it
             )
         }
@@ -177,8 +160,9 @@ private fun Header(
         modifier = if (newState) modifier.fillMaxSize() else modifier.height(330.dp),
         contentAlignment = if (newState) Alignment.Center else Alignment.TopStart
     ) {
-        GlideImage(contentScale = ContentScale.Crop,
-            modifier = Modifier.height(330.dp).alpha(alpha).fillMaxWidth(),
+        GlideImage(
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.height(330.dp).alpha(alpha).wrapContentWidth(),
             imageSize = ImageSize(_height = 330.dp),
             data = photo.urls.regular.orEmpty(),
             shapes = RoundedCornerShape(0.dp),
@@ -198,10 +182,11 @@ private fun Header(
         }
         var toState by remember { mutableStateOf(DotState.COLLAPSED) }
         Row(
-            modifier = Modifier.fillMaxWidth().alpha(alpha).padding(top = 20.dp).height(
-                if (toState == DotState.COLLAPSED) 50.dp
-                else createSpacing(list.size)
-            ).statusBarsPadding(),
+            modifier = Modifier
+                .wrapContentWidth()
+                .alpha(alpha)
+                .padding(top = 20.dp)
+                .height(50.dp).statusBarsPadding(),
             verticalAlignment = Alignment.Top,
         ) {
             Spacer(Modifier.size(30.dp))
@@ -213,16 +198,56 @@ private fun Header(
                 Color.White,
             )
             Spacer(Modifier.weight(1F, true))
-            RowDot(count = 3,
+            RowDot(
+                count = 3,
                 modifier = Modifier.padding(end = 30.dp),
                 circleSize = 6.dp,
                 spaceSize = 4.dp,
                 circleColor = if (isLightState.first) Color.White else Color.Black,
                 toState = toState,
-                items = list,
                 stateChanged = {
                     toState = it
-                })
+                },
+                content = {
+                    DropdownMenu(
+                        modifier = Modifier,
+                        expanded = toState == DotState.EXPANDED,
+                        onDismissRequest = { toState = DotState.COLLAPSED }
+                    ) {
+                        DropdownMenuItem(
+                            modifier = Modifier.height(20.dp),
+                            onClick = {}
+                        ) {
+                            Box(
+                                Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.share),
+                                    style = MaterialTheme.typography.h4,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        }
+                        Spacer(Modifier.size(2.dp))
+                        DropdownMenuItem(
+                            modifier = Modifier.height(20.dp),
+                            onClick = {}
+                        ) {
+                            Box(
+                                Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.info),
+                                    style = MaterialTheme.typography.h4,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        }
+                    }
+                }
+            )
         }
         if (newState) {
             PulsingLoader(delay = 600)
@@ -262,7 +287,10 @@ private fun UserBlock(
     photo: Photo, modifier: Modifier
 ) {
     Row(
-        modifier = modifier.height(50.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+        modifier = modifier
+            .height(50.dp)
+            .wrapContentWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.size(16.dp))
         GlideImage(
@@ -284,6 +312,13 @@ private fun UserBlock(
         )
         Spacer(modifier = Modifier.size(16.dp))
         IconBottom(
+            Modifier, icon = R.drawable.add_collections, click = {
+
+            }, color = MaterialTheme.colors.onSecondary
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+
+        IconBottom(
             Modifier, icon = R.drawable.download_tab, click = {
 
             }, color = MaterialTheme.colors.onSecondary
@@ -300,7 +335,10 @@ private fun InfoBlock(
     height: Dp,
 ) {
     Row(
-        modifier = modifier.height(height).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+        modifier = modifier
+            .height(height)
+            .wrapContentWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(Modifier.weight(.5F, true))
         Column(
@@ -361,21 +399,24 @@ private fun UserCollection(
     photo: Photo, modifier: Modifier, state: LazyListState
 ) {
     val relatedCollections = photo.relatedCollections()
-    LazyColumn(state = state, contentPadding = PaddingValues(), modifier = modifier.fillMaxWidth(), content = {
-        item {
-            Spacer(modifier = Modifier.size(10.dp))
-            Text(
-                text = stringResource(R.string.related_collections),
-                modifier = modifier.fillMaxWidth().padding(horizontal = 17.dp),
-                style = MaterialTheme.typography.h2,
-            )
-            Spacer(modifier = Modifier.size(5.dp))
-        }
-        items(count = relatedCollections.size, key = { relatedCollections[it].id }) {
-            val item = relatedCollections[it]
-            RelatedCollection(item)
-        }
-    })
+    LazyColumn(
+        state = state,
+        contentPadding = PaddingValues(),
+        modifier = modifier.wrapContentWidth().navigationBarsPadding(),
+        content = {
+            item {
+                Text(
+                    text = stringResource(R.string.related_collections),
+                    modifier = modifier.wrapContentWidth().padding(horizontal = 17.dp),
+                    style = MaterialTheme.typography.h2,
+                )
+                Spacer(modifier = Modifier.size(5.dp))
+            }
+            items(count = relatedCollections.size, key = { relatedCollections[it].id }) {
+                val item = relatedCollections[it]
+                RelatedCollection(item)
+            }
+        })
 }
 
 @Composable
@@ -434,7 +475,7 @@ val list = listOf(DotModel(R.string.share) {
 @Composable
 private fun IconBottom(
     modifier: Modifier,
-    isLightState: Boolean = false,
+    isLightState: Boolean = true,
     icon: Int,
     click: () -> Unit,
     color: Color,
