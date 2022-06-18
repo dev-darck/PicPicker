@@ -32,7 +32,7 @@ data class Photo(
     @SerializedName("links")
     val links: Links,
     @SerializedName("location")
-    val location: Location,
+    val location: Location? = null,
     @SerializedName("meta")
     val meta: Meta,
     @SerializedName("promoted_at")
@@ -62,3 +62,5 @@ data class Photo(
     @SerializedName("width")
     val width: Int
 )
+
+fun Photo.relatedCollections(): List<Result> = relatedCollections.results ?: emptyList()

@@ -80,6 +80,11 @@ class HomeViewModel @Inject constructor(
         navigation.navigate(PhotoDetail.createRoute(id))
     }
 
+    fun retryLoading() {
+        _newPhotosFlow.tryEmit(HomeState.Loading)
+        photoFirstPage(spanCount)
+    }
+
     private fun measureResult(result: List<PhotoModel>): List<PhotoModel> =
         result.map { photoModel ->
             photoModel.aspectRatio = photoModel.width / photoModel.height

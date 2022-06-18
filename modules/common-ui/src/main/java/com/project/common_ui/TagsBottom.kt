@@ -1,4 +1,4 @@
-package com.project.collectionstab.screen
+package com.project.common_ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

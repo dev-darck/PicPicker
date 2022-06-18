@@ -1,8 +1,6 @@
 package com.project.common_ui.common_error
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -10,7 +8,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -21,11 +18,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.common_resources.R
+import com.project.common_ui.extansions.clickableSingle
 
 @Preview
 @Composable
 fun Error(retry: () -> Unit = {}) {
-    val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -33,6 +30,9 @@ fun Error(retry: () -> Unit = {}) {
         Column(
             modifier = Modifier
                 .padding(paddingValue)
+                .clickableSingle(role = Role.Button) {
+                    retry()
+                }
                 .fillMaxSize(),
             horizontalAlignment = CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -40,12 +40,6 @@ fun Error(retry: () -> Unit = {}) {
             Box(
                 modifier = Modifier
                     .align(CenterHorizontally)
-                    .clickable(
-                        role = Role.Button,
-                        onClick = retry,
-                        interactionSource = interactionSource,
-                        indication = null
-                    )
                     .size(42.dp)
                     .background(
                         shape = RoundedCornerShape(20.dp),
@@ -62,7 +56,8 @@ fun Error(retry: () -> Unit = {}) {
             Spacer(
                 modifier = Modifier
                     .padding(top = 20.dp)
-                    .align(CenterHorizontally))
+                    .align(CenterHorizontally)
+            )
             Text(
                 text = stringResource(id = R.string.error_message)
             )

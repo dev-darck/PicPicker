@@ -45,9 +45,4 @@ class BaseActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        navigationManager.deleteScreens()
-    }
 }

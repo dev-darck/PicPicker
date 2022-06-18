@@ -26,10 +26,4 @@ class NavigationManagerLogic(
     override fun startDestination(): String = startDestination
 
     override fun listToolbar() = toolBarConfig
-
-    override fun deleteScreens() {
-        screens = emptySequence()
-        bottomConfig = emptySequence()
-        toolBarConfig = emptySequence()
-    }
 }

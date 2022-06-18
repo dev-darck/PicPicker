@@ -51,4 +51,9 @@ class CollectionViewModel @Inject constructor(
             }
         }
     }
+
+    fun retryLoading() {
+        collectionFlow.tryEmit(CollectionState.Loading)
+        collectionFirstPage()
+    }
 }

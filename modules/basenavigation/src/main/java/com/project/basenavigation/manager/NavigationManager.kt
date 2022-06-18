@@ -9,5 +9,4 @@ interface NavigationManager {
     fun lisScreens(): Sequence<Config>
     fun startDestination(): String
     fun listToolbar(): Sequence<ToolBarConfig>
-    fun deleteScreens()
 }

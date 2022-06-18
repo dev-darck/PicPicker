@@ -3,8 +3,11 @@ package com.project.photodetail.screen
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -17,27 +20,37 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import com.project.util.extensions.toPrettyString
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.project.common_compos_ui.theme.GrayLight
+import com.project.common_ui.TagsBottom
+import com.project.common_ui.CollagePhoto
+import com.project.common_compos_ui.theme.appTypographyH4
 import com.project.common_resources.R
 import com.project.common_ui.DotModel
 import com.project.common_ui.DotState
 import com.project.common_ui.RowDot
+import com.project.common_ui.common_error.Error
 import com.project.common_ui.createSpacing
 import com.project.image_loader.GlideImage
-import com.project.model.Photo
 import com.project.photodetail.viewmodel.PhotoDetailViewModel
 import com.project.photodetail.viewmodel.PhotoState
-import com.project.common_ui.extansions.dominateTopSelectionColor
+import com.project.common_ui.extansions.dominateSelectionColor
 import com.project.common_ui.loader.PulsingLoader
+import com.project.common_ui.tab.Point
+import com.project.common_ui.tab.SizeProportion
 import com.project.image_loader.ImageSize
-import com.project.model.name
+import com.project.model.*
+import com.project.util.extensions.openMap
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 private val userIconSize = 24.dp
 
@@ -52,8 +65,12 @@ fun PhotoDetail(viewModel: PhotoDetailViewModel) {
             Photo(state.result, viewModel)
         }
 
-        else -> {
+        is PhotoState.Loading -> {
+            PulsingLoader(delay = 600)
+        }
 
+        else -> Error {
+            viewModel.retryLoading()
         }
     }
 }
@@ -78,7 +95,12 @@ private fun Photo(
     BackHandler {
         onBack()
     }
+
+    val lazyState = rememberLazyListState()
+    val offset = remember { derivedStateOf { lazyState.firstVisibleItemScrollOffset } }
+    val itemIndex = remember { derivedStateOf { lazyState.firstVisibleItemIndex } }
     var state by remember { mutableStateOf(true) }
+
     val transition = updateTransition(
         targetState = state, label = ""
     )
@@ -91,26 +113,40 @@ private fun Photo(
     ) { animationState ->
         if (!animationState) 1F else 0F
     }
+
+    val size = max(
+        0.dp, 50.dp * min(
+            1f, 1 - (offset.value / 1000F + itemIndex.value)
+        )
+    )
+
+    val animationSize by animateDpAsState(size, tween(200, easing = LinearEasing))
+
     Column(modifier = Modifier.fillMaxSize()) {
         Header(
-            modifier = Modifier,
-            photo,
-            onBack = onBack,
-            state,
-            systemUiController
+            modifier = Modifier, photo, onBack = onBack, state, systemUiController
         ) {
             state = it
         }
         UserBlock(photo, modifier = Modifier.alpha(alpha))
-        InfoBlock(photo, modifier = Modifier.alpha(alpha))
-        photo.tags?.let {
+        InfoBlock(
+            photo, modifier = Modifier.alpha(alpha), animationSize
+        )
+        photo.tags?.takeIf { it.isNotEmpty() }?.let {
+            val tagSize = max(
+                0.dp, 30.dp * min(
+                    1f, 1 - (offset.value / 1000F + itemIndex.value)
+                )
+            )
+            val animationSizeTags by animateDpAsState(tagSize, tween(200, easing = LinearEasing))
             Spacer(Modifier.size(10.dp).alpha(alpha))
             TagsBottom(
-                Modifier.alpha(alpha),
+                modifier = Modifier.alpha(alpha).height(animationSizeTags),
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 tags = it
             )
         }
+        UserCollection(photo, modifier = Modifier.alpha(alpha), lazyState)
     }
 }
 
@@ -123,7 +159,7 @@ private fun Header(
     systemUiController: SystemUiController,
     state: (Boolean) -> Unit = { },
 ) {
-    var isLightState by remember { mutableStateOf(true) }
+    var isLightState by remember { mutableStateOf(Pair(false, false)) }
     val scope = rememberCoroutineScope()
     val transition = updateTransition(
         targetState = newState, label = ""
@@ -137,12 +173,11 @@ private fun Header(
     ) { animationState ->
         if (!animationState) 1F else 0F
     }
-    Box(
+    BoxWithConstraints(
         modifier = if (newState) modifier.fillMaxSize() else modifier.height(330.dp),
         contentAlignment = if (newState) Alignment.Center else Alignment.TopStart
     ) {
-        GlideImage(
-            contentScale = ContentScale.Crop,
+        GlideImage(contentScale = ContentScale.Crop,
             modifier = Modifier.height(330.dp).alpha(alpha).fillMaxWidth(),
             imageSize = ImageSize(_height = 330.dp),
             data = photo.urls.regular.orEmpty(),
@@ -150,12 +185,17 @@ private fun Header(
             loadSuccess = { image ->
                 state(false)
                 scope.launch {
-                    val (color, isLight) = image.dominateTopSelectionColor(100.dp.value.toInt())
-                    systemUiController.setStatusBarColor(Color(color).copy(.5F), isLight)
-                    isLightState = isLight
+                    val (color, isLight) = image.dominateSelectionColor(bottom = 100.dp.value.toInt())
+                    val (_, isLightBottom) = image.dominateSelectionColor(
+                        top = 330.dp.value.toInt() - 10.dp.value.toInt(), bottom = 330.dp.value.toInt()
+                    )
+                    systemUiController.setStatusBarColor(Color(color).copy(.5F), !isLight)
+                    isLightState = Pair(isLight, isLightBottom)
                 }
-            }
-        )
+            })
+        photo.location?.let {
+            Location(isLightState.second, alpha, it)
+        }
         var toState by remember { mutableStateOf(DotState.COLLAPSED) }
         Row(
             modifier = Modifier.fillMaxWidth().alpha(alpha).padding(top = 20.dp).height(
@@ -167,18 +207,17 @@ private fun Header(
             Spacer(Modifier.size(30.dp))
             IconBottom(
                 Modifier,
-                isLightState,
+                isLightState.first,
                 R.drawable.back_icon,
                 onBack,
                 Color.White,
             )
             Spacer(Modifier.weight(1F, true))
-            RowDot(
-                count = 3,
+            RowDot(count = 3,
                 modifier = Modifier.padding(end = 30.dp),
                 circleSize = 6.dp,
                 spaceSize = 4.dp,
-                circleColor = if (!isLightState) Color.White else Color.Black,
+                circleColor = if (isLightState.first) Color.White else Color.Black,
                 toState = toState,
                 items = list,
                 stateChanged = {
@@ -192,15 +231,38 @@ private fun Header(
 }
 
 @Composable
+private fun BoxScope.Location(isLightState: Boolean, alpha: Float, location: Location) {
+    Row(
+        modifier = Modifier.alpha(alpha)
+            .align(Alignment.BottomStart)
+            .padding(start = 30.dp, bottom = 10.dp)
+            .clickable {
+
+            },
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.location_icon),
+            modifier = Modifier.size(8.dp, 11.dp),
+            tint = if (isLightState) Color.White else Color.Black,
+            contentDescription = stringResource(R.string.location)
+        )
+        Spacer(Modifier.size(10.dp))
+        Text(
+            text = location.name() ?: stringResource(R.string.location),
+            style = MaterialTheme.typography.h4,
+            color = if (isLightState) Color.White else Color.Black
+        )
+    }
+}
+
+@Composable
 private fun UserBlock(
-    photo: Photo,
-    modifier: Modifier
+    photo: Photo, modifier: Modifier
 ) {
     Row(
-        modifier = modifier
-            .height(50.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier.height(50.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.size(16.dp))
         GlideImage(
@@ -216,43 +278,29 @@ private fun UserBlock(
         )
         Spacer(modifier = Modifier.weight(1F, true))
         IconBottom(
-            Modifier,
-            icon = R.drawable.like_icon,
-            click = {
+            Modifier, icon = R.drawable.like_icon, click = {
 
-            },
-            color = MaterialTheme.colors.onSecondary
+            }, color = MaterialTheme.colors.onSecondary
         )
         Spacer(modifier = Modifier.size(16.dp))
         IconBottom(
-            Modifier,
-            icon = R.drawable.download_tab,
-            click = {
+            Modifier, icon = R.drawable.download_tab, click = {
 
-            },
-            color = MaterialTheme.colors.onSecondary
+            }, color = MaterialTheme.colors.onSecondary
         )
         Spacer(modifier = Modifier.size(16.dp))
     }
-    Spacer(
-        modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .padding(horizontal = 17.dp)
-            .background(GrayLight)
-    )
+    Devider(modifier)
 }
 
 @Composable
 private fun InfoBlock(
     photo: Photo,
-    modifier: Modifier
+    modifier: Modifier,
+    height: Dp,
 ) {
     Row(
-        modifier = modifier
-            .height(50.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier.height(height).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(Modifier.weight(.5F, true))
         Column(
@@ -261,12 +309,12 @@ private fun InfoBlock(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                style = MaterialTheme.typography.caption,
+                style = MaterialTheme.typography.h4,
                 maxLines = 1,
-                text = "Просмотры",
+                text = stringResource(R.string.views_title),
             )
             Text(
-                style = MaterialTheme.typography.caption,
+                style = appTypographyH4,
                 maxLines = 1,
                 text = (photo.views ?: 0).toPrettyString(),
             )
@@ -278,12 +326,10 @@ private fun InfoBlock(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                style = MaterialTheme.typography.caption,
-                maxLines = 1,
-                text = "Загрузки",
+                style = MaterialTheme.typography.h4, maxLines = 1, text = stringResource(R.string.download_title)
             )
             Text(
-                style = MaterialTheme.typography.caption,
+                style = appTypographyH4,
                 maxLines = 1,
                 text = (photo.downloads ?: 0).toPrettyString(),
             )
@@ -295,44 +341,93 @@ private fun InfoBlock(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                style = MaterialTheme.typography.caption,
+                style = MaterialTheme.typography.h4,
                 maxLines = 1,
-                text = "Лайки",
+                text = stringResource(R.string.likes_title),
             )
             Text(
-                style = MaterialTheme.typography.caption,
+                style = appTypographyH4,
                 maxLines = 1,
                 text = (photo.likes ?: 0).toPrettyString(),
             )
         }
         Spacer(Modifier.weight(.5F, true))
     }
-    Spacer(
-        modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .padding(horizontal = 17.dp)
-            .background(GrayLight)
-    )
+    Devider(modifier)
 }
 
 @Composable
-private fun userCollection(
-    photo: Photo,
-    modifier: Modifier
+private fun UserCollection(
+    photo: Photo, modifier: Modifier, state: LazyListState
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        content = {
-            items(photo.currentUserCollections.size) {
-
-            }
-        })
+    val relatedCollections = photo.relatedCollections()
+    LazyColumn(state = state, contentPadding = PaddingValues(), modifier = modifier.fillMaxWidth(), content = {
+        item {
+            Spacer(modifier = Modifier.size(10.dp))
+            Text(
+                text = stringResource(R.string.related_collections),
+                modifier = modifier.fillMaxWidth().padding(horizontal = 17.dp),
+                style = MaterialTheme.typography.h2,
+            )
+            Spacer(modifier = Modifier.size(5.dp))
+        }
+        items(count = relatedCollections.size, key = { relatedCollections[it].id }) {
+            val item = relatedCollections[it]
+            RelatedCollection(item)
+        }
+    })
 }
 
-val list = listOf(DotModel("Поделиться") {
+@Composable
+private fun RelatedCollection(item: Result) {
+    CollagePhoto(
+        modifier = Modifier.padding(horizontal = 16.dp), item.previewPhotos
+    )
+    Spacer(modifier = Modifier.size(10.dp))
+    Text(
+        modifier = Modifier.padding(horizontal = 20.dp),
+        text = item.title.orEmpty(),
+        style = MaterialTheme.typography.h2
+    )
+    Row(
+        modifier = Modifier.padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "${item.totalPhotos.toString()} ${stringResource(id = R.string.photos)}",
+            style = MaterialTheme.typography.caption,
+            color = MaterialTheme.colors.onSecondary
+        )
+        Spacer(modifier = Modifier.size(5.dp))
+        Point(
+            modifier = Modifier.size(15.dp),
+            sizeProportion = SizeProportion.MIDDLE,
+            color = MaterialTheme.colors.onSecondary
+        )
+        Spacer(modifier = Modifier.size(5.dp))
+        Text(
+            text = item.user.name(stringResource(id = R.string.curated_text)),
+            style = MaterialTheme.typography.caption,
+            color = MaterialTheme.colors.onSecondary
+        )
+    }
+    Spacer(modifier = Modifier.size(10.dp))
+    TagsBottom(
+        contentPadding = PaddingValues(horizontal = 16.dp), tags = item.tags.orEmpty()
+    )
+    Spacer(modifier = Modifier.size(10.dp))
+}
 
-}, DotModel("Информация") {
+@Composable
+private fun Devider(modifier: Modifier) {
+    Spacer(
+        modifier.height(1.dp).fillMaxWidth().padding(horizontal = 17.dp)
+            .background(MaterialTheme.colors.secondaryVariant)
+    )
+}
+
+val list = listOf(DotModel(R.string.share) {
+
+}, DotModel(R.string.info) {
 
 })
 
@@ -349,7 +444,7 @@ private fun IconBottom(
     }) {
         val content = R.string.default_content_descriptions
         Icon(
-            tint = if (!isLightState) color else Color.Black,
+            tint = if (isLightState) color else Color.Black,
             imageVector = ImageVector.vectorResource(id = icon),
             contentDescription = stringResource(id = content),
         )

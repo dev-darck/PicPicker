@@ -38,10 +38,15 @@ class PhotoDetailViewModel @Inject constructor(
                     }
 
                     else -> {
-
+                        _photo.tryEmit(PhotoState.Exception)
                     }
                 }
             }
         }
+    }
+
+    fun retryLoading() {
+        _photo.tryEmit(PhotoState.Loading)
+        photo()
     }
 }
