@@ -27,6 +27,10 @@ import androidx.compose.ui.unit.dp
 import com.project.collectionstab.viewmodel.CollectionState.*
 import com.project.collectionstab.viewmodel.CollectionViewModel
 import com.project.common_resources.R
+import com.project.common_ui.CollagePhoto
+import com.project.common_ui.ShimmeringCollagePhoto
+import com.project.common_ui.TagsBottom
+import com.project.common_ui.TagsShimmering
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion.MIDDLE
 import com.project.common_ui.common_error.Error
@@ -48,11 +52,15 @@ fun Collections(viewModel: CollectionViewModel) {
         is Loading -> {
             Shimmer()
         }
+
         is Success -> {
             LazyList(state.result, viewModel)
         }
+
         is Exception -> {
-            Error()
+            Error {
+                viewModel.retryLoading()
+            }
         }
     }
 }
@@ -93,6 +101,7 @@ private fun LazyList(
                                 Spacer(modifier = Modifier.padding(bottom = 15.dp))
                             }
                         }
+
                         is PagingState.Error -> {
                             val context = LocalContext.current
                             Toast.makeText(
@@ -102,6 +111,7 @@ private fun LazyList(
                             ).show()
                             items.updateState(PagingState.Success)
                         }
+
                         else -> {
 
                         }
@@ -154,7 +164,7 @@ private fun CardCollection(collectionModel: CollectionModel) {
         Text(
             modifier = Modifier.padding(horizontal = 20.dp),
             text = collectionModel.title.orEmpty(),
-            style = typography.h6
+            style = typography.h2
         )
         Row(
             modifier = Modifier.padding(start = 20.dp),
@@ -165,11 +175,13 @@ private fun CardCollection(collectionModel: CollectionModel) {
                 style = typography.caption,
                 color = colors.onSecondary
             )
-            Spacer(modifier = Modifier.padding(top = 10.dp))
-            Point(modifier = Modifier.size(15.dp),
+            Spacer(modifier = Modifier.size(5.dp))
+            Point(
+                modifier = Modifier.size(15.dp),
                 sizeProportion = MIDDLE,
-                color = colors.onSecondary)
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+                color = colors.onSecondary
+            )
+            Spacer(modifier = Modifier.size(5.dp))
             Text(
                 text = collectionModel.user.name(stringResource(id = R.string.curated_text)),
                 style = typography.caption,

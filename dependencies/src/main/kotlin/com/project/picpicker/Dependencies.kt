@@ -82,6 +82,7 @@ object Dependency {
 
     val timber = "com.jakewharton.timber:timber:$timberVersion".impl
     val leakCanary = "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion".debugImpl
+        val googleService = "com.google.android.gms:play-services-base:18.0.1".impl
 
     val baseDependencyDeps = deps(
         "androidx.core:core-ktx:$coreVersion".impl,

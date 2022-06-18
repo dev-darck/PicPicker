@@ -1,5 +1,7 @@
 package com.project.common_ui
 
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.project.common_ui.loader.Dot
@@ -20,7 +24,7 @@ import com.project.common_ui.loader.Dot
 private val spaceItem = 20.dp
 
 data class DotModel(
-    val title: String,
+    @StringRes val title: Int,
     val onClick: () -> Unit,
 )
 
@@ -43,6 +47,7 @@ fun RowDot(
     stateChanged: (state: DotState) -> Unit,
 ) {
     val transition: Transition<DotState> = updateTransition(targetState = toState, label = "")
+    val resources = LocalContext.current.resources
     val alpha: Float by transition.animateFloat(
         transitionSpec = {
             tween(durationMillis = 50)
@@ -62,7 +67,7 @@ fun RowDot(
                     } else {
                         stateChanged(DotState.COLLAPSED)
                     }
-                }
+                },
         ) {
             repeat(count) {
                 Dot(
@@ -74,8 +79,8 @@ fun RowDot(
             }
         }
         Spacer(Modifier.size(4.dp))
-        val maxLength = items.maxOf { it.title.length }
-        val width = (maxLength * MaterialTheme.typography.caption.fontSize.value).dp
+        val maxLength = items.maxOf { resources.getString(it.title).length }
+        val width = (maxLength * MaterialTheme.typography.caption.fontSize.value).dp + 20.dp
         items.forEach {
             Item(
                 it,
@@ -100,7 +105,7 @@ private fun Item(model: DotModel, modifier: Modifier = Modifier, width: Dp) {
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 20.dp),
-            text = model.title,
+            text = stringResource(model.title),
             maxLines = 1,
             style = MaterialTheme.typography.caption,
             color = Color.Black

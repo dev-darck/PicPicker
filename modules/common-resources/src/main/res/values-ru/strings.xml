@@ -11,4 +11,11 @@
     <string name="photos">фото</string>
     <string name="curated_text">Автор</string>
     <string name="error_message">Произошла ошибка. Повторите попытку.</string>
+    <string name="download_title">Загрузки</string>
+    <string name="views_title">Просмотры</string>
+    <string name="likes_title">Лайки</string>
+    <string name="related_collections">Похожие коллекции</string>
+    <string name="share">Поделиться</string>
+    <string name="info">Информация</string>
+    <string name="location">Локация</string>
 </resources>

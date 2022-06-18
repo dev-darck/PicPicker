@@ -1,4 +1,4 @@
-package com.project.collectionstab.screen
+package com.project.common_ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -130,7 +130,7 @@ private fun SingleImage(previewPhotos: List<PreviewPhotos>, height: Dp) {
 }
 
 @Composable
-internal fun ShimmeringCollagePhoto(brush: Brush) {
+fun ShimmeringCollagePhoto(brush: Brush) {
     Spacer(
         modifier = Modifier
             .padding(horizontal = 20.dp)

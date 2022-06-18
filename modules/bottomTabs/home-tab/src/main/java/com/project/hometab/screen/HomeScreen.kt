@@ -56,7 +56,9 @@ private fun HomeScreen(
     when (state) {
         is HomeState.Success -> Home(viewModel, pagerState, state, spanCount)
         is HomeState.Loading -> Shimmer(spanCount)
-        is Exception -> Error()
+        is Exception -> Error {
+            viewModel.retryLoading()
+        }
     }
 }
 

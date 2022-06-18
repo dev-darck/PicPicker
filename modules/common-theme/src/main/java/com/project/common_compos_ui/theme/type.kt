@@ -19,10 +19,20 @@ val AppTypography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     ),
+    h2 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
+    ),
+    h3 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
+    ),
     h4 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 27.sp
+        fontSize = 12.sp
     ),
     h6 = TextStyle(
         fontFamily = fontFamily,
@@ -54,4 +64,25 @@ val AppTypography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 11.sp
     )
+)
+
+val appTypographyH1 = TextStyle(
+    fontFamily = fontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 20.sp
+)
+val appTypographyH2 = TextStyle(
+    fontFamily = fontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp
+)
+val appTypographyH3 = TextStyle(
+    fontFamily = fontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp
+)
+val appTypographyH4 = TextStyle(
+    fontFamily = fontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 12.sp
 )

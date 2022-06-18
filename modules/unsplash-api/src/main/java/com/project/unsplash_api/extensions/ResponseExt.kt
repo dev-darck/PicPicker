@@ -9,8 +9,8 @@ import timber.log.Timber
 private const val TAG = "UnsplashApi"
 
 internal fun <T : Any> Response<T>.result(): T {
-    if (!isSuccessful) throw IOException("response bad ${errorBody()}")
-    return body() ?: throw IOException("response bad ${errorBody()}")
+    if (!isSuccessful) throw IOException("response bad ${errorBody()?.string()}")
+    return body() ?: throw IOException("response bad ${errorBody()?.string()}")
 }
 
 internal fun <T : Any> Response<T>.safeCall(): ResultWrapper<T> {
