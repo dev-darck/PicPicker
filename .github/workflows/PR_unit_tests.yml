@@ -57,27 +57,8 @@ jobs:
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-  lint:
-    needs: create-cache-and-setup-options
-    name: Run Lint
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Check lint
-        if: always()
-        run: ./gradlew lintRelease --stacktrace
-
   Unit-test:
-    needs: lint
+    needs: create-cache-and-setup-options
     name: Run unit tests on PR in main
     runs-on: ubuntu-latest
     steps:
