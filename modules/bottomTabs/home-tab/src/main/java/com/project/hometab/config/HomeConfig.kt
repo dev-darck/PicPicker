@@ -2,10 +2,7 @@ package com.project.hometab.config
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
-import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.project.common_resources.R
 import com.project.hometab.screen.HomeScreen
 import com.project.navigationapi.config.*
@@ -24,6 +21,7 @@ class HomeConfig @Inject constructor(
         icon = R.drawable.settings_icon
         contentDescription = R.string.default_content_descriptions
         click = {
+            navigation.navigate(SettingsRoute.createRoute("home"))
         }
     }
     override val rightBottom: BottomIcon = BottomIcon().apply {

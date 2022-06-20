@@ -14,6 +14,7 @@ object Modules {
     const val scrollableTabRow = "scrollable-tab-row"
     const val util = "util"
     const val baseNavigation = "basenavigation"
+    const val settings = "settings-app"
 }
 
 object TabModule {
