@@ -22,7 +22,7 @@ object CollectionsRoute : Route() {
 object WebViewRoute : Route() {
     private const val route: String = "webview"
     const val schemeUrl: String = "url"
-    const val schemeType: String = "type"
+    const val schemeType: String = type
     override val routeScheme: String = "$route/{$schemeUrl}/{$schemeType}"
 
     fun createRoute(url: String, type: TypeUrl): String = "$route/$url/${type.type}"
@@ -36,15 +36,22 @@ object WebViewRoute : Route() {
 
 object HomeRoute : Route() {
     private const val route: String = "home"
-    const val scheme: String = "type"
+    const val scheme: String = type
     override val routeScheme: String = "$route/{$scheme}"
 
     fun createRoute(type: String): String = "$route/$type"
 }
 
+object SettingsRoute : Route() {
+    private const val route: String = "settings"
+    const val scheme: String = type
+    override val routeScheme: String = "$route/{$scheme}"
+    fun createRoute(type: String): String = "$route/$type"
+}
+
 object PhotoDetail : Route() {
     private const val route: String = "photodetail"
-    const val scheme: String = "id"
+    const val scheme: String = id
     override val routeScheme: String = "$route/{$scheme}"
     fun createRoute(photoId: String): String = "$route/$photoId"
 }
@@ -52,5 +59,7 @@ object PhotoDetail : Route() {
 object DefaultRoute : Route() {
     override val routeScheme: String
         get() = "Route"
-
 }
+
+private const val type = "type"
+private const val id = "id"

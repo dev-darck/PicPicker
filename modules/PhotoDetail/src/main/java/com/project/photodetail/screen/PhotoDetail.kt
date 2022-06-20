@@ -27,7 +27,10 @@ import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.project.common_compos_ui.theme.appTypographyH4
 import com.project.common_resources.R
-import com.project.common_ui.*
+import com.project.common_ui.CollagePhoto
+import com.project.common_ui.DotState
+import com.project.common_ui.RowDot
+import com.project.common_ui.TagsBottom
 import com.project.common_ui.common_error.Error
 import com.project.common_ui.extansions.dominateSelectionColor
 import com.project.common_ui.loader.PulsingLoader
@@ -405,12 +408,13 @@ private fun UserCollection(
         modifier = modifier.wrapContentWidth().navigationBarsPadding(),
         content = {
             item {
+                Spacer(modifier = Modifier.size(10.dp))
                 Text(
                     text = stringResource(R.string.related_collections),
                     modifier = modifier.wrapContentWidth().padding(horizontal = 17.dp),
                     style = MaterialTheme.typography.h2,
                 )
-                Spacer(modifier = Modifier.size(5.dp))
+                Spacer(modifier = Modifier.size(10.dp))
             }
             items(count = relatedCollections.size, key = { relatedCollections[it].id }) {
                 val item = relatedCollections[it]
@@ -465,12 +469,6 @@ private fun Devider(modifier: Modifier) {
             .background(MaterialTheme.colors.secondaryVariant)
     )
 }
-
-val list = listOf(DotModel(R.string.share) {
-
-}, DotModel(R.string.info) {
-
-})
 
 @Composable
 private fun IconBottom(

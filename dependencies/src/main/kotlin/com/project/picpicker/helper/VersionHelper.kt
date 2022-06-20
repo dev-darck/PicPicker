@@ -25,6 +25,13 @@ class VersionHelper(private val rootDir: String) {
         return "$major.$minor.$build"
     }
 
+    fun versionConfig(isRelease: Boolean = true): String {
+        val major = versionProps[VERSION_MAJOR].toString().toInt()
+        val minor = versionProps[VERSION_MINOR].toString().toInt()
+        val build = versionProps[VERSION_BUILD].toString().toInt()
+        return if (isRelease) "$major.$minor - release" else "$major.$minor.$build - debug"
+    }
+
     fun versionMajor(): Int = versionProps[VERSION_MAJOR].toString().toInt()
 
     fun versionMinor(): Int = versionProps[VERSION_MINOR].toString().toInt()
