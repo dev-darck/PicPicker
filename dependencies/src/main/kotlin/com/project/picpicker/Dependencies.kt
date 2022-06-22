@@ -1,108 +1,174 @@
 package com.project.picpicker
 
-import com.project.picpicker.LibsVersion.accompanistNavigationVersion
-import com.project.picpicker.LibsVersion.activityComposeVersion
-import com.project.picpicker.LibsVersion.appComponentVersion
-import com.project.picpicker.LibsVersion.composeVersion
-import com.project.picpicker.LibsVersion.coreVersion
-import com.project.picpicker.LibsVersion.customViewPoolingcontainerVersion
-import com.project.picpicker.LibsVersion.customViewVersion
-import com.project.picpicker.LibsVersion.glideVersion
-import com.project.picpicker.LibsVersion.hiltNavigationComposeVersion
-import com.project.picpicker.LibsVersion.hiltVersion
-import com.project.picpicker.LibsVersion.kotlinVersion
-import com.project.picpicker.LibsVersion.leakcanaryVersion
-import com.project.picpicker.LibsVersion.materialVersion
-import com.project.picpicker.LibsVersion.navigationComposeVersion
-import com.project.picpicker.LibsVersion.okhttpVersion
-import com.project.picpicker.LibsVersion.pagerVersion
-import com.project.picpicker.LibsVersion.paletteVersion
-import com.project.picpicker.LibsVersion.retrofitVersion
-import com.project.picpicker.LibsVersion.systemUiControllerVersion
-import com.project.picpicker.LibsVersion.testVersion
-import com.project.picpicker.LibsVersion.timberVersion
-import com.project.picpicker.LibsVersion.uiToolingVersion
+import com.project.picpicker.dependency.NameSpec
 import com.project.picpicker.dependency.helper.*
+import org.gradle.api.Project
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
+import org.gradle.api.artifacts.VersionCatalog
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.artifacts.VersionConstraint
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.exclude
+import org.gradle.kotlin.dsl.getByType
 
-object Dependency {
-    val composMaterial = "androidx.compose.material:material:$composeVersion".impl
-    val composeFoundation = "androidx.compose.foundation:foundation:$composeVersion".impl
-    val composeFoundationLayout =
-        "androidx.compose.foundation:foundation-layout:$composeVersion".impl
-    val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion".impl
+private val Project.depToml: VersionCatalog
+    get() {
+        val catalogs = extensions.getByType<VersionCatalogsExtension>()
+        return catalogs.named("dep")
+    }
 
-    val glideDeps = deps(
-        "com.github.bumptech.glide:glide:$glideVersion".impl,
-        "com.github.bumptech.glide:okhttp3-integration:$glideVersion".impl {
+private fun VersionCatalog.safeFindLibrary(name: String): Provider<MinimalExternalModuleDependency> =
+    findLibrary(name).orElseGet { throw IllegalAccessException("Not found dependency name = $name") }
+
+private fun VersionCatalog.safeFindVersion(name: String): VersionConstraint =
+    findVersion(name).orElseGet { throw IllegalAccessException("Not found version name = $name") }
+
+val Project.timber: NameSpec
+    get() = depToml.safeFindLibrary("timber").impl
+
+val Project.glideDeps: Dependency
+    get() {
+        val glide = depToml.safeFindLibrary("glide").impl
+        val glideIntegration = depToml.safeFindLibrary("glide_integration").impl {
             exclude(group = "com.squareup.okhttp3", module = "okhttp")
-        },
-        "com.github.bumptech.glide:compiler:$glideVersion".kapt,
-    )
+        }
+        val glideCompiler = depToml.safeFindLibrary("glide_compiler").kapt
+        return deps(
+            glide,
+            glideIntegration,
+            glideCompiler
+        )
+    }
+
+val Project.jetpackComposeUiDeps: Dependency
+    get() {
+        val composeMaterial = depToml.safeFindLibrary("compose_material").impl
+        val composeFoundation = depToml.safeFindLibrary("compose_foundation").impl
+        val composeFoundationLayout = depToml.safeFindLibrary("compose_foundation_layout").impl
+        val composeRuntime = depToml.safeFindLibrary("compose_runtime").impl
+        val composeUi = depToml.safeFindLibrary("compose_ui").impl
+        val composeTooling = depToml.safeFindLibrary("compose_tooling").impl
+        val composeIconsCore = depToml.safeFindLibrary("compose_icons_core").impl
+        val composeIconsExtended = depToml.safeFindLibrary("compose_icons_extended").impl
+        val composeTestJunit4 = depToml.safeFindLibrary("compose_test_junit4").androidTest
+        return deps(
+            composeMaterial,
+            composeFoundation,
+            composeFoundationLayout,
+            composeRuntime,
+            composeUi,
+            composeTooling,
+            composeIconsCore,
+            composeIconsExtended,
+            composeTestJunit4,
+        )
+    }
+
+val Project.composeVersion: String
+    get() = depToml.safeFindVersion("compose").toString()
+
+val Project.systemUiController: NameSpec
+    get() = depToml.safeFindLibrary("system_ui_controller").impl
+
+val Project.composePreviewDeps: Dependency
+    get() {
+        val uiTooling = depToml.safeFindLibrary("tooling_preview").impl
+        val tooling = depToml.safeFindLibrary("tooling").debugImpl
+        val poolingContainer = depToml.safeFindLibrary("pooling_container").debugImpl
+        val customView = depToml.safeFindLibrary("custom_view").debugImpl
+        return deps(
+            uiTooling,
+            tooling,
+            poolingContainer,
+            customView
+        )
+    }
+
+val Project.jetpackComposeActivity: NameSpec
+    get() = depToml.safeFindLibrary("activity_compose").impl
+
+val Project.palette: NameSpec
+    get() = depToml.safeFindLibrary("palette").impl
+
+val Project.hiltNavigation: NameSpec
+    get() = depToml.safeFindLibrary("hilt_navigation").impl
 
 
-    val jetpackComposeUiDeps = deps(
-        "androidx.compose.ui:ui:$composeVersion".impl,
-        "androidx.compose.ui:ui-tooling:$composeVersion".impl,
-        composeFoundation,
-        composMaterial,
-        composeFoundationLayout,
-        composeRuntime,
-        "androidx.compose.material:material-icons-core:$composeVersion".impl,
-        "androidx.compose.material:material-icons-extended:$composeVersion".impl,
-        "androidx.compose.ui:ui-test-junit4:$composeVersion".androidTest
-    )
+val Project.navigationDeps: Dependency
+    get() {
+        val navigation = depToml.safeFindLibrary("navigation").impl
+        val navigationAnimation = depToml.safeFindLibrary("navigation_animation").impl
+        val navigationMaterial = depToml.safeFindLibrary("navigation_material").impl
+        return deps(
+            navigation,
+            navigationAnimation,
+            navigationMaterial,
+        )
+    }
 
-    val systemuiController =
-        "com.google.accompanist:accompanist-systemuicontroller:$systemUiControllerVersion".impl
+val Project.hiltDeps: Dependency
+    get() {
+        val hilt = depToml.safeFindLibrary("hilt").impl
+        val hiltCompiler = depToml.safeFindLibrary("hilt_compiler").kapt
+        return deps(
+            hilt,
+            hiltCompiler
+        )
+    }
 
-    val composePreviewDeps = deps(
-        "androidx.compose.ui:ui-tooling-preview:$uiToolingVersion".impl,
-        "androidx.compose.ui:ui-tooling:$uiToolingVersion".debugImpl,
-        "androidx.customview:customview-poolingcontainer:$customViewPoolingcontainerVersion".debugImpl,
-        "androidx.customview:customview:$customViewVersion".debugImpl,
-    )
+val Project.leakCanary: NameSpec
+    get() = depToml.safeFindLibrary("leakcanary").debugImpl
 
-    val jetpackComposeActivity = "androidx.activity:activity-compose:$activityComposeVersion".impl
-    val palette = "com.android.support:palette-v7:$paletteVersion".impl
+val Project.googleService: NameSpec
+    get() = depToml.safeFindLibrary("google_service").impl
 
-    val hiltNavigation = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion".impl
+val Project.okHttp: NameSpec
+    get() = depToml.safeFindLibrary("okhttp").impl
 
-    val navigationDeps = deps(
-        "androidx.navigation:navigation-compose:$navigationComposeVersion".impl,
-        "com.google.accompanist:accompanist-navigation-animation:$accompanistNavigationVersion".impl,
-        "com.google.accompanist:accompanist-navigation-material:$accompanistNavigationVersion".impl,
-        hiltNavigation
-    )
+val Project.gson: NameSpec
+    get() = depToml.safeFindLibrary("gson").impl
 
-    val hiltDeps = deps(
-        "com.google.dagger:hilt-android:$hiltVersion".impl,
-        "com.google.dagger:hilt-android-compiler:$hiltVersion".kapt,
-    )
+val Project.network: Dependency
+    get() {
+        val okHttpLogger = depToml.safeFindLibrary("logging_interceptor").impl
+        val retrofit = depToml.safeFindLibrary("retrofit").impl
+        val gson = depToml.safeFindLibrary("gson").impl
+        return deps(
+            okHttp,
+            okHttpLogger,
+            retrofit,
+            gson,
+        )
+    }
 
-    val timber = "com.jakewharton.timber:timber:$timberVersion".impl
-    val leakCanary = "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion".debugImpl
-        val googleService = "com.google.android.gms:play-services-base:18.0.1".impl
+val Project.pagerDeps: Dependency
+    get() {
+        val pager = depToml.safeFindLibrary("pager").impl
+        val pagerIndicators = depToml.safeFindLibrary("pager_indicators").impl
+        return deps(
+            pager,
+            pagerIndicators
+        )
+    }
 
-    val baseDependencyDeps = deps(
-        "androidx.core:core-ktx:$coreVersion".impl,
-        "androidx.appcompat:appcompat:$appComponentVersion".impl,
-        "com.google.android.material:material:$materialVersion".impl,
-        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion".impl,
-        "org.junit.jupiter:junit-jupiter-api:$testVersion".test,
-        "androidx.test.ext:junit:1.1.3".impl,
-        "androidx.test.espresso:espresso-core:3.4.0".impl,
-        timber,
-        leakCanary
-    )
-    val okHttpLogger = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion".impl
-    val okHttp = "com.squareup.okhttp3:okhttp:$okhttpVersion".impl
-    val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion".impl
-    val gson = "com.squareup.retrofit2:converter-gson:$retrofitVersion".impl
-
-    val pagerDeps = deps(
-        "com.google.accompanist:accompanist-pager:$pagerVersion".impl,
-        "com.google.accompanist:accompanist-pager-indicators:$pagerVersion".impl,
-    )
-}
-
+val Project.base: Dependency
+    get() {
+        val core = depToml.safeFindLibrary("core").impl
+        val appcompat = depToml.safeFindLibrary("appcompat").impl
+        val material = depToml.safeFindLibrary("material").impl
+        val jdk8 = depToml.safeFindLibrary("kotlin_stdlib_jdk8").impl
+        val jupiter = depToml.safeFindLibrary("jupiter").test
+        val junit = depToml.safeFindLibrary("junit").impl
+        val espresso = depToml.safeFindLibrary("espresso").impl
+        return deps(
+            core,
+            appcompat,
+            material,
+            jdk8,
+            jupiter,
+            junit,
+            espresso,
+            timber,
+            leakCanary,
+        )
+    }

@@ -1,8 +1,4 @@
-import com.project.picpicker.Dependency.composePreviewDeps
-import com.project.picpicker.Dependency.hiltDeps
-import com.project.picpicker.Dependency.hiltNavigation
-import com.project.picpicker.Dependency.jetpackComposeUiDeps
-import com.project.picpicker.Dependency.pagerDeps
+import com.project.picpicker.*
 import com.project.picpicker.Model.commonModel
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.commonResources

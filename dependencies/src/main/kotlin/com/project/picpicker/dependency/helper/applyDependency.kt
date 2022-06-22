@@ -9,11 +9,19 @@ fun Project.applyDependency(
     dependencies {
         appDependency.forEach(
             { nameSpec ->
-                addDependencyTo(
-                    nameSpec.configurationName.name,
-                    nameSpec.name,
-                    nameSpec.externalModuleAction
-                )
+                if (nameSpec.dependencyNotation != null) {
+                    addDependencyByConfigTo(
+                        nameSpec.configurationName.name,
+                        nameSpec.dependencyNotation,
+                        nameSpec.externalModuleAction
+                    )
+                } else {
+                    addDependencyTo(
+                        nameSpec.configurationName.name,
+                        nameSpec.name,
+                        nameSpec.externalModuleAction
+                    )
+                }
             },
             { projectSpec ->
                 addModuleTo(

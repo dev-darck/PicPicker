@@ -1,8 +1,4 @@
-import com.project.picpicker.Dependency.composePreviewDeps
-import com.project.picpicker.Dependency.glideDeps
-import com.project.picpicker.Dependency.hiltDeps
-import com.project.picpicker.Dependency.jetpackComposeUiDeps
-import com.project.picpicker.Dependency.okHttp
+import com.project.picpicker.*
 import com.project.picpicker.Modules.commonResources
 import com.project.picpicker.Modules.util
 import com.project.picpicker.dependency.helper.deps

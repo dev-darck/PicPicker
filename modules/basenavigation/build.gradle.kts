@@ -1,5 +1,3 @@
-import com.project.picpicker.Dependency.hiltDeps
-import com.project.picpicker.Dependency.navigationDeps
 import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.Modules.navigationImpl
@@ -15,6 +13,8 @@ import com.project.picpicker.dependency.helper.apiModule
 import com.project.picpicker.dependency.helper.deps
 import com.project.picpicker.dependency.helper.module
 import com.project.picpicker.dependency.helper.plus
+import com.project.picpicker.hiltDeps
+import com.project.picpicker.navigationDeps
 import com.project.picpicker.plugins.config.module
 
 module(
