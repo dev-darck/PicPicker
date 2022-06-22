@@ -1,0 +1,70 @@
+[versions]
+kotlinVersion = "1.6.21"
+timber = "5.0.1"
+glide = "4.13.2"
+compose = "1.2.0-rc01"
+systemuicontroller = "0.24.11-rc"
+customviewpoolingcontainer = "1.0.0-beta02"
+customview = "1.2.0-alpha01"
+activitycompose = "1.6.0-alpha05"
+palette = "28.0.0"
+hiltNavigation = "1.0.0"
+navigation = "2.5.0-rc02"
+navigationAnimation = "0.24.10-beta"
+hilt = "2.42"
+leakcanary = "2.9.1"
+googleService = "18.0.1"
+okkHttp = "4.9.3"
+retrofit = "2.9.0"
+pager = "0.24.11-rc"
+core = "1.8.0"
+appcompat = "1.6.0-alpha05"
+material = "1.7.0-alpha02"
+kotlinStdlibJdk8 = "1.6.21"
+jupiter = "5.8.2"
+junit = "1.1.3"
+espresso = "3.4.0"
+gradleplugin = "7.1.3"
+
+[libraries]
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide_integration = { module = "com.github.bumptech.glide:okhttp3-integration", version.ref = "glide" }
+glide_compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+compose_material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose_foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose_foundation_layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "compose" }
+compose_runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose_ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose_tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose_icons_core = { module = "androidx.compose.material:material-icons-core", version.ref = "compose" }
+compose_icons_extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+compose_test_junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+system_ui_controller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "systemuicontroller" }
+tooling_preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+pooling_container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "customviewpoolingcontainer" }
+custom_view = { module = "androidx.customview:customview", version.ref = "customview" }
+activity_compose = { module = "androidx.activity:activity-compose", version.ref = "activitycompose" }
+palette = { module = "com.android.support:palette-v7", version.ref = "palette" }
+hilt_navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
+navigation = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+navigation_animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "navigationAnimation" }
+navigation_material = { module = "com.google.accompanist:accompanist-navigation-material", version.ref = "navigationAnimation" }
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
+google_service = { module = "com.google.android.gms:play-services-base", version.ref = "googleService" }
+logging_interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okkHttp" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okkHttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "pager" }
+pager_indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "pager" }
+core = { module = "androidx.core:core-ktx", version.ref = "core" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+kotlin_stdlib_jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinStdlibJdk8" }
+jupiter = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
+junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }

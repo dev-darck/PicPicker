@@ -6,6 +6,10 @@ val generatedCode = "import com.project.picpicker.plugins.config.module\n" +
         "\n" +
         "module()"
 
+dependencyResolutionManagement {
+    defaultLibrariesExtensionName.set("dep")
+}
+
 autoInclude()
 
 fun Settings.autoInclude() {

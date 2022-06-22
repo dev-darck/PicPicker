@@ -1,8 +1,4 @@
-import com.project.picpicker.Dependency.composePreviewDeps
-import com.project.picpicker.Dependency.hiltDeps
-import com.project.picpicker.Dependency.hiltNavigation
-import com.project.picpicker.Dependency.jetpackComposeUiDeps
-import com.project.picpicker.Dependency.systemuiController
+import com.project.picpicker.*
 import com.project.picpicker.Model.commonModel
 import com.project.picpicker.Modules.commonResources
 import com.project.picpicker.Modules.commonTheme
@@ -23,7 +19,7 @@ module(
         composePreviewDeps,
     ) + deps(
         hiltNavigation,
-        systemuiController,
+        systemUiController,
         module(navigationApi),
         module(commonResources),
         module(commonUi),

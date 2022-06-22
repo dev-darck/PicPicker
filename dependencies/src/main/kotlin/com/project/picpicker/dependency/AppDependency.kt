@@ -31,6 +31,7 @@ data class ProjectSpec(
 data class NameSpec(
     override val name: String,
     val config: ConfigurationName,
+    val dependencyNotation: org.gradle.api.provider.Provider<*>? = null,
     val externalModuleAction: ExternalModuleDependency.() -> Unit = {}
 ) : AppDependency(name, config)
 
