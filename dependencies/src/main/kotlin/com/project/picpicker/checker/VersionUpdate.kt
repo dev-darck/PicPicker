@@ -31,7 +31,7 @@ class VersionUpdate(
             }
         }
         val newVersion = updatesChecker.run().run {
-            upgradeVersions
+            latestVersions
         }
         return findUpdateVersion(newVersion)
     }
