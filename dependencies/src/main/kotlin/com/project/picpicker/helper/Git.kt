@@ -3,6 +3,8 @@ package com.project.picpicker.helper
 private const val commit = "commit"
 private const val push = "push"
 private const val git = "git"
+private const val release = "release/"
+private const val dev = "dev"
 
 object Git {
 
@@ -40,6 +42,13 @@ object Git {
         val commands = command.split("\\s".toRegex())
         return process(commands)?.printResult(gitCommand) ?: ""
     }
+
+    fun currentRootBranch(currentBrunch: String, major: String, minor: String) =
+        if (currentBrunch.contains(release)) {
+            release + major + minor
+        } else {
+            dev
+        }
 
     private fun process(command: List<String>): Process? {
         return try {

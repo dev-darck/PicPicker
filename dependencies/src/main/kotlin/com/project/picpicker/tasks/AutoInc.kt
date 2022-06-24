@@ -66,20 +66,13 @@ open class AutoInc : DefaultTask() {
         val minor = versionHelper.versionMinor().toString()
         val build = versionHelper.versionCode().toString()
         Git.runCommand(
-            "git checkout -B ${currentRootBranch(currentBrunch, major, minor)} " +
-                    "origin/${currentRootBranch(currentBrunch, major, minor)}"
+            "git checkout -B ${Git.currentRootBranch(currentBrunch, major, minor)} " +
+                    "origin/${Git.currentRootBranch(currentBrunch, major, minor)}"
         )
         Git.add(versionHelper.fileName())
         Git.commit(commitMessage(major, minor, build))
         Git.push()
     }
-
-    private fun currentRootBranch(currentBrunch: String, major: String, minor: String) =
-        if (currentBrunch.contains(release)) {
-            release + major + minor
-        } else {
-            dev
-        }
 
     private fun findVersion(tags: String): String = regex.find(tags)?.value ?: ""
 
@@ -88,7 +81,5 @@ open class AutoInc : DefaultTask() {
 
     private companion object {
         val regex = "\\d+(\\.\\d+)?".toRegex()
-        const val release = "release/"
-        const val dev = "dev"
     }
 }

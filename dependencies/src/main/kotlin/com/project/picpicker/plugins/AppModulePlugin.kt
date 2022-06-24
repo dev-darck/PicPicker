@@ -8,6 +8,7 @@ import com.project.picpicker.dependency.helper.deps
 import com.project.picpicker.plugins.options.applicationOptions
 import com.project.picpicker.plugins.options.libraryOptions
 import com.project.picpicker.tasks.AutoInc
+import com.project.picpicker.tasks.UpdateDependenciesVersions
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -18,6 +19,7 @@ class AppModulePlugin : Plugin<Project> {
             plugins.all {
                 when (this) {
                     is AppPlugin -> {
+                        update()
                         autoInc()
                         applicationOptions()
                         appApp()
@@ -48,4 +50,8 @@ private fun Project.appApp() {
 
 private fun Project.autoInc() {
     tasks.register("autoInc", AutoInc::class.java)
+}
+
+private fun Project.update() {
+    tasks.register("updateCatalog", UpdateDependenciesVersions::class.java)
 }
