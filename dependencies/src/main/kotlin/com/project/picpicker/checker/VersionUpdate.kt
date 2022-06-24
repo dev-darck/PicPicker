@@ -4,6 +4,7 @@ import com.github.benmanes.gradle.versions.updates.Coordinate
 import com.github.benmanes.gradle.versions.updates.DependencyUpdates
 import com.project.picpicker.checker.model.TomlLibVersion
 import com.project.picpicker.checker.model.Version
+import com.project.picpicker.helper.TomlHelper
 import org.gradle.api.Project
 import java.util.*
 
@@ -18,11 +19,12 @@ class VersionUpdate(
         updatesChecker.revision = "release"
         updatesChecker.checkForGradleUpdate = false
         updatesChecker.checkConstraints = true
-        val names = tomlHelper.listLibrary.map { it.module.name }
         updatesChecker.setResolutionStrategy {
             componentSelection.all {
-                val lib = tomlHelper.listLibrary.find { names.contains(this.candidate.moduleIdentifier.name) }
-                if (lib != null) {
+                val findModule = candidate.displayName.replace(":${candidate.version}", "")
+                val libName = tomlHelper.currentTomlLib(findModule)
+                if (libName != null) {
+                    val lib = tomlHelper.findLibrary(libName)
                     println(" \"Library project\" -> $lib")
                     println(" \"Library new version\" -> ${candidate.displayName}")
                 }
