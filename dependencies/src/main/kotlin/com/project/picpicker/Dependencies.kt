@@ -11,16 +11,16 @@ import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.getByType
 
-private val Project.depToml: VersionCatalog
+val Project.depToml: VersionCatalog
     get() {
         val catalogs = extensions.getByType<VersionCatalogsExtension>()
         return catalogs.named("dep")
     }
 
-private fun VersionCatalog.safeFindLibrary(name: String): Provider<MinimalExternalModuleDependency> =
+fun VersionCatalog.safeFindLibrary(name: String): Provider<MinimalExternalModuleDependency> =
     findLibrary(name).orElseGet { throw IllegalAccessException("Not found dependency name = $name") }
 
-private fun VersionCatalog.safeFindVersion(name: String): VersionConstraint =
+fun VersionCatalog.safeFindVersion(name: String): VersionConstraint =
     findVersion(name).orElseGet { throw IllegalAccessException("Not found version name = $name") }
 
 val Project.timber: NameSpec
