@@ -1,4 +1,4 @@
-package com.project.picpicker.checker
+package com.project.picpicker.helper
 
 import com.project.picpicker.checker.model.TomlLibVersion
 import com.project.picpicker.checker.model.Version
@@ -16,6 +16,17 @@ class TomlHelper(val project: Project) {
     }
 
     fun findVersion(name: String): String = project.depToml.safeFindVersion(name).displayName
+
+    fun findLibrary(name: String) = project.depToml.findLibrary(name).orElseGet {
+        null
+    }?.get()
+
+    fun currentTomlLib(module: String): String? {
+        val result = contentToml.value ?: return null
+        val startSearch = result.indexOf(LIBRARIES)
+        val textForSearch = result.subSequence(startSearch + LIBRARIES.length, result.length)
+        return textForSearch.lines().find { it.contains(module) }?.split(" ")?.first()
+    }
 
     fun currentTomlVersion(module: String): TomlLibVersion? {
         val result = contentToml.value ?: return null

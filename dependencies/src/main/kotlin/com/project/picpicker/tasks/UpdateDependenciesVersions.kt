@@ -1,8 +1,8 @@
 package com.project.picpicker.tasks
 
-import com.project.picpicker.checker.TomlHelper
 import com.project.picpicker.checker.VersionUpdate
 import com.project.picpicker.helper.Git
+import com.project.picpicker.helper.TomlHelper
 import com.project.picpicker.helper.VersionHelper
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
