@@ -103,6 +103,7 @@ val Project.navigationDeps: Dependency
             navigation,
             navigationAnimation,
             navigationMaterial,
+            hiltNavigation
         )
     }
 

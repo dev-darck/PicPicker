@@ -17,6 +17,12 @@ interface UnsplashRepository {
         @IntRange(from = 1, to = 30) maxPage: Int,
     ): ResultWrapper<List<CollectionModel>>
 
+    suspend fun collectionsById(
+        id: String,
+        page: Int,
+        @IntRange(from = 1, to = 30) maxPage: Int
+    ): ResultWrapper<List<PhotoModel>>
+
     suspend fun photos(page: Int, orderBy: OrderBy): ResultWrapper<List<PhotoModel>>
     suspend fun photo(id: String): ResultWrapper<Photo>
 }

@@ -21,6 +21,13 @@ class UnsplashRepositoryImpl(
     ): ResultWrapper<List<CollectionModel>> =
         unsplashApi.collections(page.toString(), maxPage.toString()).safeCall()
 
+    override suspend fun collectionsById(
+        id: String,
+        page: Int,
+        maxPage: Int
+    ): ResultWrapper<List<PhotoModel>> =
+        unsplashApi.collectionsById(id, page.toString(), maxPage.toString()).safeCall()
+
     override suspend fun photos(page: Int, orderBy: OrderBy): ResultWrapper<List<PhotoModel>> =
         unsplashApi.photos(page = page.toString(), orderBy = orderBy.jsonName).safeCall()
 

@@ -2,6 +2,11 @@ package com.project.navigationapi.config
 
 sealed class Route {
     abstract val routeScheme: String
+
+    companion object {
+        const val name = "name"
+        const val id = "id"
+    }
 }
 
 object ProfileRoute : Route() {
@@ -49,11 +54,22 @@ object SettingsRoute : Route() {
     fun createRoute(type: String): String = "$route/$type"
 }
 
-object PhotoDetail : Route() {
+object PhotoDetailRout : Route() {
     private const val route: String = "photodetail"
-    const val scheme: String = id
-    override val routeScheme: String = "$route/{$scheme}"
+    override val routeScheme: String = "$route/{$id}"
     fun createRoute(photoId: String): String = "$route/$photoId"
+}
+
+object CollectionScreenRout : Route() {
+    private const val route: String = "collectionrout"
+    const val countPhoto: String = "count"
+    const val curatorName: String = "curator"
+    override val routeScheme: String = "$route/{$id}/{$name}/{$countPhoto}/{$curatorName}"
+    fun createRoute(collectionId: String, collectionName: String, count: String, curator: String): String {
+        val collection = collectionName.replace(DELIMITER_NAVIGATION, DELIMITER)
+        val name = curator.replace(DELIMITER_NAVIGATION, DELIMITER)
+        return "$route/$collectionId/$collection/$count/$name"
+    }
 }
 
 object DefaultRoute : Route() {
@@ -62,4 +78,5 @@ object DefaultRoute : Route() {
 }
 
 private const val type = "type"
-private const val id = "id"
+const val DELIMITER = "--"
+const val DELIMITER_NAVIGATION = "/"

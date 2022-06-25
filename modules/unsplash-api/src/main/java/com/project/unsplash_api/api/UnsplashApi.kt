@@ -8,11 +8,7 @@ import com.project.model.User
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface UnsplashApi {
     @GET("me")
@@ -27,6 +23,13 @@ interface UnsplashApi {
         @Query("page") page: String,
         @Query("per_page") perPage: String = "30",
     ): Response<List<CollectionModel>>
+
+    @GET("/collections/{id}/photos")
+    suspend fun collectionsById(
+        @Path("id") id: String,
+        @Query("page") page: String,
+        @Query("per_page") perPage: String = "30",
+    ): Response<List<PhotoModel>>
 
     @GET("photos")
     @CheckResult

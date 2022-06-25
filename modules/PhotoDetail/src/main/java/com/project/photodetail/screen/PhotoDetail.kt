@@ -32,13 +32,16 @@ import com.project.common_ui.DotState
 import com.project.common_ui.RowDot
 import com.project.common_ui.TagsBottom
 import com.project.common_ui.common_error.Error
+import com.project.common_ui.extansions.clickableSingle
 import com.project.common_ui.extansions.dominateSelectionColor
+import com.project.common_ui.extansions.orDefault
 import com.project.common_ui.loader.PulsingLoader
 import com.project.common_ui.tab.Point
 import com.project.common_ui.tab.SizeProportion
 import com.project.image_loader.GlideImage
 import com.project.image_loader.ImageSize
 import com.project.model.*
+import com.project.navigationapi.config.CollectionScreenRout
 import com.project.photodetail.viewmodel.PhotoDetailViewModel
 import com.project.photodetail.viewmodel.PhotoState
 import com.project.util.extensions.toPrettyString
@@ -132,7 +135,16 @@ private fun Photo(
                 tags = it
             )
         }
-        UserCollection(photo, modifier = Modifier.alpha(alpha), lazyState)
+        UserCollection(photo, modifier = Modifier.alpha(alpha), lazyState, onClick = { item, curator ->
+            viewModel.navigate(
+                CollectionScreenRout.createRoute(
+                    item.id.orEmpty(),
+                    item.title.orEmpty(),
+                    item.totalPhotos.orDefault,
+                    item.user.name(curator)
+                )
+            )
+        })
     }
 }
 
@@ -399,7 +411,10 @@ private fun InfoBlock(
 
 @Composable
 private fun UserCollection(
-    photo: Photo, modifier: Modifier, state: LazyListState
+    photo: Photo,
+    modifier: Modifier,
+    state: LazyListState,
+    onClick: (item: Result, curator: String) -> Unit,
 ) {
     val relatedCollections = photo.relatedCollections()
     LazyColumn(
@@ -418,15 +433,21 @@ private fun UserCollection(
             }
             items(count = relatedCollections.size, key = { relatedCollections[it].id }) {
                 val item = relatedCollections[it]
-                RelatedCollection(item)
+                RelatedCollection(item, onClick)
             }
         })
 }
 
 @Composable
-private fun RelatedCollection(item: Result) {
+private fun RelatedCollection(item: Result, onClick: (item: Result, curator: String) -> Unit) {
+    val curator = stringResource(id = R.string.curated_text)
     CollagePhoto(
-        modifier = Modifier.padding(horizontal = 16.dp), item.previewPhotos
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .clickableSingle {
+                onClick(item, curator)
+            },
+        item.previewPhotos
     )
     Spacer(modifier = Modifier.size(10.dp))
     Text(
@@ -450,7 +471,7 @@ private fun RelatedCollection(item: Result) {
         )
         Spacer(modifier = Modifier.size(5.dp))
         Text(
-            text = item.user.name(stringResource(id = R.string.curated_text)),
+            text = item.user.name(curator),
             style = MaterialTheme.typography.caption,
             color = MaterialTheme.colors.onSecondary
         )

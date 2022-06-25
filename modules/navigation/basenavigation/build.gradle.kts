@@ -1,4 +1,5 @@
 import com.project.picpicker.Modules.bottomNavigation
+import com.project.picpicker.Modules.collectionScreen
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.Modules.navigationImpl
 import com.project.picpicker.Modules.settings
@@ -32,6 +33,7 @@ module(
         apiModule(webViewScreen),
         apiModule(photoDetail),
         apiModule(settings),
+        apiModule(collectionScreen),
         module(util)
     )
 )
