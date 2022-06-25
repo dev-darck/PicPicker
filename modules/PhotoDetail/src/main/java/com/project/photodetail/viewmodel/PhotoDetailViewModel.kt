@@ -3,7 +3,7 @@ package com.project.photodetail.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.navigationapi.config.PhotoDetail
+import com.project.navigationapi.config.Route
 import com.project.navigationapi.navigation.Navigation
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
@@ -22,7 +22,7 @@ class PhotoDetailViewModel @Inject constructor(
     navigation: Navigation,
 ) : ViewModel(), Navigation by navigation {
 
-    private val photoID = savedStateHandle.get<String>(PhotoDetail.scheme).orEmpty()
+    private val photoID = savedStateHandle.get<String>(Route.id).orEmpty()
 
     private val _photo = MutableStateFlow<PhotoState>(PhotoState.Loading)
     val photo = _photo.asStateFlow()

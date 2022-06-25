@@ -31,17 +31,20 @@ import com.project.common_ui.CollagePhoto
 import com.project.common_ui.ShimmeringCollagePhoto
 import com.project.common_ui.TagsBottom
 import com.project.common_ui.TagsShimmering
-import com.project.common_ui.tab.Point
-import com.project.common_ui.tab.SizeProportion.MIDDLE
 import com.project.common_ui.common_error.Error
+import com.project.common_ui.extansions.clickableSingle
+import com.project.common_ui.extansions.orDefault
 import com.project.common_ui.loader.PulsingLoader
 import com.project.common_ui.paging.PagingData
 import com.project.common_ui.paging.PagingState
 import com.project.common_ui.paging.pagingItems
 import com.project.common_ui.paging.rememberAsNewPage
+import com.project.common_ui.tab.Point
+import com.project.common_ui.tab.SizeProportion.MIDDLE
 import com.project.image_loader.Shimmering
 import com.project.model.CollectionModel
 import com.project.model.name
+import com.project.navigationapi.config.CollectionScreenRout
 
 @Composable
 fun Collections(viewModel: CollectionViewModel) {
@@ -87,7 +90,19 @@ private fun LazyList(
                     AddTag(viewModel)
                 }
                 pagingItems(items) { collectionModel ->
-                    collectionModel?.let { CardCollection(collectionModel = it) }
+                    val curatorName = stringResource(id = R.string.curated_text)
+                    collectionModel?.let {
+                        CardCollection(collectionModel = it) {
+                            viewModel.navigate(
+                                CollectionScreenRout.createRoute(
+                                    it.id.orEmpty(),
+                                    it.title.orEmpty(),
+                                    it.totalPhotos.orDefault,
+                                    it.user.name(curatorName)
+                                )
+                            )
+                        }
+                    }
                 }
                 item {
                     when (state) {
@@ -150,11 +165,14 @@ private fun SomeHeader() {
 }
 
 @Composable
-private fun CardCollection(collectionModel: CollectionModel) {
+private fun CardCollection(collectionModel: CollectionModel, onClick: () -> Unit = {}) {
     Column(
         Modifier
             .padding(vertical = 10.dp)
             .fillMaxSize()
+            .clickableSingle {
+                onClick()
+            }
     ) {
         CollagePhoto(
             modifier = Modifier.padding(horizontal = 16.dp),

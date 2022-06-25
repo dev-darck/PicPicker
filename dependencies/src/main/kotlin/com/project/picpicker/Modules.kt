@@ -15,6 +15,7 @@ object Modules {
     const val util = "util"
     const val baseNavigation = "basenavigation"
     const val settings = "settings-app"
+    const val collectionScreen = "collections-screen"
 }
 
 object TabModule {

@@ -4,6 +4,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.coroutines.channels.ProducerScope
@@ -26,9 +27,17 @@ internal class FlowCustomTarget(
     }
 
     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+        val image = when (resource) {
+            is BitmapDrawable -> resource.bitmap
+            is GifDrawable -> resource.firstFrame
+            else -> null
+        }
+        if (image == null) {
+            Timber.tag(TAG).i("image is empty or type not found")
+            return
+        }
+        producerScope.trySendBlocking(GlideImageState.Success(BitmapPainter(image.asImageBitmap()), image))
         Timber.tag(TAG).i("success load")
-        val image = (resource as BitmapDrawable).bitmap.asImageBitmap()
-        producerScope.trySendBlocking(GlideImageState.Success(BitmapPainter(image), resource.bitmap))
     }
 
     override fun onLoadFailed(errorDrawable: Drawable?) {

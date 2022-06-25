@@ -1,5 +1,6 @@
 package com.project.toolbar
 
+import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -17,12 +18,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.project.common_resources.R
 import com.project.navigationapi.config.*
 
 private val TOOLBAR_HORIZONTAL_PADDING = 30.dp
+private val PADDING_TEXT = 15.dp
 private val Elevation = 15.dp
 private val SizeNavigationIcon = 20.dp
 private val ToolbarSize = 50.dp
@@ -33,18 +36,21 @@ fun Toolbar(
     toolbarConfigs: Sequence<ToolBarConfig>,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    if (navBackStackEntry == null) return
     val currentRoute = navBackStackEntry?.destination?.route
     toolbarConfigs.firstOrNull { screen -> screen.root == currentRoute }
         ?.let {
-            ToolbarSurface(toolbarConfig = it)
+            ToolbarSurface(toolbarConfig = it, navBackStackEntry!!.arguments)
         }
 }
 
 @Composable
 private fun ToolbarSurface(
     toolbarConfig: ToolBarConfig,
+    bundle: Bundle?
 ) {
     val background = if (toolbarConfig.isTransparentBackground) Color.Transparent else colors.surface
+    val name = bundle?.getString(Route.name, "").orEmpty().replace(DELIMITER, DELIMITER_NAVIGATION)
     Surface(
         modifier = Modifier.statusBarsPadding()
             .height(ToolbarSize)
@@ -56,12 +62,12 @@ private fun ToolbarSurface(
                 colors.secondaryVariant
             ),
     ) {
-        Toolbar(toolbarConfig)
+        Toolbar(toolbarConfig, name)
     }
 }
 
 @Composable
-private fun Toolbar(config: ToolBarConfig) {
+private fun Toolbar(config: ToolBarConfig, name: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
@@ -70,23 +76,23 @@ private fun Toolbar(config: ToolBarConfig) {
         if (config.leftBottom != null) {
             Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
             ToolbarBottom(config.leftBottom!!, Modifier)
+            Spacer(Modifier.size(PADDING_TEXT))
         } else {
             Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING + SizeNavigationIcon))
         }
 
         val label = config.label
-        if (label != null) {
-            Text(
-                text = stringResource(id = label),
-                style = MaterialTheme.typography.h1,
-                color = colors.onBackground,
-                modifier = Modifier.weight(1F, true),
-                textAlign = TextAlign.Center
-            )
-        }
-
+        Text(
+            text = label?.let { stringResource(id = label) } ?: name,
+            style = MaterialTheme.typography.h1,
+            color = colors.onBackground,
+            maxLines = 1,
+            modifier = Modifier.weight(1F, true),
+            textAlign = TextAlign.Center
+        )
 
         if (config.rightBottom != null) {
+            Spacer(Modifier.size(PADDING_TEXT))
             ToolbarBottom(config.rightBottom!!, Modifier)
             Spacer(Modifier.size(TOOLBAR_HORIZONTAL_PADDING))
         } else {
@@ -120,5 +126,5 @@ private fun PreviewToolBar() {
         }
         override val route: Route = DefaultRoute
         override val label: Int = R.string.preview_name
-    })
+    }, bundleOf())
 }

@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.hometab.screen.HomeState
 import com.project.hometab.screen.updateResult
-import com.project.model.Photo
 import com.project.model.PhotoModel
-import com.project.navigationapi.config.PhotoDetail
+import com.project.navigationapi.config.PhotoDetailRout
 import com.project.navigationapi.navigation.Navigation
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
@@ -77,7 +76,7 @@ class HomeViewModel @Inject constructor(
             val position = state.result.item.indexOfFirst { photo -> photo.id == id }
             state.result.settingsPaging.lastPosition = position
         }
-        navigation.navigate(PhotoDetail.createRoute(id))
+        navigation.navigate(PhotoDetailRout.createRoute(id))
     }
 
     fun retryLoading() {
