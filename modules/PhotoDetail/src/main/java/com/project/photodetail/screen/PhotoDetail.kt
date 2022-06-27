@@ -81,10 +81,14 @@ private fun Photo(
     val colorTheme = MaterialTheme.colors.background
     val useDarkIcons = MaterialTheme.colors.isLight
 
-    val onBack: () -> Unit = {
+    val backColorStatusBar = {
         systemUiController.setSystemBarsColor(
             color = colorTheme, darkIcons = useDarkIcons
         )
+    }
+
+    val onBack: () -> Unit = {
+        backColorStatusBar()
         viewModel.navigateUp()
     }
 
@@ -112,7 +116,7 @@ private fun Photo(
 
     val size = max(
         0.dp, 50.dp * min(
-            1f, 1 - (offset.value / 1000F + itemIndex.value)
+            1f, 1 - (offset.value / 500F + itemIndex.value)
         )
     )
 
@@ -136,6 +140,7 @@ private fun Photo(
             )
         }
         UserCollection(photo, modifier = Modifier.alpha(alpha), lazyState, onClick = { item, curator ->
+            backColorStatusBar()
             viewModel.navigate(
                 CollectionScreenRout.createRoute(
                     item.id.orEmpty(),
