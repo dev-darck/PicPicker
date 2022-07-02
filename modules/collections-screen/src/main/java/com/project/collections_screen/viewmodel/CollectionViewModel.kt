@@ -58,7 +58,7 @@ class CollectionViewModel @Inject constructor(
 
     fun photosByCollection(page: Int) {
         viewModelScope.launch {
-            when (val result = unsplashRepository.collectionsById(collectionId, 1, MaxCollectionPage)) {
+            when (val result = unsplashRepository.collectionsById(collectionId, page, MaxCollectionPage)) {
                 is ResultWrapper.Success -> {
                     photosFlow.update {
                         val homeModel = measureResult(result.value)
