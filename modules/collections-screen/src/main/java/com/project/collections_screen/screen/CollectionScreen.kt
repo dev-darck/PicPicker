@@ -68,10 +68,6 @@ private fun ListPhoto(
     collectionInfoModel: CollectionInfoModel,
     viewModel: CollectionViewModel,
 ) {
-    val paging = pagingData.rememberAsNewPage {
-
-    }
-
     Column(
         modifier = Modifier.systemGesturesPadding().fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -99,14 +95,19 @@ private fun ListPhoto(
                 style = MaterialTheme.typography.caption,
                 color = MaterialTheme.colors.onSecondary
             )
-            Spacer(modifier = Modifier.size(5.dp))
+        }
+
+        Spacer(modifier = Modifier.size(5.dp))
+
+        val paging = pagingData.rememberAsNewPage {
+            viewModel.photosByCollection(it)
         }
 
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize(),
         ) {
             StaggeredGrid(
-                modifier = Modifier,
+                modifier = Modifier.fillMaxSize(),
                 spanCount = 2,
                 data = paging,
                 measureHeight = { it.measureHeight },

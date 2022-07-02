@@ -10,9 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -32,11 +30,9 @@ import com.project.image_loader.Shimmering
 private val titles = listOf("Trending", "New")
 
 @OptIn(ExperimentalPagerApi::class)
-@Preview
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: HomeViewModel) {
     val pagerState = rememberPagerState()
-    val viewModel: HomeViewModel = hiltViewModel()
     val spanCount = 2
     val screenDensity = LocalConfiguration.current.densityDpi / 160f
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
