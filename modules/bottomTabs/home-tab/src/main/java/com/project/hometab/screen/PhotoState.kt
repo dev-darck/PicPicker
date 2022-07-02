@@ -17,7 +17,7 @@ internal fun HomeState.updateResult(
     when (this) {
         is HomeState.Success -> {
             val paging = this.result.copy()
-            paging.updateData(result)
+            paging.updateData(result).distinct()
             HomeState.Success(paging)
         }
         else -> HomeState.Success(PagingData(result, SettingsPaging(30, page, 2)))

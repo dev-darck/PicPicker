@@ -3,8 +3,13 @@ package com.project.common_ui.paging
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.runtime.*
-import kotlinx.coroutines.flow.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 sealed class PagingState {
     object Loading : PagingState()
@@ -38,21 +43,28 @@ data class SettingsPaging(
 }
 
 data class PagingData<T : Any>(
-    var item: List<T> = listOf(),
+    private var item: List<T> = listOf(),
     val settingsPaging: SettingsPaging,
 ) {
-    fun updateData(items: List<T>) {
+    fun updateData(items: List<T>): PagingData<T> {
         val newDate = item.toMutableList()
         newDate.addAll(items)
         item = newDate
+        return this
     }
+
+    fun distinct() = item.distinct()
+
+    fun isNotEmpty(): Boolean = item.isNotEmpty()
+
+    fun getItems(): List<T> = item
 }
 
 open class Paging<T : Any>(
     pagingData: PagingData<T>,
 ) {
     private val scrollState = MutableStateFlow(0)
-    private val items = ArrayList(pagingData.item)
+    private val items = ArrayList(pagingData.getItems())
     private val settingsPaging: SettingsPaging = pagingData.settingsPaging
     private val state = MutableStateFlow<PagingState>(PagingState.Success)
     var statePaging = state.asStateFlow()
@@ -63,6 +75,10 @@ open class Paging<T : Any>(
             if (this.state.value != state)
                 updateState(it)
         }
+    }
+
+    fun savePosition(position: Int) {
+        settingsPaging.lastPosition = position
     }
 
     fun emitNewItem(index: Int) {
@@ -85,7 +101,6 @@ open class Paging<T : Any>(
         state.combine(scrollState, ::Pair)
             .distinctUntilChanged()
             .collect { (currentState, position) ->
-                settingsPaging.lastPosition = position
                 val last = itemCount - settingsPaging.countForNextPage
                 if (position >= last
                     && settingsPaging.isNextPage()

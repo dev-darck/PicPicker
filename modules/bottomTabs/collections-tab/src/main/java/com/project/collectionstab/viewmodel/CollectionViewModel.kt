@@ -28,7 +28,7 @@ class CollectionViewModel @Inject constructor(
 
     fun collectionFirstPage() {
         val state = collectionFlow.value
-        if (state is CollectionState.Success && state.result.item.isNotEmpty()) return
+        if (state is CollectionState.Success && state.result.isNotEmpty()) return
         collections(1)
     }
 
@@ -42,7 +42,7 @@ class CollectionViewModel @Inject constructor(
                 }
                 else -> {
                     val state = collectionFlow.value
-                    if (state is CollectionState.Success && state.result.item.isNotEmpty()) {
+                    if (state is CollectionState.Success && state.result.isNotEmpty()) {
                         state.result.settingsPaging.errorState()
                     } else {
                         collectionFlow.emit(CollectionState.Exception)

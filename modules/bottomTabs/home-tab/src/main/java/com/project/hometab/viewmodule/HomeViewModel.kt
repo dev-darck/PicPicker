@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.hometab.screen.HomeState
 import com.project.hometab.screen.updateResult
 import com.project.model.PhotoModel
-import com.project.navigationapi.config.PhotoDetailRout
+import com.project.navigationapi.config.PhotoDetailRoute
 import com.project.navigationapi.navigation.Navigation
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.api.UnsplashRepository
@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
     fun photoFirstPage(spanCount: Int) {
         this.spanCount = spanCount
         val state = _newPhotosFlow.value
-        if (state is HomeState.Success && state.result.item.isNotEmpty()) return
+        if (state is HomeState.Success && state.result.isNotEmpty()) return
         photos(1)
     }
 
@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
 
                 else -> {
                     val state = _newPhotosFlow.value
-                    if (state is HomeState.Success && state.result.item.isNotEmpty()) {
+                    if (state is HomeState.Success && state.result.isNotEmpty()) {
                         state.result.settingsPaging.errorState()
                     } else {
                         _newPhotosFlow.emit(HomeState.Exception)
@@ -73,10 +73,10 @@ class HomeViewModel @Inject constructor(
     fun clickPhoto(id: String) {
         val state = _newPhotosFlow.value
         if (state is HomeState.Success) {
-            val position = state.result.item.indexOfFirst { photo -> photo.id == id }
+            val position = state.result.getItems().indexOfFirst { photo -> photo.id == id }
             state.result.settingsPaging.lastPosition = position
         }
-        navigation.navigate(PhotoDetailRout.createRoute(id))
+        navigation.navigate(PhotoDetailRoute.createRoute(id))
     }
 
     fun retryLoading() {

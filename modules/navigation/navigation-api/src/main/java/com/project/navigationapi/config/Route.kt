@@ -6,6 +6,7 @@ sealed class Route {
     companion object {
         const val name = "name"
         const val id = "id"
+        const val query = "query"
     }
 }
 
@@ -54,13 +55,13 @@ object SettingsRoute : Route() {
     fun createRoute(type: String): String = "$route/$type"
 }
 
-object PhotoDetailRout : Route() {
+object PhotoDetailRoute : Route() {
     private const val route: String = "photodetail"
     override val routeScheme: String = "$route/{$id}"
     fun createRoute(photoId: String): String = "$route/$photoId"
 }
 
-object CollectionScreenRout : Route() {
+object CollectionScreenRoute : Route() {
     private const val route: String = "collectionrout"
     const val countPhoto: String = "count"
     const val curatorName: String = "curator"
@@ -72,11 +73,22 @@ object CollectionScreenRout : Route() {
     }
 }
 
+object SearchScreenRoute : Route() {
+    private const val route: String = "searchscreen"
+    override val routeScheme: String = "$route/{$query}"
+    private const val empty: String = "empty_${route}"
+    fun createRoute(query: String = ""): String {
+        return if (query.isEmpty()) "$route/$empty" else "$route/$query"
+    }
+
+    fun isQueryEmpty(rout: String): Boolean = rout == empty
+}
+
 object DefaultRoute : Route() {
     override val routeScheme: String
         get() = "Route"
 }
 
 private const val type = "type"
-const val DELIMITER = "--"
+const val DELIMITER = "generated_collection_screen_unique"
 const val DELIMITER_NAVIGATION = "/"
