@@ -44,7 +44,7 @@ import com.project.common_ui.tab.SizeProportion.MIDDLE
 import com.project.image_loader.Shimmering
 import com.project.model.CollectionModel
 import com.project.model.name
-import com.project.navigationapi.config.CollectionScreenRout
+import com.project.navigationapi.config.CollectionScreenRoute
 
 @Composable
 fun Collections(viewModel: CollectionViewModel) {
@@ -94,7 +94,7 @@ private fun LazyList(
                     collectionModel?.let {
                         CardCollection(collectionModel = it) {
                             viewModel.navigate(
-                                CollectionScreenRout.createRoute(
+                                CollectionScreenRoute.createRoute(
                                     it.id.orEmpty(),
                                     it.title.orEmpty(),
                                     it.totalPhotos.orDefault,

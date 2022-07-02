@@ -32,7 +32,7 @@ import com.project.common_ui.tab.SizeProportion
 import com.project.image_loader.GlideImage
 import com.project.image_loader.ImageSize
 import com.project.model.PhotoModel
-import com.project.navigationapi.config.PhotoDetailRout
+import com.project.navigationapi.config.PhotoDetailRoute
 
 private val userIconSize = 24.dp
 private val rounded = 15.dp
@@ -113,7 +113,7 @@ private fun ListPhoto(
                 measureHeight = { it.measureHeight },
                 content = { photo ->
                     PhotoCard(photo) {
-                        viewModel.navigate(PhotoDetailRout.createRoute(it))
+                        viewModel.navigate(PhotoDetailRoute.createRoute(it))
                     }
                 }
             )

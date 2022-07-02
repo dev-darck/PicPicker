@@ -41,7 +41,7 @@ import com.project.common_ui.tab.SizeProportion
 import com.project.image_loader.GlideImage
 import com.project.image_loader.ImageSize
 import com.project.model.*
-import com.project.navigationapi.config.CollectionScreenRout
+import com.project.navigationapi.config.CollectionScreenRoute
 import com.project.photodetail.viewmodel.PhotoDetailViewModel
 import com.project.photodetail.viewmodel.PhotoState
 import com.project.util.extensions.toPrettyString
@@ -140,7 +140,7 @@ private fun Photo(
                 color = colorTheme, darkIcons = useDarkIcons
             )
             viewModel.navigate(
-                CollectionScreenRout.createRoute(
+                CollectionScreenRoute.createRoute(
                     item.id.orEmpty(),
                     item.title.orEmpty(),
                     item.totalPhotos.orDefault,

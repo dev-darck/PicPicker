@@ -30,6 +30,7 @@ class HomeConfig @Inject constructor(
         icon = R.drawable.shearch_icon
         contentDescription = R.string.default_content_descriptions
         click = {
+            navigation.navigate(SearchScreenRoute.createRoute())
         }
     }
 

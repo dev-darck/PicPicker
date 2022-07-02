@@ -55,6 +55,7 @@ fun HomePager(
         count = count,
         state = pagerState,
         modifier = Modifier.wrapContentSize(),
+        userScrollEnabled = false
     ) { page ->
         if (page != pagerState.currentPage) return@HorizontalPager
         Page(spanCount = spanCount, scrollState = scrollState, state = state, onNewPage, clickPhoto)

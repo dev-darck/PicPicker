@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.collections_screen.MaxCollectionPage
 import com.project.collections_screen.model.CollectionInfoModel
 import com.project.model.PhotoModel
-import com.project.navigationapi.config.CollectionScreenRout
+import com.project.navigationapi.config.CollectionScreenRoute
 import com.project.navigationapi.config.DELIMITER
 import com.project.navigationapi.config.DELIMITER_NAVIGATION
 import com.project.navigationapi.config.Route
@@ -35,9 +35,9 @@ class CollectionViewModel @Inject constructor(
     private val columnWidth
         get() = screenWidthDp / spanCount - 20.dp
 
-    private val countPhoto = savedStateHandle.get<String>(CollectionScreenRout.countPhoto)
+    private val countPhoto = savedStateHandle.get<String>(CollectionScreenRoute.countPhoto)
     private val curator =
-        savedStateHandle.get<String>(CollectionScreenRout.curatorName)?.replace(DELIMITER, DELIMITER_NAVIGATION)
+        savedStateHandle.get<String>(CollectionScreenRoute.curatorName)?.replace(DELIMITER, DELIMITER_NAVIGATION)
     private val collectionId = savedStateHandle.get<String>(Route.id).orEmpty()
 
     private val collectionInfo = CollectionInfoModel(countPhoto.orEmpty(), curator.orEmpty())
@@ -52,7 +52,7 @@ class CollectionViewModel @Inject constructor(
 
     fun photosByCollectionFirst() {
         val state = photosFlow.value
-        if (state is CollectionState.Success && state.result.item.isNotEmpty()) return
+        if (state is CollectionState.Success && state.result.isNotEmpty()) return
         photosByCollection(1)
     }
 
@@ -68,7 +68,7 @@ class CollectionViewModel @Inject constructor(
 
                 else -> {
                     val state = photosFlow.value
-                    if (state is CollectionState.Success && state.result.item.isNotEmpty()) {
+                    if (state is CollectionState.Success && state.result.isNotEmpty()) {
                         state.result.settingsPaging.errorState()
                     } else {
                         photosFlow.emit(CollectionState.Exception)

@@ -1,6 +1,5 @@
 package com.project.common_ui.grid
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -78,6 +77,14 @@ fun <T : Any> StaggeredGrid(
             scrollToPosition(scrollToPosition)
             animation = null
             overScrollMode = OVER_SCROLL_NEVER
+            addOnScrollListener(
+                object : OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        data.savePosition(manager.findFirstCompletelyVisibleItemPositions(IntArray(spanCount)).last())
+                    }
+                }
+            )
             scrollState?.let { state -> addOnScrollListener(state) }
         }
     }, update = {
