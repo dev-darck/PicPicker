@@ -2,6 +2,7 @@ import com.project.picpicker.Modules.bottomNavigation
 import com.project.picpicker.Modules.collectionScreen
 import com.project.picpicker.Modules.navigationApi
 import com.project.picpicker.Modules.navigationImpl
+import com.project.picpicker.Modules.searchScreen
 import com.project.picpicker.Modules.settings
 import com.project.picpicker.Modules.util
 import com.project.picpicker.Screen.photoDetail
@@ -34,6 +35,7 @@ module(
         apiModule(photoDetail),
         apiModule(settings),
         apiModule(collectionScreen),
+        apiModule(searchScreen),
         module(util)
     )
 )
