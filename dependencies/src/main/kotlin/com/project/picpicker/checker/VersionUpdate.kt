@@ -38,28 +38,49 @@ class VersionUpdate(
 
     private fun findUpdateVersion(update: Map<Map<String, String>, Coordinate>): Boolean {
         var isUpdate = false
-        update.forEach { newlib ->
-            val findModule = newlib.value.toString().replace(":${newlib.value.version}", "")
-            val tomlVersion = tomlHelper.currentTomlVersion(findModule)
-            if (tomlVersion != null) {
+        val currentLibraries = tomlHelper.listLibrary
+        val updateVersion = mutableListOf<Triple<Coordinate, String, TomlLibVersion>>()
+        currentLibraries.forEach { currentLib ->
+            val dep = currentLib.toString().dropLastDelimiter()
+            val newDep = update.values.find { it.toString().dropLastDelimiter().contains(dep) }
+            val tomlVersion = tomlHelper.currentTomlVersion(dep)
+            if (newDep != null && tomlVersion != null) {
+                println("Update version newLib -> $newDep currentLib -> $currentLib")
                 val lib = tomlHelper.findVersion(tomlVersion.tomlVersion)
-                update(newlib.value, lib, tomlVersion)
+                updateVersion.add(Triple(newDep, lib, tomlVersion))
                 isUpdate = true
             } else {
-                println("Not found version by $findModule")
+                println("Not found version by newLib $newDep currentLib $currentLib")
             }
+        }
+        if (isUpdate || updateVersion.isNotEmpty()) {
+            update(updateVersion)
         }
         return isUpdate
     }
 
-    private fun update(lib: Coordinate, oldVersion: String, tomlLibVersion: TomlLibVersion) {
-        println("${lib.version} -> $oldVersion")
-        if (
-            lib.version.contains(oldVersion)
-            || lib.version.toLowerCase(Locale.getDefault())
-                .contains("m")
-        ) return
-        val version = Version(oldVersion, lib.version)
-        tomlHelper.writeVersion(version, tomlLibVersion)
+    private fun String.dropLastDelimiter(): String {
+        val findLastIndex = this.indexOfLast { DELIMITER.contains(it) }
+        return this.removeRange(findLastIndex, this.length)
+    }
+
+    private fun update(list: List<Triple<Coordinate, String, TomlLibVersion>>) {
+        val libs = list.map { (lib, oldVersion, tomlLibVersion) ->
+            println("${lib.version} -> $oldVersion")
+            if (
+                lib.version.contains(oldVersion)
+                || lib.version.toLowerCase(Locale.getDefault())
+                    .contains("m")
+            ) {
+                Version(oldVersion, oldVersion, tomlLibVersion)
+            } else {
+                Version(oldVersion, lib.version, tomlLibVersion)
+            }
+        }
+        tomlHelper.writeVersion(libs)
+    }
+
+    private companion object {
+        const val DELIMITER = ":"
     }
 }

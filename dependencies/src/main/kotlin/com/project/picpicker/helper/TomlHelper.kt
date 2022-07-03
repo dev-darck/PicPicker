@@ -32,7 +32,8 @@ class TomlHelper(val project: Project) {
         val result = contentToml.value ?: return null
         val startSearch = result.indexOf(LIBRARIES)
         val textForSearch = result.subSequence(startSearch + LIBRARIES.length, result.length)
-        val match = textForSearch.lines().find { it.contains(module) }
+        val findModule = "module = \"$module\""
+        val match = textForSearch.lines().find { it.contains(findModule) }
         return if (match != null) {
             val position = match.indexOf(VERSION) + VERSION.length
             val versionName = match.subSequence(position, match.lastIndex).replace("\"".toRegex(), "").trim()
@@ -45,21 +46,26 @@ class TomlHelper(val project: Project) {
         }
     }
 
-    fun writeVersion(version: Version, tomlLibVersion: TomlLibVersion) {
+    fun writeVersion(libs: List<Version>) {
         if (libToml == null) {
             println("This file is not found \"$TOML_VERSION\"")
             return
         }
-        val result = contentToml.value ?: return
-        if (version.newVersion.isNotEmpty() && version.oldVersion.isNotEmpty()) {
-            val editVersion = result.replace(
-                "${tomlLibVersion.tomlVersion} = \"${version.oldVersion}\"",
-                "${tomlLibVersion.tomlVersion} = \"${version.newVersion}\""
-            )
-            libToml.bufferedWriter().use { it.write(editVersion) }
-        } else {
-            println("New version or old version is empty")
+        var result = contentToml.value ?: return
+        libs.forEach { version ->
+            println("Update $version")
+            if (version.newVersion.isNotEmpty() && version.oldVersion.isNotEmpty()) {
+                if (version.tomlVersion.tomlVersion == "compose" && version.newVersion.contains("1.3.0-alpha01"))
+                    return
+                result = result.replace(
+                    "${version.tomlVersion.tomlVersion} = \"${version.oldVersion}\"",
+                    "${version.tomlVersion.tomlVersion} = \"${version.newVersion}\""
+                )
+            } else {
+                println("New version or old version is empty")
+            }
         }
+        libToml.bufferedWriter().use { it.write(result) }
     }
 
     companion object {
