@@ -75,13 +75,14 @@ object CollectionScreenRoute : Route() {
 
 object SearchScreenRoute : Route() {
     private const val route: String = "searchscreen"
-    override val routeScheme: String = "$route/{$query}"
+    private const val typeSearch: String = "type_search"
+    override val routeScheme: String = "$route/{$query}/{$typeSearch}"
     private const val empty: String = "empty_${route}"
-    fun createRoute(query: String = ""): String {
-        return if (query.isEmpty()) "$route/$empty" else "$route/$query"
+    fun createRoute(query: String = "", typeSearch: String = ""): String {
+        return if (query.isEmpty()) "$route/$empty/$empty" else "$route/$query/$typeSearch"
     }
 
-    fun isQueryEmpty(rout: String): Boolean = rout == empty
+    fun queryNotDefault(query: String): String = query.replace(empty, "")
 }
 
 object DefaultRoute : Route() {

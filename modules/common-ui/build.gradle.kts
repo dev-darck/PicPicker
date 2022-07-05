@@ -1,5 +1,6 @@
 import com.project.picpicker.Model.commonModel
 import com.project.picpicker.Modules.commonResources
+import com.project.picpicker.Modules.commonTheme
 import com.project.picpicker.Modules.imageLoader
 import com.project.picpicker.composePreviewDeps
 import com.project.picpicker.dependency.helper.deps
@@ -17,6 +18,7 @@ module(
         palette,
         module(commonResources),
         module(imageLoader),
-        module(commonModel)
+        module(commonModel),
+        module(commonTheme)
     )
 )

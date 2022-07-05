@@ -19,4 +19,8 @@
     <string name="share">Поделиться</string>
     <string name="info">Информация</string>
     <string name="location">Локация</string>
+    <string name="search_profile">Профили</string>
+    <string name="search_photos">Фото</string>
+    <string name="search_collections">Коллекции</string>
+    <string name="search_hint">Поиск по Unsplash: %s</string>
 </resources>
