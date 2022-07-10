@@ -81,7 +81,7 @@ fun <T : Any> StaggeredGrid(
                 object : OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
-                        data.savePosition(manager.findFirstCompletelyVisibleItemPositions(IntArray(spanCount)).last())
+                        data.savePosition(manager.findFirstCompletelyVisibleItemPositions(IntArray(spanCount)).first())
                     }
                 }
             )

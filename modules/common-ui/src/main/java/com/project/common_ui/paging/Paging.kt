@@ -53,7 +53,9 @@ data class PagingData<T : Any>(
         return this
     }
 
-    fun distinct() = item.distinct()
+    fun distinct() {
+        runCatching { item.distinct() }
+    }
 
     fun isNotEmpty(): Boolean = item.isNotEmpty()
 

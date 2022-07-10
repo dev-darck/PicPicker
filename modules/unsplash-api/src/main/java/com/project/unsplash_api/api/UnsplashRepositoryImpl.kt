@@ -1,9 +1,6 @@
 package com.project.unsplash_api.api
 
-import com.project.model.CollectionModel
-import com.project.model.Photo
-import com.project.model.PhotoModel
-import com.project.model.User
+import com.project.model.*
 import com.project.unsplash_api.ResultWrapper
 import com.project.unsplash_api.extensions.safeCall
 import com.project.unsplash_api.models.OrderBy
@@ -33,4 +30,13 @@ class UnsplashRepositoryImpl(
 
     override suspend fun photo(id: String): ResultWrapper<Photo> =
         unsplashApi.photo(id).safeCall()
+
+    override suspend fun searchPhoto(query: String, page: Int, maxPage: Int): ResultWrapper<SearchPhoto> =
+        unsplashApi.searchPhoto(page.toString(), query, maxPage.toString()).safeCall()
+
+    override suspend fun searchCollection(query: String, page: Int, maxPage: Int): ResultWrapper<SearchCollection> =
+        unsplashApi.searchCollection(page.toString(), query, maxPage.toString()).safeCall()
+
+    override suspend fun searchUser(query: String, page: Int, maxPage: Int): ResultWrapper<SearchUser> =
+        unsplashApi.searchUser(page.toString(), query, maxPage.toString()).safeCall()
 }

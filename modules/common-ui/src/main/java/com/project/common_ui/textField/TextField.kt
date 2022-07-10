@@ -13,7 +13,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.project.common_compos_ui.theme.GrayMedium
 import com.project.common_resources.R
-import com.project.common_ui.extansions.textFieldOnSurface
 
 @Composable
 fun SearchTextField(
@@ -21,7 +20,12 @@ fun SearchTextField(
     textInit: String = "",
     hint: String,
     onValueChange: (String) -> Unit = {}
-) = BaseTextField(textInit, label = "", onValueChange = onValueChange) { showHint, innerTextField ->
+) = BaseTextField(
+    modifier = modifier,
+    textInit,
+    label = "",
+    onValueChange = onValueChange
+) { showHint, innerTextField ->
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Start,
@@ -50,7 +54,7 @@ fun SearchTextField(
 
 @Composable
 fun TextField(hint: String, label: String, onValueChange: (String) -> Unit = {}) =
-    BaseTextField(label = label, onValueChange = onValueChange) { showHint, innerTextField ->
+    BaseTextField(modifier = Modifier, label = label, onValueChange = onValueChange) { showHint, innerTextField ->
         Box(
             contentAlignment = Alignment.CenterStart,
             modifier = Modifier
@@ -70,7 +74,7 @@ fun PasswordTextField(
     label: String,
     onValueChange: (String) -> Unit = {},
     forgotPassword: () -> Unit = {}
-) = BaseTextField(label = label, onValueChange = onValueChange) { showHint, innerTextField ->
+) = BaseTextField(modifier = Modifier, label = label, onValueChange = onValueChange) { showHint, innerTextField ->
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
@@ -91,7 +95,7 @@ fun PasswordTextField(
 private fun Forgot(forgotPassword: () -> Unit) = Text(
     text = "FORGOT?",
     style = MaterialTheme.typography.overline,
-    color = MaterialTheme.colors.textFieldOnSurface,
+    color = MaterialTheme.colors.secondary,
     modifier = Modifier.clickable { forgotPassword() }
 )
 
