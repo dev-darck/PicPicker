@@ -35,17 +35,18 @@ data class SelectionTabModel(
 )
 
 @Composable
-fun SearchSelection(toSelection: TitleSelection, onSelection: (TitleSelection) -> Unit = {}) {
+fun SearchSelection(modifier: Modifier, toSelection: TitleSelection, onSelection: (TitleSelection) -> Unit = {}) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(TitleSelection.size()) {
             val titleSelection = TitleSelection.getByIndex(it)
-            SelectionTab(SelectionTabModel(
-                title = titleSelection.title,
-                isSelection = titleSelection == toSelection,
+            SelectionTab(
+                SelectionTabModel(
+                    title = titleSelection.title,
+                    isSelection = titleSelection == toSelection,
                 onClick = {
                     onSelection(titleSelection)
                 }

@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -25,6 +26,7 @@ import com.project.common_ui.extansions.textFieldOnSurface
 
 @Composable
 internal fun BaseTextField(
+    modifier: Modifier,
     textInit: String = "",
     label: String,
     height: Dp = 40.dp,
@@ -52,7 +54,7 @@ internal fun BaseTextField(
         elevation = elevation,
         shape = MaterialTheme.shapes.small,
         color = MaterialTheme.colors.textField,
-        modifier = Modifier
+        modifier = modifier
             .onFocusChanged { focus = it.isFocused }
             .fillMaxWidth()
             .height(height)
@@ -96,14 +98,16 @@ private fun BaseTextField(
 
     BasicTextField(
         value = text,
+        modifier = Modifier,
+        cursorBrush = SolidColor(MaterialTheme.colors.secondary),
         singleLine = true,
         onValueChange = { value ->
             onValueChange(value)
             text = value
         },
-        keyboardActions = KeyboardActions(onDone = {
+        keyboardActions = KeyboardActions {
             clearFocus()
-        }),
+        },
         textStyle = MaterialTheme.typography.h3
             .copy(color = MaterialTheme.colors.textFieldOnSurface),
         decorationBox = { innerTextField ->

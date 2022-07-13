@@ -1,10 +1,7 @@
 package com.project.unsplash_api.api
 
 import androidx.annotation.CheckResult
-import com.project.model.CollectionModel
-import com.project.model.Photo
-import com.project.model.PhotoModel
-import com.project.model.User
+import com.project.model.*
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -43,4 +40,25 @@ interface UnsplashApi {
     suspend fun photo(
         @Path("id") id: String,
     ): Response<Photo>
+
+    @GET("/search/photos")
+    suspend fun searchPhoto(
+        @Query("page") page: String,
+        @Query("query") query: String,
+        @Query("per_page") perPage: String = "30",
+    ): Response<SearchPhoto>
+
+    @GET("/search/collections")
+    suspend fun searchCollection(
+        @Query("page") page: String,
+        @Query("query") query: String,
+        @Query("per_page") perPage: String = "30",
+    ): Response<SearchCollection>
+
+    @GET("/search/users")
+    suspend fun searchUser(
+        @Query("page") page: String,
+        @Query("query") query: String,
+        @Query("per_page") perPage: String = "30",
+    ): Response<SearchUser>
 }
