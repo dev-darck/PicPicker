@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -40,6 +42,7 @@ import com.project.image_loader.GlideImage
 import com.project.image_loader.ImageSize
 import com.project.model.CollectionModel
 import com.project.model.PhotoModel
+import com.project.model.User
 import com.project.model.name
 import com.project.navigationapi.config.CollectionScreenRoute
 import com.project.navigationapi.config.PhotoDetailRoute
@@ -89,9 +92,7 @@ fun Search(viewModel: SearchViewModel) {
 private fun ColumnScope.ResultSearch(viewModel: SearchViewModel) {
     when (val state = viewModel.state.collectAsState().value) {
         is NotFindContent -> {
-            if (state.query.isEmpty()) return
-            Spacer(modifier = Modifier.size(5.dp))
-            Text(state.query)
+
         }
 
         is Success -> {
@@ -109,7 +110,7 @@ private fun ColumnScope.ResultSearch(viewModel: SearchViewModel) {
                 }
 
                 PROFILE -> {
-
+                    ListUsers(state.users!!, viewModel)
                 }
 
                 COLLECTIONS -> {
@@ -329,6 +330,98 @@ private fun PhotoCard(photo: PhotoModel, clickPhoto: (String) -> Unit = { }) {
             )
             Spacer(modifier = Modifier.size(10.dp))
         }
+    }
+}
+
+@Composable
+private fun ListUsers(
+    pagingData: PagingData<User>,
+    viewModel: SearchViewModel,
+) {
+    val data = pagingData.rememberAsNewPage {
+        viewModel.search(page = it)
+    }
+    val state = data.statePaging.collectAsState(Loading).value
+    val lazyState = rememberLazyListState()
+    LazyColumn(
+        state = lazyState,
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            pagingItems(data) { uesr ->
+                uesr?.let {
+                    UserUI(it) {
+
+                    }
+                }
+            }
+
+            item {
+                when (state) {
+                    is PagingState.Loading -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(modifier = Modifier.padding(top = 15.dp))
+                            PulsingLoader()
+                            Spacer(modifier = Modifier.padding(bottom = 15.dp))
+                        }
+                    }
+
+                    is PagingState.Error -> {
+                        val context = LocalContext.current
+                        Toast.makeText(
+                            context,
+                            "Connection error, please try later",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        data.updateState(PagingState.Success)
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun UserUI(user: User, clickPhoto: (String) -> Unit) {
+    Row(
+        modifier = Modifier
+            .clickableSingle { clickPhoto(user.id.orEmpty()) }
+            .padding(top = padding)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Spacer(modifier = Modifier.size(10.dp))
+        GlideImage(
+            imageSize = ImageSize(100.dp, 100.dp, 1.5F),
+            modifier = Modifier.size(56.dp).clip(CircleShape),
+            data = user.profileImage?.large.orEmpty(),
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        Column(
+            modifier = Modifier.height(56.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                style = MaterialTheme.typography.caption,
+                maxLines = 1,
+                color = Color.White,
+                text = user.name.orEmpty(),
+            )
+            Spacer(modifier = Modifier.size(5.dp))
+            Text(
+                style = MaterialTheme.typography.caption,
+                maxLines = 1,
+                color = Color.White,
+                text = user.username.orEmpty(),
+            )
+        }
+        Spacer(modifier = Modifier.size(10.dp))
     }
 }
 
