@@ -55,8 +55,6 @@ class TomlHelper(val project: Project) {
         libs.forEach { version ->
             println("Update $version")
             if (version.newVersion.isNotEmpty() && version.oldVersion.isNotEmpty()) {
-                if (version.tomlVersion.tomlVersion == "compose" && version.newVersion.contains("1.3.0-alpha01"))
-                    return
                 result = result.replace(
                     "${version.tomlVersion.tomlVersion} = \"${version.oldVersion}\"",
                     "${version.tomlVersion.tomlVersion} = \"${version.newVersion}\""

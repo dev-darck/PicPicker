@@ -38,7 +38,16 @@ class SearchViewModel @Inject constructor(
     private val columnWidth
         get() = screenWidthDp / spanCount - 20.dp
     private val _state = MutableStateFlow<SearchState>(NotFindContent(""))
-    private val _stateSelection = MutableStateFlow(PROFILE)
+    private val _stateSelection = MutableStateFlow(
+        SearchScreenRoute.queryNotDefault(savedStateHandle.get<String>(SearchScreenRoute.typeSearch).orEmpty()).run {
+            when (this) {
+                SearchScreenRoute.TypeSearch.PROFILE.value -> PROFILE
+                SearchScreenRoute.TypeSearch.COLLECTION.value -> COLLECTIONS
+                SearchScreenRoute.TypeSearch.PHOTO.value -> PHOTOS
+                else -> PROFILE
+            }
+        }
+    )
     private val _stateQuery =
         MutableStateFlow(SearchScreenRoute.queryNotDefault(savedStateHandle.get<String>(Route.query).orEmpty()))
 
