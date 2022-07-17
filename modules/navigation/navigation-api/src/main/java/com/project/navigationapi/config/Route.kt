@@ -75,11 +75,18 @@ object CollectionScreenRoute : Route() {
 
 object SearchScreenRoute : Route() {
     private const val route: String = "searchscreen"
-    private const val typeSearch: String = "type_search"
+    const val typeSearch: String = "type_search"
     override val routeScheme: String = "$route/{$query}/{$typeSearch}"
     private const val empty: String = "empty_${route}"
-    fun createRoute(query: String = "", typeSearch: String = ""): String {
-        return if (query.isEmpty()) "$route/$empty/$empty" else "$route/$query/$typeSearch"
+
+    enum class TypeSearch(val value: String) {
+        PROFILE("profile"),
+        COLLECTION("collection"),
+        PHOTO("photo"),
+    }
+
+    fun createRoute(query: String = "", typeSearch: TypeSearch = TypeSearch.PROFILE): String {
+        return if (query.isEmpty()) "$route/$empty/${typeSearch.value}" else "$route/$query/${typeSearch.value}"
     }
 
     fun queryNotDefault(query: String): String = query.replace(empty, "")

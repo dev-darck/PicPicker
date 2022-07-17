@@ -32,7 +32,8 @@ fun Project.baseConfig(isCompose: Boolean) {
                     addBuildFields(defaultPropertiesManager)
                 }
 
-                app -> {
+                app,
+                settings -> {
                     val isRelease =
                         gradle.startParameter.taskNames.toString().toLowerCase(Locale.getDefault()).contains(release)
                     val appName = rootProject.name
@@ -42,14 +43,8 @@ fun Project.baseConfig(isCompose: Boolean) {
                     addBuildFields(settingAppPropertiesManager)
                 }
 
-                settings -> {
-                    val isRelease =
-                        gradle.startParameter.taskNames.toString().toLowerCase(Locale.getDefault()).contains(release)
-                    val appName = rootProject.name
-                    val settingsConfig = SettingsConfig(VersionHelper(rootDir.path).versionConfig(isRelease), appName)
-                    val settingAppPropertiesManager =
-                        SettingAppPropertiesManager(gradleLocalProperties(rootDir), settingsConfig)
-                    addBuildFields(settingAppPropertiesManager)
+                else -> {
+                    buildFeatures.buildConfig = false
                 }
             }
         }
