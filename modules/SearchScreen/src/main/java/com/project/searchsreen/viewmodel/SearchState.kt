@@ -1,6 +1,7 @@
 package com.project.searchsreen.viewmodel
 
 import com.project.common_ui.paging.PagingData
+import com.project.common_ui.paging.PagingState
 import com.project.common_ui.paging.SettingsPaging
 import com.project.model.*
 import com.project.searchsreen.screen.TitleSelection
@@ -39,6 +40,9 @@ fun SearchState.updateSuccess(
                 } else {
                     oldPhoto.updateData(result).distinct()
                 }
+                if (result.isEmpty()) {
+                    oldPhoto.settingsPaging.updateState(PagingState.Success)
+                }
                 SearchState.Success(
                     photos = oldPhoto,
                     selections = titleSelection,
@@ -55,6 +59,9 @@ fun SearchState.updateSuccess(
                     oldUser = PagingData(result, settingsPaging)
                 } else {
                     oldUser.updateData(result).distinct()
+                }
+                if (result.isEmpty()) {
+                    oldUser.settingsPaging.updateState(PagingState.Success)
                 }
                 SearchState.Success(
                     users = oldUser,
@@ -73,6 +80,9 @@ fun SearchState.updateSuccess(
                     oldCollections = PagingData(result, settingsPaging)
                 } else {
                     oldCollections.updateData(result).distinct()
+                }
+                if (result.isEmpty()) {
+                    oldCollections.settingsPaging.updateState(PagingState.Success)
                 }
                 oldCollections.updateData(result).distinct()
                 SearchState.Success(

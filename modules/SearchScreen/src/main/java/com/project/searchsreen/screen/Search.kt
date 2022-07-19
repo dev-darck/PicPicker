@@ -410,14 +410,13 @@ private fun UserUI(user: User, clickPhoto: (String) -> Unit) {
             Text(
                 style = MaterialTheme.typography.caption,
                 maxLines = 1,
-                color = Color.White,
+                color = MaterialTheme.colors.onSecondary,
                 text = user.name.orEmpty(),
             )
             Spacer(modifier = Modifier.size(5.dp))
             Text(
                 style = MaterialTheme.typography.caption,
-                maxLines = 1,
-                color = Color.White,
+                color = MaterialTheme.colors.onSecondary,
                 text = user.username.orEmpty(),
             )
         }
